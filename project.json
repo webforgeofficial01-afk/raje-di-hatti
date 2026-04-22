@@ -1,0 +1,29 @@
+{
+  "overview": "Raje Di Hatti is a world-class, ultra-premium, mobile-first restaurant web app for a renowned Punjabi eatery in Sant Nagar Burari, Delhi. Built to rival top food brands in design, UX, and conversion with a deep matte black and gold design system, cinematic animations, and a full menu of authentic Punjabi dishes.",
+  "features": [
+    "Full-screen cinematic hero with psychological triggers and trust badges",
+    "3D animated WOW food scene with floating kulhad lassi",
+    "App-like menu with 50+ items, search, and veg filter",
+    "Ordering via Zomato, Swiggy, and Porter",
+    "WhatsApp catering builder for events",
+    "Live reviews with persistent backend storage",
+    "Loyalty badge system for repeat visitors",
+    "Today's Special rotating daily highlight",
+    "Animated background with floating particles and cursor parallax",
+    "Delivery zone breakdown with estimated times",
+    "Live Open/Closed status indicator",
+    "Google Maps embed and contact section",
+    "Branded 404 page and SEO schema markup"
+  ],
+  "category": "restaurant-food",
+  "tags": [
+    "restaurant",
+    "punjabi",
+    "food",
+    "delhi",
+    "premium",
+    "mobile-first",
+    "conversion"
+  ],
+  "last_updated": "2026-04-19T13:35:47.803Z"
+}

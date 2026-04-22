@@ -1,0 +1,104 @@
+type _CaffeineStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _CaffeineStorageRefillInformation = record {
+                                           proposed_top_up_amount: opt nat;};
+type _CaffeineStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserProfile = record {name: text;};
+type Time = int;
+type Submission = 
+ record {
+   email: text;
+   message: text;
+   name: text;
+   phone: opt text;
+   timestamp: Time;
+ };
+type ReviewInput = 
+ record {
+   comment: text;
+   name: text;
+   rating: nat;
+ };
+type Review = 
+ record {
+   comment: text;
+   id: nat;
+   name: text;
+   rating: nat;
+   timestamp: Time;
+ };
+type OrderInput = 
+ record {
+   address: text;
+   customerName: text;
+   items: text;
+   paymentMethod: text;
+   phone: text;
+   total: nat;
+ };
+type Order = 
+ record {
+   address: text;
+   customerName: text;
+   items: text;
+   orderId: text;
+   paymentMethod: text;
+   phone: text;
+   status: text;
+   timestamp: int;
+   total: nat;
+ };
+type GalleryItem = 
+ record {
+   creator: principal;
+   description: text;
+   id: nat;
+   image: ExternalBlob;
+   timestamp: Time;
+   title: text;
+ };
+type ExternalBlob = blob;
+service : {
+  _caffeineStorageBlobIsLive: (hash: blob) -> (bool) query;
+  _caffeineStorageBlobsToDelete: () -> (vec blob) query;
+  _caffeineStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _caffeineStorageCreateCertificate: (blobHash: text) ->
+   (_CaffeineStorageCreateCertificateResult);
+  _caffeineStorageRefillCashier: (refillInformation:
+   opt _CaffeineStorageRefillInformation) -> (_CaffeineStorageRefillResult);
+  _caffeineStorageUpdateGatewayPrincipals: () -> ();
+  _initializeAccessControlWithSecret: (userSecret: text) -> ();
+  addGalleryItem: (image: ExternalBlob, title: text, description: text) ->
+   (nat);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  deleteGalleryItem: (id: nat) -> ();
+  deleteReview: (id: nat) -> ();
+  getAllGalleryItems: () -> (vec GalleryItem) query;
+  getAllReviews: () -> (vec Review) query;
+  getAllSubmissions: () -> (vec Submission) query;
+  getCallerUserProfile: () -> (opt UserProfile) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getGalleryItem: (id: nat) -> (opt GalleryItem) query;
+  getOrderById: (orderId: text) -> (opt Order) query;
+  getReviewInputs: () -> (vec ReviewInput) query;
+  getUserProfile: (user: principal) -> (opt UserProfile) query;
+  isCallerAdmin: () -> (bool) query;
+  saveCallerUserProfile: (profile: UserProfile) -> ();
+  submitContactForm: (name: text, phone: opt text, email: text, message:
+   text) -> ();
+  submitOrder: (input: OrderInput) -> (text);
+  submitReview: (name: text, rating: nat, comment: text) -> (nat);
+}

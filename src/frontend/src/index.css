@@ -1,0 +1,2193 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 1rem;
+
+    /* Deeper dark background */
+    --background: 0.04 0.006 0;
+    --foreground: 0.95 0.005 0;
+
+    --card: 0.07 0.008 0;
+    --card-foreground: 0.95 0.005 0;
+
+    --popover: 0.07 0.008 0;
+    --popover-foreground: 0.95 0.005 0;
+
+    /* Gold primary */
+    --primary: 0.78 0.16 78;
+    --primary-foreground: 0.04 0.006 0;
+
+    --secondary: 0.1 0.018 0;
+    --secondary-foreground: 0.95 0.005 0;
+
+    --muted: 0.1 0.018 0;
+    --muted-foreground: 0.52 0.01 0;
+
+    --accent: 0.1 0.018 0;
+    --accent-foreground: 0.95 0.005 0;
+
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+
+    --border: 0.13 0.009 0;
+    --input: 0.13 0.009 0;
+    --ring: 0.78 0.16 78;
+
+    --sidebar: 0.07 0.008 0;
+    --sidebar-foreground: 0.95 0.005 0;
+    --sidebar-primary: 0.78 0.16 78;
+    --sidebar-primary-foreground: 0.04 0.006 0;
+    --sidebar-accent: 0.1 0.018 0;
+    --sidebar-accent-foreground: 0.95 0.005 0;
+    --sidebar-border: 0.13 0.009 0;
+    --sidebar-ring: 0.78 0.16 78;
+
+    /* Accent tokens — GOLD & ORANGE only */
+    --neon-gold: #f5c542;
+    --neon-orange: #ff7a18;
+    --brand-bg: #020202;
+    --brand-surface: #0a0a0a;
+    --brand-text: #ffffff;
+    --brand-text-muted: #a0a0a0;
+    --brand-border: rgba(245, 197, 66, 0.18);
+    --brand-border-active: rgba(255, 122, 24, 0.4);
+    --brand-whatsapp: #25d366;
+
+    /* Luxury gradient variables */
+    --gold-gradient: linear-gradient(
+      135deg,
+      #f5c542 0%,
+      #ffd700 35%,
+      #e8aa1b 65%,
+      #f5c542 100%
+    );
+    --gold-gradient-metallic: linear-gradient(
+      135deg,
+      #f5c542 0%,
+      #e6a817 50%,
+      #f5c542 100%
+    );
+    --gold-gradient-text: linear-gradient(
+      135deg,
+      #f5c542 0%,
+      #fff2a0 50%,
+      #e8aa1b 100%
+    );
+    --orange-gradient: linear-gradient(
+      135deg,
+      #ff7a18 0%,
+      #ff9a4a 50%,
+      #ff6000 100%
+    );
+    --section-glow: radial-gradient(
+      ellipse at top,
+      rgba(245, 197, 66, 0.04),
+      transparent 60%
+    );
+
+    --chart-1: 0.78 0.16 78;
+    --chart-2: 0.65 0.22 24;
+    --chart-3: 0.73 0.25 55;
+    --chart-4: 0.7 0.12 60;
+    --chart-5: 0.5 0.08 42;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 0;
+    color-scheme: dark;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(212, 175, 55, 0.3) transparent;
+    overscroll-behavior: none;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background-color: #050505;
+    font-family: "Inter", "Poppins", -apple-system, BlinkMacSystemFont,
+      "Segoe UI", "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
+      sans-serif;
+    font-weight: 500;
+    line-height: 1.75;
+    letter-spacing: 0.01em;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+  }
+
+  /* Warm vignette on body — fixed, pointer-events none */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 40%,
+      rgba(0, 0, 0, 0.38) 100%
+    );
+  }
+
+  #root {
+    position: relative;
+  }
+
+  /* White dot starfield float patterns — gentle drift, GPU-only (transform only) */
+  @keyframes dotFloat1 {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    25% {
+      transform: translate(12px, -14px);
+    }
+    50% {
+      transform: translate(8px, -20px);
+    }
+    75% {
+      transform: translate(-6px, -10px);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+  @keyframes dotFloat2 {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    25% {
+      transform: translate(-10px, 8px);
+    }
+    50% {
+      transform: translate(-16px, 18px);
+    }
+    75% {
+      transform: translate(-4px, 12px);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+  @keyframes dotFloat3 {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    33% {
+      transform: translate(14px, 16px);
+    }
+    66% {
+      transform: translate(-12px, 9px);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+  @keyframes dotFloat4 {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    20% {
+      transform: translate(-18px, -8px);
+    }
+    40% {
+      transform: translate(-8px, 15px);
+    }
+    60% {
+      transform: translate(16px, 20px);
+    }
+    80% {
+      transform: translate(18px, -4px);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+  /* dotPulse — subtle opacity oscillation for select dots */
+  @keyframes dotPulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.55;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ambient-dot {
+      animation: none !important;
+    }
+  }
+
+  /* backgroundPulse — opacity only (GPU-safe), 15s loop */
+  @keyframes backgroundPulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.82;
+    }
+  }
+  #root::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(
+        ellipse 70% 60% at 0% 8%,
+        rgba(245, 197, 66, 0.14) 0%,
+        transparent 65%
+      ),
+      radial-gradient(
+        ellipse 65% 55% at 100% 88%,
+        rgba(255, 122, 24, 0.12) 0%,
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse 50% 50% at 50% 50%,
+        rgba(245, 197, 66, 0.06) 0%,
+        transparent 75%
+      );
+    animation: backgroundPulse 15s ease-in-out infinite;
+    will-change: opacity;
+  }
+
+  /* Global grain texture overlay — cinematic primary layer */
+  #root::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.055;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+  }
+
+  /* Second noise layer — different frequency for film-grain depth */
+  #root > .grain-layer-2 {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.02;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.45' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise2)'/%3E%3C/svg%3E");
+    background-size: 512px 512px;
+  }
+
+  /* Ensure page content stacks above glow */
+  #root > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Cursor highlight — follows mouse via CSS vars set in App.tsx */
+  body::before {
+    content: "";
+    position: fixed;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(245, 197, 66, 0.04) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+    z-index: 0;
+    transform: translate(
+      calc(var(--cx, -200px) - 100px),
+      calc(var(--cy, -200px) - 100px)
+    );
+    will-change: transform;
+    transition: transform 0.08s linear;
+  }
+
+  h1 {
+    font-family: "Playfair Display", "Inter", "Poppins", "Apple Color Emoji",
+      "Segoe UI Emoji", "Noto Color Emoji", serif;
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "pnum" 1;
+    font-optical-sizing: auto;
+  }
+  h2,
+  h3 {
+    font-family: "Inter", "Poppins", "Apple Color Emoji", "Segoe UI Emoji",
+      "Noto Color Emoji", sans-serif;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    font-feature-settings: "kern" 1, "liga" 1;
+    font-optical-sizing: auto;
+  }
+  h4,
+  h5,
+  h6 {
+    font-family: "Inter", "Poppins", "Apple Color Emoji", "Segoe UI Emoji",
+      "Noto Color Emoji", sans-serif;
+    font-weight: 700;
+  }
+
+  p {
+    line-height: 1.8;
+    letter-spacing: 0.01em;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0a0a0a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(245, 197, 66, 0.35);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(245, 197, 66, 0.6);
+  }
+
+  ::selection {
+    background: rgba(245, 197, 66, 0.3);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgba(245, 197, 66, 0.6);
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: "Playfair Display", "Inter", "Poppins", "Apple Color Emoji",
+      "Segoe UI Emoji", "Noto Color Emoji", serif;
+    font-weight: 800;
+  }
+  .font-body {
+    font-family: "Inter", "Poppins", "Apple Color Emoji", "Segoe UI Emoji",
+      "Noto Color Emoji", sans-serif;
+    font-weight: 600;
+  }
+
+  /* Force iOS/Apple Color Emoji rendering on all platforms */
+  .emoji {
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
+      sans-serif;
+    font-style: normal;
+  }
+
+  /* ─── WORLD-CLASS TYPOGRAPHY SYSTEM ─── */
+
+  /* Editorial class — Playfair Display, 900 weight, ultra-tight */
+  .text-editorial {
+    font-family: "Playfair Display", Georgia, serif;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "pnum" 1;
+    font-optical-sizing: auto;
+  }
+
+  /* Luxury label — small uppercase overline, refined */
+  .label-luxury {
+    font-family: "Inter", "Poppins", sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    line-height: 1.4;
+  }
+
+  .luxury-heading {
+    font-family: "Playfair Display", serif;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    font-optical-sizing: auto;
+  }
+
+  .section-kicker {
+    font-family: "Inter", "Poppins", sans-serif;
+    font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+    font-weight: 800;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(245, 197, 66, 0.7);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Section heading — updated as label/kicker */
+  .section-title {
+    font-family: "Inter", "Poppins", sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(245, 197, 66, 0.7);
+    display: block;
+  }
+
+  /* Large section heading */
+  .section-title-lg {
+    font-family: "Inter", "Poppins", sans-serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: #ffffff;
+    text-align: center;
+    text-shadow: 0 2px 32px rgba(0, 0, 0, 0.5);
+  }
+
+  .body-text {
+    font-family: "Inter", "Poppins", sans-serif;
+    line-height: 1.8;
+    letter-spacing: 0.01em;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  /* ─── SECTION LAYOUT ─── */
+  .section-spacious {
+    padding: clamp(88px, 10vw, 160px) 0;
+  }
+
+  /* Editorial section luxury — generous breathing room */
+  .section-luxury {
+    padding-top: 120px;
+    padding-bottom: 120px;
+  }
+
+  /* Section gold wash — subtle connection between sections with depth */
+  .section-luxury::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(245, 197, 66, 0.04),
+      transparent
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Section heading block — editorial structure */
+  .section-heading-block {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+  .section-heading-block .overline-label {
+    display: block;
+    font-family: "Inter", "Poppins", sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(245, 197, 66, 0.6);
+    margin-bottom: 0.75rem;
+  }
+  .section-heading-block h2 {
+    font-family: "Playfair Display", Georgia, serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+  .section-heading-block .sub-desc {
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.45);
+    letter-spacing: 0.04em;
+    margin-top: 0.5rem;
+  }
+
+  .section-glow-top {
+    background: radial-gradient(
+      ellipse 80% 40% at 50% 0%,
+      rgba(245, 197, 66, 0.05),
+      transparent
+    );
+  }
+
+  /* Section gold divider accent — full-width line */
+  .section-divider-line {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(245, 197, 66, 0.3),
+      transparent
+    );
+    margin: 0 auto;
+  }
+
+  /* Inline short gold divider below headings */
+  .section-divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, #f5c542, #ff7a18, transparent);
+    margin: 1.25rem auto 0;
+    border-radius: 2px;
+  }
+  .section-divider-left {
+    margin: 1.25rem 0 0;
+  }
+
+  /* Between-section gold light bleed — editorial detail */
+  .section-light-bleed {
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(245, 197, 66, 0.15),
+      transparent
+    );
+    margin: 0 auto;
+  }
+
+  /* ─── AMBIENT LIGHTING SYSTEM ─── */
+
+  /* Hero ambient — warm centered pool with enhanced blur */
+  .ambient-hero {
+    position: relative;
+  }
+  .ambient-hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+      ellipse 85% 65% at 50% 28%,
+      rgba(245, 197, 66, 0.18) 0%,
+      transparent 68%
+    );
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(100px);
+  }
+
+  /* Section ambient glow — bottom center orange warmth with depth */
+  .ambient-section {
+    position: relative;
+  }
+  .ambient-section::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 88%;
+    height: 60%;
+    background: radial-gradient(
+      ellipse,
+      rgba(245, 130, 50, 0.12) 0%,
+      transparent 65%
+    );
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(80px);
+  }
+
+  /* Card inner warm glow — top gradient with enhanced luminance */
+  .card-inner-glow {
+    background: linear-gradient(
+      180deg,
+      rgba(245, 197, 66, 0.06) 0%,
+      transparent 55%
+    );
+    position: relative;
+  }
+
+  /* ─── GLOW UTILITIES ─── */
+  .glow-gold {
+    box-shadow: 0 0 12px rgba(245, 197, 66, 0.18), 0 0 32px
+      rgba(245, 197, 66, 0.07);
+  }
+  .glow-orange {
+    box-shadow: 0 0 14px rgba(255, 122, 24, 0.15), 0 0 36px
+      rgba(255, 122, 24, 0.05);
+  }
+  .text-glow-gold {
+    text-shadow: 0 0 24px rgba(212, 175, 55, 0.4), 0 0 48px
+      rgba(212, 175, 55, 0.18), 0 0 80px rgba(212, 175, 55, 0.08);
+  }
+  .gold-border {
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s
+      cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .gold-border:hover {
+    border-color: rgba(212, 175, 55, 0.6);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.12);
+  }
+
+  /* ─── STAGGER ANIMATION DELAY HELPERS ─── */
+  .stagger-1 {
+    animation-delay: 0.12s;
+  }
+  .stagger-2 {
+    animation-delay: 0.24s;
+  }
+  .stagger-3 {
+    animation-delay: 0.36s;
+  }
+  .stagger-4 {
+    animation-delay: 0.48s;
+  }
+  .stagger-5 {
+    animation-delay: 0.60s;
+  }
+
+  /* ─── BUTTON PRESS FEEDBACK ─── */
+  .btn-press {
+    transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-press:active {
+    transform: scale(0.97);
+    transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-press:not(:active) {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Magnetic button — transform via CSS vars --mx, --my */
+  .btn-magnetic {
+    transform: translate(var(--mx, 0px), var(--my, 0px));
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn-magnetic.magnetic-active {
+    transition: transform 0.1s linear;
+  }
+
+  /* ─── PREMIUM GOLD FILLED BUTTON ─── */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--gold-gradient-metallic);
+    background-size: 200% 100%;
+    color: #0a0a0a;
+    font-family: "Inter", "Poppins", "Apple Color Emoji", "Segoe UI Emoji",
+      "Noto Color Emoji", sans-serif;
+    font-weight: 800;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.85rem 2.25rem;
+    border-radius: 0.75rem;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s
+      cubic-bezier(0.16, 1, 0.3, 1), background-position 0.6s ease;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.18), 0 0 32px
+      rgba(212, 175, 55, 0.06), 0 4px 16px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 44px;
+  }
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.4) 0%,
+      transparent 70%
+    );
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+  .btn-primary:active::after {
+    transform: scale(4);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+  .btn-primary:hover {
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.35), 0 0 70px
+      rgba(212, 175, 55, 0.15), 0 8px 32px rgba(212, 175, 55, 0.12);
+    transform: translateY(-2px) scale(1.04);
+    background-position: 100% 0;
+  }
+  .btn-primary:active {
+    transform: scale(0.96);
+    transition: transform 0.12s ease;
+  }
+  .btn-primary:not(:active) {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s
+      cubic-bezier(0.16, 1, 0.3, 1), background-position 0.6s ease;
+  }
+
+  /* ─── ORANGE OUTLINE BUTTON ─── */
+  .btn-outline-gold {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: rgba(255, 122, 24, 0.08);
+    color: #ff7a18;
+    font-family: "Inter", "Poppins", "Apple Color Emoji", "Segoe UI Emoji",
+      "Noto Color Emoji", sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.85rem 2.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 122, 24, 0.45);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition:
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    text-decoration: none;
+    white-space: nowrap;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 44px;
+  }
+  .btn-outline-gold::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at center,
+      rgba(255, 122, 24, 0.3) 0%,
+      transparent 70%
+    );
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+  .btn-outline-gold:active::after {
+    transform: scale(4);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+  .btn-outline-gold:hover {
+    background: var(--orange-gradient);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 0 32px rgba(255, 122, 24, 0.5), 0 8px 24px
+      rgba(255, 122, 24, 0.25);
+    transform: translateY(-2px) scale(1.04);
+  }
+  .btn-outline-gold:active {
+    transform: scale(0.96);
+    transition: transform 0.12s ease;
+  }
+  .btn-outline-gold:not(:active) {
+    transition:
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ─── SUBTLE GLASS WHITE OUTLINE ─── */
+  .btn-outline-white {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.85);
+    font-family: "Inter", "Poppins", "Apple Color Emoji", "Segoe UI Emoji",
+      "Noto Color Emoji", sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.85rem 2.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition:
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    text-decoration: none;
+    white-space: nowrap;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 44px;
+  }
+  .btn-outline-white::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at center,
+      rgba(245, 197, 66, 0.3) 0%,
+      transparent 70%
+    );
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+  .btn-outline-white:active::after {
+    transform: scale(4);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+  .btn-outline-white:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: rgba(212, 175, 55, 0.5);
+    color: #f5c542;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+    transform: translateY(-2px) scale(1.02);
+  }
+  .btn-outline-white:active {
+    transform: scale(0.96);
+    transition: transform 0.12s ease;
+  }
+  .btn-outline-white:not(:active) {
+    transition:
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ─── ADVANCED GLASSMORPHISM CARD — cinematic depth ─── */
+  /* backdrop-filter removed: replaced with rich dark bg + layered box-shadow for 60fps scroll */
+  .dark-glass-card {
+    background: linear-gradient(
+      135deg,
+      rgba(20, 16, 8, 0.9) 0%,
+      rgba(12, 10, 4, 0.88) 100%
+    );
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 1rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 1px 10px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(212, 175, 55, 0.08), inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.45s
+      cubic-bezier(0.16, 1, 0.3, 1), border-color 0.45s
+      cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  /* Specular top edge on glass cards — stronger inner light */
+  .dark-glass-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 55%;
+    background: linear-gradient(
+      180deg,
+      rgba(245, 197, 66, 0.08) 0%,
+      rgba(245, 197, 66, 0.02) 50%,
+      transparent 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+    border-radius: inherit;
+  }
+  .dark-glass-card > * {
+    position: relative;
+    z-index: 1;
+  }
+  .dark-glass-card:hover {
+    border-color: rgba(212, 175, 55, 0.32);
+    box-shadow:
+      0 0 0 1px rgba(245, 197, 66, 0.35),
+      0 12px 48px rgba(0, 0, 0, 0.6),
+      0 0 32px rgba(245, 197, 66, 0.14),
+      inset 0 1px 0 rgba(212, 175, 55, 0.08),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+    transform: translateY(-6px) scale(1.01);
+    will-change: transform;
+  }
+  .dark-glass-card:not(:hover) {
+    will-change: auto;
+  }
+
+  /* Glass panel — hero badge, overlay */
+  /* backdrop-filter removed for 60fps scroll performance */
+  .glass-panel {
+    background: rgba(14, 11, 5, 0.85);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 60px rgba(212, 175, 55, 0.04),
+      inset 0 1px 0 rgba(212, 175, 55, 0.07);
+    border-radius: 1rem;
+  }
+
+  /* Static card — clean look */
+  .warm-card {
+    background: linear-gradient(
+      135deg,
+      rgba(212, 175, 55, 0.04) 0%,
+      transparent 60%
+    );
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    border-radius: 1rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35), 0 1px 8px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.45s
+      cubic-bezier(0.16, 1, 0.3, 1), border-color 0.45s
+      cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 24px;
+  }
+  .warm-card:hover {
+    border-color: rgba(212, 175, 55, 0.35);
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 24px rgba(212, 175, 55, 0.1);
+    will-change: transform;
+  }
+  .warm-card:not(:hover) {
+    will-change: auto;
+  }
+
+  /* Star rating */
+  .star-filled {
+    color: #f5c542;
+    filter: drop-shadow(0 0 4px rgba(245, 197, 66, 0.6));
+  }
+  .star-empty {
+    color: rgba(255, 255, 255, 0.15);
+  }
+
+  /* ── EDITORIAL SCROLL ANIMATION — luxurious spring curve ── */
+  .animate-section {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1), transform 0.95s
+      cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 0.05s;
+    will-change: transform, opacity;
+    animation-fill-mode: both;
+  }
+  .animate-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+    will-change: auto;
+  }
+
+  /* Stagger classes — data-delay attribute */
+  .animate-section[data-delay="1"] {
+    transition-delay: 0.12s;
+  }
+  .animate-section[data-delay="2"] {
+    transition-delay: 0.22s;
+  }
+  .animate-section[data-delay="3"] {
+    transition-delay: 0.34s;
+  }
+  .animate-section[data-delay="4"] {
+    transition-delay: 0.44s;
+  }
+  .animate-section[data-delay="5"] {
+    transition-delay: 0.56s;
+  }
+
+  /* Editorial entrance — deeper fall for hero text */
+  .animate-fade-up-editorial {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.1s
+      cubic-bezier(0.16, 1, 0.3, 1);
+    animation-fill-mode: both;
+  }
+  .animate-fade-up-editorial.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Scale reveal — for cards entering viewport */
+  .animate-scale-reveal {
+    opacity: 0;
+    transform: scale(0.97);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s
+      cubic-bezier(0.16, 1, 0.3, 1);
+    animation-fill-mode: both;
+  }
+  .animate-scale-reveal.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Named delay utilities */
+  .delay-100 {
+    transition-delay: 0.12s;
+  }
+  .delay-200 {
+    transition-delay: 0.22s;
+  }
+  .delay-300 {
+    transition-delay: 0.34s;
+  }
+  .delay-400 {
+    transition-delay: 0.44s;
+  }
+  .delay-500 {
+    transition-delay: 0.56s;
+  }
+  .delay-600 {
+    transition-delay: 0.68s;
+  }
+  .delay-700 {
+    transition-delay: 0.80s;
+  }
+
+  /* Gold gradient text */
+  .gold-text {
+    background: var(--gold-gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Gold top border accent on cards */
+  .gold-top-border {
+    border-top: 2px solid #f5c542;
+    border-radius: 0 0 1.25rem 1.25rem;
+  }
+
+  /* ─── Gold title shimmer — GPU-safe: translateX on a ::after pseudo overlay ─── */
+  /* NO background-position animation — replaced with transform: translateX() */
+  @keyframes goldShimmerMove {
+    0% {
+      transform: translateX(-120%);
+    }
+    100% {
+      transform: translateX(220%);
+    }
+  }
+
+  .title-gold-shimmer {
+    background: linear-gradient(
+      135deg,
+      #c49a28 0%,
+      #d4a843 15%,
+      #f5c542 35%,
+      #fff9b0 50%,
+      #f5c542 65%,
+      #e8b84b 80%,
+      #c49a28 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 0 60px rgba(245, 197, 66, 0.3))
+      drop-shadow(0 0 120px rgba(245, 197, 66, 0.15));
+    position: relative;
+    display: inline-block;
+    /* background-position no longer animated — static gradient only */
+  }
+  /* Shimmer light sweep using translateX — GPU composited, zero repaints */
+  .title-gold-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.28) 50%,
+      transparent 80%
+    );
+    -webkit-background-clip: unset;
+    background-clip: unset;
+    -webkit-text-fill-color: unset;
+    pointer-events: none;
+    animation: goldShimmerMove 5s ease-in-out infinite;
+    border-radius: 4px;
+  }
+
+  /* Ken Burns — cinematic slow zoom for hero bg image */
+  @keyframes kenBurns {
+    from {
+      transform: scale(1.0);
+    }
+    to {
+      transform: scale(1.08);
+    }
+  }
+  .ken-burns {
+    animation: kenBurns 24s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  /* ─── Cart & Menu Premium Utilities ─── */
+
+  /* Hide scrollbar cross-browser */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* ─── MENU CARD — Advanced glassmorphism ─── */
+  .menu-card-premium {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.02) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 1rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35), 0 1px 6px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.07), inset 0 -1px 0
+      rgba(0, 0, 0, 0.25);
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), border-color
+      0.55s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.55s
+      cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+    /* will-change removed from base: only promoted on :hover to avoid
+       holding 60+ menu cards in separate GPU layers simultaneously */
+  }
+  /* Subtle inner gradient shine */
+  .menu-card-premium::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(212, 175, 55, 0.04) 0%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.08) 100%
+    );
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .menu-card-premium > * {
+    position: relative;
+    z-index: 1;
+  }
+  .menu-card-premium:hover {
+    transform: scale(1.02) translateY(-3px);
+    border-color: rgba(212, 175, 55, 0.28);
+    box-shadow: 0 0 0 1px rgba(245, 197, 66, 0.15), 0 12px 36px
+      rgba(0, 0, 0, 0.5), 0 0 16px rgba(212, 175, 55, 0.07), 0 0 36px
+      rgba(212, 175, 55, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    will-change: transform;
+  }
+  .menu-card-premium:not(:hover) {
+    will-change: auto;
+  }
+  .menu-card-premium:active {
+    transform: scale(0.99);
+    transition: transform 0.12s ease;
+  }
+  .menu-card-premium:not(:active) {
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), border-color
+      0.55s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.55s
+      cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Popular item card — gold left border accent */
+  .popular-item-card {
+    border-left: 3px solid rgba(212, 175, 55, 0.5) !important;
+  }
+  .popular-item-card:hover {
+    border-left-color: rgba(212, 175, 55, 0.9) !important;
+  }
+
+  /* Chef pick card — persistent soft gold glow */
+  .menu-card-chef-pick {
+    border-color: rgba(212, 175, 55, 0.25) !important;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(212, 175, 55, 0.08) !important;
+  }
+  .menu-card-chef-pick:hover {
+    border-color: rgba(212, 175, 55, 0.5) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 24px
+      rgba(212, 175, 55, 0.14) !important;
+  }
+
+  /* Circular quantity button — CSS hover only */
+  .qty-btn {
+    width: 34px;
+    height: 34px;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    color: #f5c542;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s
+      cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s
+      cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qty-btn:hover {
+    background: rgba(212, 175, 55, 0.22);
+    border-color: rgba(212, 175, 55, 0.7);
+    transform: scale(1.12);
+  }
+  .qty-btn:active {
+    transform: scale(0.92);
+    transition: transform 0.1s ease;
+  }
+  .qty-btn:not(:active) {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s
+      cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s
+      cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* "Add +" button — CSS hover only */
+  .add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--gold-gradient);
+    color: #0a0a0a;
+    font-family: "Inter", "Poppins", "Apple Color Emoji", "Segoe UI Emoji",
+      "Noto Color Emoji", sans-serif;
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    padding: 9px 18px;
+    border-radius: 0.75rem;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s
+      cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 0 16px rgba(212, 175, 55, 0.2), 0 2px 8px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+    flex-shrink: 0;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 44px;
+  }
+  .add-btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.35) 0%,
+      transparent 60%
+    );
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .add-btn:active::after {
+    transform: scale(4);
+    opacity: 0;
+    transition: transform 0.45s ease, opacity 0.45s ease;
+  }
+  .add-btn:hover {
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.45), 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px) scale(1.03);
+  }
+  .add-btn:active {
+    transform: scale(0.96);
+    transition: transform 0.12s ease;
+  }
+  .add-btn:not(:active) {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s
+      cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Fire badge — static */
+  .badge-fire {
+    font-family: "Inter", "Poppins", "Apple Color Emoji", "Segoe UI Emoji",
+      "Noto Color Emoji", sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #ff7a18;
+    background: rgba(255, 122, 24, 0.12);
+    border: 1px solid rgba(255, 122, 24, 0.3);
+    border-radius: 6px;
+    padding: 2px 7px;
+    letter-spacing: 0.03em;
+    box-shadow: 0 0 8px rgba(255, 122, 24, 0.15);
+  }
+
+  /* Chef pick badge */
+  .badge-chef {
+    font-family: "Inter", "Poppins", "Apple Color Emoji", "Segoe UI Emoji",
+      "Noto Color Emoji", sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #f5c542;
+    background: rgba(245, 197, 66, 0.1);
+    border: 1px solid rgba(245, 197, 66, 0.35);
+    border-radius: 6px;
+    padding: 2px 8px;
+    box-shadow: 0 0 8px rgba(245, 197, 66, 0.1);
+  }
+
+  /* Recommended card */
+  .recommended-card {
+    min-width: 152px;
+    max-width: 152px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.04) 0%,
+      rgba(255, 255, 255, 0.01) 100%
+    );
+    border: 1px solid rgba(245, 197, 66, 0.12);
+    border-radius: 20px;
+    padding: 20px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex-shrink: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .recommended-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(245, 197, 66, 0.4);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45), 0 0 16px
+      rgba(245, 197, 66, 0.08);
+  }
+
+  /* ─── Subtle grain texture on sections ─── */
+  .grain-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
+  }
+
+  /* ─── CARD ENTRANCE ─── */
+  @keyframes cardEntrance {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .card-enter {
+    opacity: 0;
+    animation: cardEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes cardSlideIn {
+    from {
+      opacity: 0;
+      transform: translateX(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  .card-slide-in {
+    opacity: 0;
+    animation: cardSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* ─── FLOATING CART — bounce only ─── */
+  @keyframes cart-bounce {
+    0% {
+      transform: scale(1);
+    }
+    30% {
+      transform: scale(1.22);
+    }
+    55% {
+      transform: scale(0.93);
+    }
+    75% {
+      transform: scale(1.08);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  .cart-bounce {
+    animation: cart-bounce 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Pulsing gold dot for cart badge */
+  @keyframes cartDotPulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(0.7);
+    }
+  }
+  .cart-dot-pulse {
+    animation: cartDotPulse 3s ease-in-out infinite;
+  }
+
+  /* ─── WHATSAPP BUTTON — interval-based one-shot pulse ─── */
+  @keyframes wa-pulse-once {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(245, 197, 66, 0.45), 0 4px 24px
+        rgba(0, 0, 0, 0.5);
+    }
+    50% {
+      transform: scale(1.06);
+      box-shadow: 0 0 0 8px rgba(245, 197, 66, 0.06), 0 4px 24px
+        rgba(0, 0, 0, 0.5);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(245, 197, 66, 0), 0 4px 24px rgba(0, 0, 0, 0.5);
+    }
+  }
+  /* Ring expansion — like a ripple in water */
+  @keyframes wa-ring-expand {
+    0% {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+  }
+  .wa-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1.5px solid rgba(245, 197, 66, 0.4);
+    pointer-events: none;
+    animation: wa-ring-expand 2.4s ease-out forwards;
+  }
+
+  /* Legacy continuous pulse — kept for compat */
+  @keyframes wa-pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.55), 0 4px 24px
+        rgba(212, 175, 55, 0.35);
+    }
+    60% {
+      box-shadow: 0 0 0 14px rgba(212, 175, 55, 0), 0 4px 24px
+        rgba(212, 175, 55, 0.35);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(212, 175, 55, 0), 0 4px 24px
+        rgba(212, 175, 55, 0.35);
+    }
+  }
+  .wa-pulse {
+    animation: wa-pulse 3s ease-in-out infinite;
+  }
+  .wa-btn-pulsing {
+    animation: wa-pulse-once 2.0s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Floating cart button — CSS hover only */
+  .floating-cart-btn {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s
+      cubic-bezier(0.16, 1, 0.3, 1);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .floating-cart-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.6);
+  }
+  .floating-cart-btn:active {
+    transform: scale(0.94);
+    transition: transform 0.1s ease;
+  }
+  .floating-cart-btn:not(:active) {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s
+      cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Category tab active — gold */
+  .category-tab-active {
+    background: var(--gold-gradient);
+    color: #050505;
+    box-shadow: 0 0 20px rgba(245, 197, 66, 0.5);
+  }
+
+  /* Cart drawer — solid dark overlay, no blur */
+  .cart-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 59;
+    background: rgba(0, 0, 0, 0.82);
+  }
+
+  /* Cart item entrance */
+  @keyframes cartItemIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .cart-item-enter {
+    animation: cartItemIn 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Activity text — static */
+  .activity-text {
+    opacity: 0.6;
+  }
+
+  /* ─── PREMIUM BADGE PILLS ─── */
+  .badge-chef-pick-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: linear-gradient(
+      135deg,
+      rgba(212, 168, 67, 0.18),
+      rgba(232, 160, 32, 0.1)
+    );
+    border: 1px solid rgba(212, 168, 67, 0.5);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-family: "Poppins", "Apple Color Emoji", sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    color: #f5c542;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px rgba(212, 168, 67, 0.2), inset 0 1px 0
+      rgba(255, 255, 255, 0.08);
+    white-space: nowrap;
+  }
+
+  .badge-bestseller-pill {
+    display: inline-block;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 122, 24, 0.18),
+      rgba(245, 197, 66, 0.12)
+    );
+    border: 1px solid rgba(255, 122, 24, 0.45);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-family: "Poppins", "Apple Color Emoji", sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    color: #ff7a18;
+    letter-spacing: 0.04em;
+    box-shadow: 0 0 8px rgba(255, 122, 24, 0.18), inset 0 1px 0
+      rgba(255, 255, 255, 0.06);
+    white-space: nowrap;
+  }
+
+  .badge-most-ordered-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 122, 24, 0.15),
+      rgba(232, 160, 32, 0.08)
+    );
+    border: 1px solid rgba(255, 122, 24, 0.4);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-family: "Poppins", "Apple Color Emoji", sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    color: #ff7a18;
+    letter-spacing: 0.04em;
+    box-shadow: 0 0 8px rgba(255, 122, 24, 0.15);
+    white-space: nowrap;
+  }
+
+  .badge-chef-favorite-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: linear-gradient(
+      135deg,
+      rgba(212, 168, 67, 0.14),
+      rgba(180, 130, 30, 0.08)
+    );
+    border: 1px solid rgba(212, 168, 67, 0.42);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-family: "Poppins", "Apple Color Emoji", sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    color: #d4a843;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    box-shadow: 0 0 8px rgba(212, 168, 67, 0.12);
+    white-space: nowrap;
+  }
+
+  .badge-trending-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(245, 197, 66, 0.28);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-family: "Poppins", "Apple Color Emoji", sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    color: rgba(245, 197, 66, 0.82);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  /* ─── WHATSAPP ORDER LINK ─── */
+  .wa-order-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 11px;
+    padding: 5px 13px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 122, 24, 0.4);
+    color: #ff7a18;
+    background: rgba(255, 122, 24, 0.06);
+    font-family: "Poppins", "Apple Color Emoji", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background 0.25s ease,
+      color 0.25s ease,
+      border-color 0.25s ease,
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+    /* will-change removed: not actively animating at rest */
+    white-space: nowrap;
+  }
+  .wa-order-link:hover {
+    background: rgba(255, 122, 24, 0.88);
+    color: #0a0602;
+    border-color: rgba(255, 122, 24, 0.9);
+    transform: scale(1.03);
+    box-shadow: 0 0 14px rgba(255, 122, 24, 0.4);
+  }
+
+  /* Simple static loading placeholder */
+  .skeleton-shimmer {
+    background: rgba(20, 14, 8, 0.85);
+    border: 1px solid rgba(212, 168, 67, 0.07);
+  }
+
+  /* ─── FLY-TO-CART PARTICLE — CSS-only ─── */
+  @keyframes flyToCartAnim {
+    0% {
+      transform: translate(0, 0) scale(1);
+      opacity: 1;
+    }
+    60% {
+      transform: translate(calc(var(--fly-x) * 0.6), calc(var(--fly-y) * 0.6))
+        scale(0.6);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translate(var(--fly-x), var(--fly-y)) scale(0.15);
+      opacity: 0;
+    }
+  }
+  .fly-particle {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #f5c542, #ff7a18);
+    box-shadow: 0 0 10px rgba(245, 197, 66, 0.7);
+    pointer-events: none;
+    z-index: 9999;
+    --fly-x: 0px;
+    --fly-y: 0px;
+    animation: flyToCartAnim 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
+  /* ─── NAVBAR sliding underline for nav links ─── */
+  .nav-link-underline {
+    position: relative;
+    display: inline-block;
+  }
+  .nav-link-underline::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #d4af37, #ff7a18);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .nav-link-underline:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* ─── HERO CTA GLOW BUTTON ─── */
+  .hero-cta-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: linear-gradient(135deg, #f5c542 0%, #e6a817 50%, #f5c542 100%);
+    background-size: 200% 100%;
+    color: #0a0a0a;
+    font-family: "Inter", "Poppins", "Apple Color Emoji", sans-serif;
+    font-weight: 900;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    border-radius: 0.875rem;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s
+      cubic-bezier(0.16, 1, 0.3, 1), background-position 0.4s ease;
+    text-decoration: none;
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.25), 0 6px 24px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 44px;
+  }
+  .hero-cta-primary:hover {
+    box-shadow: 0 0 60px rgba(212, 175, 55, 0.5), 0 10px 40px
+      rgba(212, 175, 55, 0.2);
+    transform: translateY(-3px) scale(1.04);
+    background-position: 100% 0;
+  }
+  .hero-cta-primary:active {
+    transform: scale(0.96);
+    transition: transform 0.12s ease;
+  }
+  .hero-cta-primary:not(:active) {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s
+      cubic-bezier(0.16, 1, 0.3, 1), background-position 0.6s ease;
+  }
+
+  /* ─── CTA PERIODIC GLOW PULSE ─── */
+  /* GPU-safe: animates opacity only on a pseudo-element that has a static
+     box-shadow. No box-shadow changes per frame → zero repaints. */
+  @keyframes ctaGlowPulseOpacity {
+    0% {
+      opacity: 0;
+    }
+    40% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  .hero-btn-gold.cta-glow-pulse::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    box-shadow: 0 0 50px rgba(212, 175, 55, 0.55), 0 0 80px
+      rgba(212, 175, 55, 0.2);
+    pointer-events: none;
+    z-index: -1;
+    animation: ctaGlowPulseOpacity 3s ease-in-out forwards;
+  }
+
+  /* ─── CTA GLOW SWEEP — shimmer left-to-right ─── */
+  @keyframes ctaGlowSweep {
+    0% {
+      background-position: -200% center;
+    }
+    100% {
+      background-position: 200% center;
+    }
+  }
+  .hero-btn-gold.cta-glow-sweep::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      105deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.22) 50%,
+      transparent 70%
+    );
+    background-size: 200% 100%;
+    animation: ctaGlowSweep 1.6s ease-in-out forwards;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* ─── RADIAL GRADIENT OVERLAY ─── */
+  .gradient-overlay {
+    background: radial-gradient(
+      ellipse at center,
+      rgba(245, 197, 66, 0.03) 0%,
+      transparent 70%
+    );
+  }
+
+  /* ─── PAGE LOADER ─── */
+  @keyframes pageLoad {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .page-fade-in {
+    animation: pageLoad 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes loaderSpin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes loaderFadeOut {
+    0% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+  .page-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #050505;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    animation: loaderFadeOut 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+  }
+  .page-loader-ring {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 2.5px solid rgba(245, 197, 66, 0.12);
+    border-top-color: #f5c542;
+    animation: loaderSpin 0.9s linear infinite;
+    box-shadow: 0 0 20px rgba(245, 197, 66, 0.25);
+  }
+
+  /* ─── URGENCY BANNER SHIMMER ─── */
+  @keyframes bannerShimmer {
+    0% {
+      background-position: -200% center;
+    }
+    100% {
+      background-position: 200% center;
+    }
+  }
+
+  /* ─── PREMIUM SECTION SPACING ─── */
+  .section-premium {
+    padding: 80px 0;
+  }
+
+  /* ─── GLASS CARD PREMIUM — deep glassmorphism ─── */
+  /* backdrop-filter removed for 60fps scroll performance */
+  .glass-card-premium {
+    background: rgba(16, 12, 6, 0.88);
+    border: 1px solid rgba(212, 175, 55, 0.12);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55), inset 0 1px 0
+      rgba(212, 175, 55, 0.06);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ─── SHINE SWEEP — sweeps left-to-right on hover ─── */
+  .shine-sweep {
+    position: relative;
+    overflow: hidden;
+  }
+  .shine-sweep::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.06) 50%,
+      transparent 100%
+    );
+    transform: translateX(-100%);
+    transition: transform 1.0s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .shine-sweep:hover::after {
+    transform: translateX(100%);
+  }
+
+  /* ─── WARM TINT HOVER — subtle orange overlay on hover ─── */
+  .warm-tint-hover {
+    position: relative;
+    overflow: hidden;
+  }
+  .warm-tint-hover::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 122, 24, 0.08);
+    opacity: 0;
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    z-index: 1;
+    border-radius: inherit;
+  }
+  .warm-tint-hover:hover::before {
+    opacity: 1;
+  }
+
+  /* ─── CARD HOVER LIFT — premium lift with enhanced shadow ─── */
+  .card-hover-lift {
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.45s
+      cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .card-hover-lift:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55), 0 0 24px
+      rgba(245, 197, 66, 0.1);
+  }
+  .card-hover-lift:not(:hover) {
+    will-change: auto;
+  }
+
+  /* ─── SECTION DIVIDER — full-width gradient separator ─── */
+  .section-divider-full {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(245, 197, 66, 0.15),
+      transparent
+    );
+    margin: 0 auto;
+    max-width: 200px;
+  }
+
+  /* ─── BADGE GOLD — solid gold badge ─── */
+  .badge-gold {
+    background: #f5c542;
+    color: #050505;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    font-family: "Inter", "Poppins", "Apple Color Emoji", sans-serif;
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  /* ─── BADGE SIGNATURE — gold-to-orange gradient badge ─── */
+  .badge-signature {
+    background: linear-gradient(135deg, #f5c542, #ff7a18);
+    color: #050505;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    font-family: "Inter", "Poppins", "Apple Color Emoji", sans-serif;
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  /* ─── BTN GLOW GOLD — gold glow on hover ─── */
+  .btn-glow-gold {
+    transition: box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s
+      cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn-glow-gold:hover {
+    box-shadow: 0 0 20px rgba(245, 197, 66, 0.35), 0 4px 15px
+      rgba(245, 197, 66, 0.15);
+    transform: translateY(-1px) scale(1.03);
+  }
+  .btn-glow-gold:active {
+    transform: scale(0.97);
+    transition-duration: 0.12s;
+  }
+
+  /* ─── LOYALTY CARD ANIMATIONS ─── */
+  @keyframes loyaltyShimmer {
+    0% {
+      background-position: -200% center;
+    }
+    100% {
+      background-position: 200% center;
+    }
+  }
+
+  .loyalty-reward-shimmer {
+    background: linear-gradient(
+      90deg,
+      #f5c542 0%,
+      #fff8e1 40%,
+      #f5c542 60%,
+      #ff7a18 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: loyaltyShimmer 2s linear infinite;
+  }
+
+  @keyframes loyaltyStampPop {
+    0% {
+      transform: scale(0.6);
+      opacity: 0;
+    }
+    60% {
+      transform: scale(1.15);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .loyalty-reward-shimmer {
+      animation: none !important;
+      background: #f5c542;
+    }
+    .loyalty-reward-shimmer {
+      -webkit-text-fill-color: #f5c542;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-section,
+    .animate-fade-up-editorial,
+    .animate-scale-reveal {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      will-change: auto !important;
+    }
+    .card-enter,
+    .card-slide-in,
+    .cart-item-enter {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .wa-pulse,
+    .wa-btn-pulsing {
+      animation: none !important;
+    }
+    .hero-btn-gold.cta-glow-pulse::after,
+    .hero-btn-gold.cta-glow-sweep::before {
+      animation: none !important;
+    }
+    .title-gold-shimmer::after {
+      animation: none !important;
+    }
+    .ken-burns {
+      animation: none !important;
+    }
+    body {
+      animation: none !important;
+    }
+    .cart-dot-pulse,
+    .wa-ring {
+      animation: none !important;
+    }
+    #root::before {
+      animation: none !important;
+      will-change: auto !important;
+      opacity: 1 !important;
+    }
+    .bg-shimmer-sweep,
+    .ambient-particle,
+    .shimmer-line {
+      animation: none !important;
+    }
+    * {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+
+  /* ─── CONTENT VISIBILITY — removed to prevent scroll jumps on Contact section ─── */
+}
