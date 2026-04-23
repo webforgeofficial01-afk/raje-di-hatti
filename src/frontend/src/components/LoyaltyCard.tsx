@@ -50,7 +50,7 @@ export default function LoyaltyCard() {
       <section
         id="loyalty"
         style={{
-          padding: "80px 0",
+          padding: "clamp(48px, 7vw, 80px) 0",
           background: "#050505",
           position: "relative",
         }}
@@ -68,7 +68,7 @@ export default function LoyaltyCard() {
           }}
         />
 
-        <div className="relative z-10 max-w-lg mx-auto px-6">
+        <div className="relative z-10 max-w-lg mx-auto px-4 sm:px-6">
           {/* Heading */}
           <div
             className="section-heading-block animate-section mb-8"
@@ -114,7 +114,7 @@ export default function LoyaltyCard() {
                 ? "1px solid rgba(245,197,66,.6)"
                 : "1px solid rgba(255,255,255,.08)",
               borderRadius: "20px",
-              padding: "32px 28px",
+              padding: "clamp(20px, 4vw, 32px) clamp(16px, 3.5vw, 28px)",
               boxShadow: goldStatus
                 ? "0 0 40px rgba(245,197,66,.22), 0 8px 40px rgba(0,0,0,.45)"
                 : "0 8px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.05)",
@@ -166,8 +166,8 @@ export default function LoyaltyCard() {
                   >
                     <div
                       style={{
-                        width: "52px",
-                        height: "52px",
+                        width: "clamp(40px, 10vw, 52px)",
+                        height: "clamp(40px, 10vw, 52px)",
                         borderRadius: "50%",
                         display: "flex",
                         alignItems: "center",

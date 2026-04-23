@@ -405,7 +405,7 @@
   /* Luxury label — small uppercase overline, refined */
   .label-luxury {
     font-family: "Inter", "Poppins", sans-serif;
-    font-size: 0.7rem;
+    font-size: clamp(0.7rem, 1.5vw, 0.85rem);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -424,7 +424,7 @@
 
   .section-kicker {
     font-family: "Inter", "Poppins", sans-serif;
-    font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+    font-size: clamp(0.75rem, 1.5vw, 0.85rem);
     font-weight: 800;
     letter-spacing: 0.28em;
     text-transform: uppercase;
@@ -437,7 +437,7 @@
   .section-title {
     font-family: "Inter", "Poppins", sans-serif;
     font-weight: 700;
-    font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+    font-size: clamp(0.75rem, 1.5vw, 0.85rem);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: rgba(245, 197, 66, 0.7);
@@ -470,8 +470,8 @@
 
   /* Editorial section luxury — generous breathing room */
   .section-luxury {
-    padding-top: 120px;
-    padding-bottom: 120px;
+    padding-top: clamp(56px, 8vw, 120px);
+    padding-bottom: clamp(56px, 8vw, 120px);
   }
 
   /* Section gold wash — subtle connection between sections with depth */
@@ -500,7 +500,7 @@
   .section-heading-block .overline-label {
     display: block;
     font-family: "Inter", "Poppins", sans-serif;
-    font-size: 0.7rem;
+    font-size: clamp(0.7rem, 1.5vw, 0.85rem);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -2190,4 +2190,29 @@
   }
 
   /* ─── CONTENT VISIBILITY — removed to prevent scroll jumps on Contact section ─── */
+
+  /* ─── MOBILE SPACING OVERRIDES ─── */
+  @media (max-width: 480px) {
+    /* Warm card reduced padding on tiny screens */
+    .warm-card {
+      padding: 16px;
+    }
+
+    /* Section heading block margin */
+    .section-heading-block {
+      margin-bottom: 2rem;
+    }
+
+    /* Dark glass card — reduce padding on very small screens */
+    .dark-glass-card {
+      border-radius: 0.875rem;
+    }
+
+    /* Recommended card — ensure minimum readable padding */
+    .recommended-card {
+      min-width: 136px;
+      max-width: 136px;
+      padding: 16px 10px;
+    }
+  }
 }

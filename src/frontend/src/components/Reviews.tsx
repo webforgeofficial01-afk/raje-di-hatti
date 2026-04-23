@@ -87,7 +87,7 @@ function ReviewCard({
         border: "1px solid rgba(245,197,66,0.18)",
         borderLeft: "4px solid #f5c542",
         borderRadius: "16px",
-        padding: "20px",
+        padding: "clamp(14px, 3vw, 20px)",
         position: "relative",
         overflow: "hidden",
         transitionDelay: `${delay}ms`,
@@ -283,7 +283,8 @@ function SubmitReviewForm() {
 
   return (
     <div
-      className="dark-glass-card p-8 max-w-2xl mx-auto mt-14"
+      className="dark-glass-card max-w-2xl mx-auto mt-10"
+      style={{ padding: "clamp(20px, 4vw, 32px)" }}
       data-ocid="reviews.dialog"
     >
       <h3
@@ -455,7 +456,7 @@ function LiveReviews() {
       >
         Recent Customer Reviews
       </h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
         {(reviews as Review[]).map((review, i) => (
           <ReviewCard
             key={review.id}
@@ -475,11 +476,14 @@ export default function Reviews() {
   return (
     <section
       id="reviews"
-      style={{ backgroundColor: "#0a0602", padding: "120px 0" }}
+      style={{
+        backgroundColor: "#0a0602",
+        padding: "clamp(56px, 8vw, 120px) 0",
+      }}
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         {/* Section header */}
-        <div className="text-center mb-14 animate-section">
+        <div className="text-center mb-10 animate-section">
           <span className="section-kicker">Reviews</span>
           <h2
             style={{
@@ -517,9 +521,9 @@ export default function Reviews() {
               "linear-gradient(135deg, rgba(245,197,66,0.06) 0%, rgba(255,122,24,0.03) 100%)",
             border: "1px solid rgba(245,197,66,0.2)",
             borderRadius: "20px",
-            padding: "36px 32px",
+            padding: "clamp(20px, 4vw, 36px) clamp(16px, 4vw, 32px)",
             maxWidth: "520px",
-            margin: "0 auto 56px",
+            margin: "0 auto 40px",
             textAlign: "center",
             position: "relative",
             overflow: "hidden",
@@ -637,7 +641,7 @@ export default function Reviews() {
 
         {/* Featured review cards */}
         <div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5"
           data-ocid="reviews.list"
         >
           {FEATURED_REVIEWS.map((rev, i) => (

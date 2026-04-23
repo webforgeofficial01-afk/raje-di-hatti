@@ -116,7 +116,7 @@ export default function Location() {
       id="delivery"
       style={{
         backgroundColor: "#0d0905",
-        padding: "100px 0",
+        padding: "clamp(56px, 8vw, 100px) 0",
         position: "relative",
         overflow: "hidden",
       }}
@@ -138,9 +138,9 @@ export default function Location() {
         }}
       />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6">
         {/* ── HEADER ── */}
-        <div className="animate-section text-center mb-14">
+        <div className="animate-section text-center mb-10">
           <span className="section-kicker">Delivery</span>
           <h2
             style={{
@@ -237,9 +237,10 @@ export default function Location() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: "20px",
-            marginBottom: "40px",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(min(100%, 240px), 1fr))",
+            gap: "16px",
+            marginBottom: "32px",
           }}
         >
           {ZONES.map((zone, i) => (
@@ -250,7 +251,7 @@ export default function Location() {
                 background: zone.bg,
                 border: `1px solid ${zone.borderColor}`,
                 borderRadius: "20px",
-                padding: "26px 24px",
+                padding: "clamp(18px, 4vw, 26px) clamp(16px, 3vw, 24px)",
                 transitionDelay: `${i * 80}ms`,
                 transition:
                   "transform 0.45s cubic-bezier(0.16,1,0.3,1), box-shadow 0.45s cubic-bezier(0.16,1,0.3,1), border-color 0.45s cubic-bezier(0.16,1,0.3,1)",

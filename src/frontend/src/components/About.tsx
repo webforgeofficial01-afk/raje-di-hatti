@@ -16,7 +16,7 @@ export default function About() {
       id="story"
       style={{
         backgroundColor: "#0a0602",
-        padding: "120px 0",
+        padding: "clamp(56px, 8vw, 120px) 0",
         position: "relative",
         overflow: "hidden",
       }}
@@ -50,7 +50,7 @@ export default function About() {
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Image side */}
           <div className="relative">
@@ -194,7 +194,7 @@ export default function About() {
             <div
               style={{
                 marginTop: "32px",
-                padding: "24px",
+                padding: "clamp(16px, 3.5vw, 24px)",
                 background:
                   "linear-gradient(135deg, rgba(245,197,66,0.06) 0%, rgba(255,122,24,0.03) 100%)",
                 border: "1px solid rgba(245,197,66,0.18)",
@@ -203,16 +203,16 @@ export default function About() {
                 WebkitBackdropFilter: "blur(8px)",
               }}
             >
-              <div className="flex gap-8">
+              <div className="flex gap-4 sm:gap-8 min-w-0">
                 {aboutStats.map((stat, i) => (
                   <div
                     key={stat.label}
-                    className="flex flex-col"
+                    className="flex flex-col min-w-0"
                     style={
                       i > 0
                         ? {
                             borderLeft: "1px solid rgba(212,168,67,0.18)",
-                            paddingLeft: "28px",
+                            paddingLeft: "clamp(12px, 3vw, 28px)",
                           }
                         : {}
                     }
@@ -222,7 +222,7 @@ export default function About() {
                         fontFamily: "Playfair Display, Georgia, serif",
                         color: "#f5c542",
                         filter: "drop-shadow(0 0 8px rgba(245,197,66,0.4))",
-                        fontSize: "1.8rem",
+                        fontSize: "clamp(1.3rem, 4vw, 1.8rem)",
                         fontWeight: 900,
                         lineHeight: 1,
                       }}

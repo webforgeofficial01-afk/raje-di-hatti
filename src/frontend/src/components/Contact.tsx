@@ -143,7 +143,7 @@ export default function Contact() {
       id="contact"
       style={{
         backgroundColor: "#0a0602",
-        padding: "100px 0",
+        padding: "clamp(56px, 8vw, 100px) 0",
         position: "relative",
         overflow: "hidden",
       }}
@@ -165,9 +165,9 @@ export default function Contact() {
         }}
       />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-12">
         {/* ── HEADER ── */}
-        <div className="animate-section text-center mb-14">
+        <div className="animate-section text-center mb-10">
           <span className="section-kicker">Contact</span>
           <h2
             style={{
@@ -189,14 +189,16 @@ export default function Contact() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-            gap: "32px",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
+            gap: "24px",
             alignItems: "start",
           }}
         >
           {/* LEFT — Contact Form */}
           <div
-            className="animate-section dark-glass-card p-8"
+            className="animate-section dark-glass-card"
+            style={{ padding: "clamp(20px, 4vw, 32px)" }}
             data-ocid="contact.dialog"
           >
             <h3
@@ -221,7 +223,7 @@ export default function Contact() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
                   gap: "12px",
                 }}
               >
@@ -403,7 +405,11 @@ export default function Contact() {
             style={{ display: "flex", flexDirection: "column", gap: "20px" }}
           >
             {/* Info card */}
-            <div className="dark-glass-card p-7" data-ocid="contact.info.card">
+            <div
+              className="dark-glass-card"
+              style={{ padding: "clamp(20px, 4vw, 28px)" }}
+              data-ocid="contact.info.card"
+            >
               <h3
                 style={{
                   fontFamily: "Playfair Display, Georgia, serif",

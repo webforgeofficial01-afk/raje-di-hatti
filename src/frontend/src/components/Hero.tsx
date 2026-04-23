@@ -29,11 +29,10 @@ function useMagnetic(strength = 5) {
     ).matches;
     if (prefersReduced) return;
 
-    // RAF throttle: getBoundingClientRect called at most once per frame
     let rafId: number | null = null;
 
     const onMouseMove = (e: MouseEvent) => {
-      if (rafId !== null) return; // skip if RAF already pending
+      if (rafId !== null) return;
       const clientX = e.clientX;
       const clientY = e.clientY;
       rafId = requestAnimationFrame(() => {
@@ -85,7 +84,6 @@ export default function Hero() {
   const [urgencyIdx, setUrgencyIdx] = useState(0);
   const [urgencyVisible, setUrgencyVisible] = useState(true);
 
-  // Urgency line rotator — cycles every 8s
   useEffect(() => {
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -102,7 +100,6 @@ export default function Hero() {
     return () => clearInterval(interval);
   }, []);
 
-  // Subtle parallax on hero photo — GPU transform only
   useEffect(() => {
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -125,7 +122,6 @@ export default function Hero() {
     };
   }, []);
 
-  // Periodic CTA glow pulse every 9 seconds
   useEffect(() => {
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -202,7 +198,7 @@ export default function Hero() {
         />
       </div>
 
-      {/* Authority ribbon — fades in at 1.5s */}
+      {/* Authority ribbon */}
       <div
         className="absolute top-20 left-1/2 -translate-x-1/2 z-20 pointer-events-none hero-fade-in"
         style={{ animationDelay: "1.5s", whiteSpace: "nowrap" }}
@@ -254,8 +250,8 @@ export default function Hero() {
       />
 
       {/* ── CONTENT ── */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-16 py-20 md:py-28 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto w-full hero-content-padding">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           {/* LEFT — Staggered text content */}
           <div>
             {/* Overline kicker */}
@@ -284,11 +280,11 @@ export default function Hero() {
               }}
             />
 
-            {/* ── RESTAURANT NAME — Playfair Display 900, gold shimmer ── */}
+            {/* ── RESTAURANT NAME ── */}
             <h1
               className="mb-2 hero-slide-up title-gold-shimmer text-editorial"
               style={{
-                fontSize: "clamp(3rem, 7.5vw, 5rem)",
+                fontSize: "clamp(2.4rem, 7.5vw, 5rem)",
                 animationDelay: "0s",
                 lineHeight: 1.06,
               }}
@@ -296,14 +292,14 @@ export default function Hero() {
               Raje Di Hatti
             </h1>
 
-            {/* Tagline — italic serif, muted gold */}
+            {/* Tagline */}
             <p
               className="mb-4 hero-slide-up"
               style={{
                 fontFamily: "Playfair Display, Georgia, serif",
                 fontStyle: "italic",
                 fontWeight: 700,
-                fontSize: "clamp(1.1rem, 2.8vw, 1.5rem)",
+                fontSize: "clamp(1rem, 2.8vw, 1.5rem)",
                 color: "rgba(245,197,66,0.78)",
                 letterSpacing: "0.01em",
                 lineHeight: 1.4,
@@ -313,7 +309,7 @@ export default function Hero() {
               Burari's Most Loved Taste
             </p>
 
-            {/* Trust badges row — glass pills */}
+            {/* Trust badges row */}
             <div
               className="flex flex-wrap gap-2 mb-5 hero-fade-in"
               style={{ animationDelay: "0.2s" }}
@@ -339,13 +335,13 @@ export default function Hero() {
               ))}
             </div>
 
-            {/* Psychological triggers — sensory + authenticity */}
+            {/* Psychological triggers */}
             <p
               className="mb-2 hero-fade-in"
               style={{
                 fontFamily: "Poppins, sans-serif",
                 fontWeight: 600,
-                fontSize: "clamp(0.85rem, 1.8vw, 1rem)",
+                fontSize: "clamp(0.8rem, 1.8vw, 1rem)",
                 color: "rgba(245,240,232,0.72)",
                 letterSpacing: "0.04em",
                 lineHeight: 1.6,
@@ -355,13 +351,13 @@ export default function Hero() {
               Authentic Punjabi flavors, made fresh every morning
             </p>
 
-            {/* Sensory copy — italic gold hunger trigger */}
+            {/* Sensory copy */}
             <p
               className="mb-2 hero-fade-in"
               style={{
                 fontFamily: "Playfair Display, Georgia, serif",
                 fontStyle: "italic",
-                fontSize: "clamp(0.9rem, 1.9vw, 1.05rem)",
+                fontSize: "clamp(0.85rem, 1.9vw, 1.05rem)",
                 color: "rgba(245,197,66,0.68)",
                 letterSpacing: "0.01em",
                 lineHeight: 1.55,
@@ -396,7 +392,7 @@ export default function Hero() {
 
             {/* Urgency rotator */}
             <div
-              className="mb-5 hero-fade-in"
+              className="mb-4 hero-fade-in"
               style={{ animationDelay: "0.41s", minHeight: "20px" }}
             >
               <p
@@ -422,7 +418,7 @@ export default function Hero() {
 
             {/* Opening hours + delivery */}
             <div
-              className="mb-6 hero-fade-in"
+              className="mb-5 hero-fade-in"
               style={{ animationDelay: "0.44s" }}
             >
               <span
@@ -453,14 +449,14 @@ export default function Hero() {
                 height: "2px",
                 background:
                   "linear-gradient(90deg, #d4a843, rgba(212,168,67,0.28), transparent)",
-                marginBottom: "1.6rem",
+                marginBottom: "1.4rem",
                 animationDelay: "0.46s",
                 borderRadius: "2px",
               }}
             />
 
-            {/* ── CTAs — staggered ── */}
-            <div className="flex flex-wrap gap-3 mb-5">
+            {/* ── CTAs ── */}
+            <div className="flex flex-wrap gap-3 mb-4">
               {/* Primary — Order Now */}
               <button
                 ref={(el) => {
@@ -524,7 +520,7 @@ export default function Hero() {
 
             {/* FOMO micro-copy */}
             <div
-              className="hero-fade-in flex flex-col gap-0.5 mb-5"
+              className="hero-fade-in flex flex-col gap-0.5 mb-4"
               style={{ animationDelay: "0.76s" }}
             >
               <p
@@ -579,12 +575,11 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* RIGHT — Restaurant photo with parallax (desktop only) */}
+          {/* RIGHT — Restaurant photo (desktop only) */}
           <div
             className="relative hidden lg:flex justify-end items-center hero-fade-in"
             style={{ animationDelay: "0.28s" }}
           >
-            {/* Outer ambient glow */}
             <div
               aria-hidden
               className="absolute inset-0 rounded-3xl pointer-events-none"
@@ -596,7 +591,6 @@ export default function Hero() {
               }}
             />
 
-            {/* Gold gradient frame */}
             <div
               className="relative rounded-3xl p-[2px]"
               style={{
@@ -613,7 +607,6 @@ export default function Hero() {
                   aspectRatio: "4/3",
                 }}
               >
-                {/* Parallax image layer */}
                 <div
                   ref={photoRef}
                   style={{
@@ -633,7 +626,6 @@ export default function Hero() {
                   />
                 </div>
 
-                {/* Vignette */}
                 <div
                   className="absolute inset-0 rounded-3xl pointer-events-none"
                   style={{
@@ -642,7 +634,6 @@ export default function Hero() {
                     zIndex: 1,
                   }}
                 />
-                {/* Chef's Signature badge */}
                 <div
                   className="absolute top-4 left-4"
                   style={{
@@ -688,7 +679,12 @@ export default function Hero() {
       </div>
 
       <style>{`
-        /* ── Cinematic gradient background — simulates tandoor warmth ── */
+        /* Responsive hero content padding */
+        .hero-content-padding {
+          padding: clamp(48px, 8vw, 112px) clamp(16px, 4vw, 64px);
+        }
+
+        /* ── Cinematic gradient background ── */
         @keyframes cinematicBgShift {
           0%   { background-position: 0% 0%; }
           33%  { background-position: 100% 50%; }
@@ -716,7 +712,6 @@ export default function Hero() {
           background-size: 256px 256px;
         }
 
-        /* ── Staggered CTA entry ── */
         @keyframes ctaStaggerIn {
           from { opacity: 0; transform: translateY(18px); }
           to   { opacity: 1; transform: translateY(0); }
@@ -789,7 +784,7 @@ export default function Hero() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 13px 28px;
+          padding: 13px 24px;
           border-radius: 12px;
           font-family: Poppins, sans-serif;
           font-weight: 700;
@@ -806,7 +801,8 @@ export default function Hero() {
                       background-position 0.6s ease;
           touch-action: manipulation;
           -webkit-tap-highlight-color: transparent;
-          min-height: 44px;
+          min-height: 48px;
+          min-width: 120px;
         }
         .hero-btn-gold:hover {
           transform: scale(1.04) translateY(-2px);
@@ -822,7 +818,7 @@ export default function Hero() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 13px 24px;
+          padding: 13px 20px;
           border-radius: 12px;
           font-family: Poppins, sans-serif;
           font-weight: 700;
@@ -838,7 +834,8 @@ export default function Hero() {
                       box-shadow 0.5s cubic-bezier(0.16,1,0.3,1);
           touch-action: manipulation;
           -webkit-tap-highlight-color: transparent;
-          min-height: 44px;
+          min-height: 48px;
+          min-width: 120px;
         }
         .hero-btn-orange:hover {
           transform: scale(1.04) translateY(-2px);
@@ -853,7 +850,7 @@ export default function Hero() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 13px 22px;
+          padding: 13px 18px;
           border-radius: 12px;
           font-family: Poppins, sans-serif;
           font-weight: 700;
@@ -872,7 +869,7 @@ export default function Hero() {
                       border-color 0.5s cubic-bezier(0.16,1,0.3,1);
           touch-action: manipulation;
           -webkit-tap-highlight-color: transparent;
-          min-height: 44px;
+          min-height: 48px;
         }
         .hero-btn-outline:hover {
           transform: scale(1.04) translateY(-2px);

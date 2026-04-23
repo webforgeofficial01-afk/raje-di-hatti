@@ -50,7 +50,7 @@ export default function WhyChooseUs() {
       <section
         style={{
           backgroundColor: "#0d0905",
-          padding: "120px 0",
+          padding: "clamp(56px, 8vw, 120px) 0",
           position: "relative",
           overflow: "hidden",
         }}
@@ -71,8 +71,8 @@ export default function WhyChooseUs() {
           }}
         />
 
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="text-center mb-16 animate-section">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+          <div className="text-center mb-10 animate-section">
             <span className="section-kicker">Why Us</span>
             <h2
               style={{
@@ -103,7 +103,7 @@ export default function WhyChooseUs() {
                       "linear-gradient(135deg, rgba(245,197,66,0.04) 0%, rgba(255,122,24,0.02) 100%)",
                     border: "1px solid rgba(245,197,66,0.12)",
                     borderRadius: "20px",
-                    padding: "32px 28px",
+                    padding: "clamp(20px, 4vw, 32px) clamp(18px, 3.5vw, 28px)",
                     position: "relative",
                     overflow: "hidden",
                     transitionDelay: `${i * 80}ms`,
@@ -143,7 +143,7 @@ export default function WhyChooseUs() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      marginBottom: "24px",
+                      marginBottom: "18px",
                       boxShadow: "0 0 16px rgba(245,197,66,0.1)",
                       transition:
                         "box-shadow 0.35s cubic-bezier(0.4,0,0.2,1), transform 0.35s cubic-bezier(0.4,0,0.2,1)",
@@ -301,7 +301,7 @@ export default function WhyChooseUs() {
       <section
         style={{
           backgroundColor: "#060401",
-          padding: "100px 0",
+          padding: "clamp(56px, 8vw, 100px) 0",
           position: "relative",
           overflow: "hidden",
           textAlign: "center",
@@ -333,7 +333,7 @@ export default function WhyChooseUs() {
           }}
         />
 
-        <div className="relative z-10 max-w-3xl mx-auto px-6">
+        <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6">
           <div className="animate-section">
             <span className="section-kicker">Ready to Order?</span>
             <h2
@@ -385,7 +385,7 @@ export default function WhyChooseUs() {
                   fontSize: "0.9rem",
                   letterSpacing: "0.06em",
                   textTransform: "uppercase",
-                  padding: "14px 36px",
+                  padding: "clamp(12px, 3vw, 14px) clamp(24px, 5vw, 36px)",
                   borderRadius: "14px",
                   border: "none",
                   cursor: "pointer",
@@ -397,7 +397,7 @@ export default function WhyChooseUs() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "8px",
-                  minHeight: "52px",
+                  minHeight: "48px",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform =
@@ -427,7 +427,7 @@ export default function WhyChooseUs() {
                   fontSize: "0.9rem",
                   letterSpacing: "0.06em",
                   textTransform: "uppercase",
-                  padding: "14px 36px",
+                  padding: "clamp(12px, 3vw, 14px) clamp(24px, 5vw, 36px)",
                   borderRadius: "14px",
                   border: "1px solid rgba(37,211,102,0.4)",
                   cursor: "pointer",
@@ -437,7 +437,7 @@ export default function WhyChooseUs() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "8px",
-                  minHeight: "52px",
+                  minHeight: "48px",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform =

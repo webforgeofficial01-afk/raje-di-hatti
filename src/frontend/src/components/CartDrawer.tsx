@@ -271,7 +271,7 @@ export default function CartDrawer() {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            padding: "6px 16px 12px",
+            padding: "6px clamp(12px, 4vw, 20px) 12px",
             borderBottom: "1px solid rgba(245,197,66,.08)",
           }}
         >
@@ -422,7 +422,7 @@ export default function CartDrawer() {
                     display: "flex",
                     alignItems: "center",
                     gap: "10px",
-                    padding: "11px 14px",
+                    padding: "11px clamp(12px, 3vw, 16px)",
                     borderBottom: "1px solid rgba(255,255,255,.05)",
                   }}
                 >
@@ -537,7 +537,8 @@ export default function CartDrawer() {
         {items.length > 0 && (
           <div
             style={{
-              padding: "14px 16px 28px",
+              padding:
+                "clamp(12px, 3vw, 16px) clamp(12px, 4vw, 16px) max(28px, env(safe-area-inset-bottom, 28px))",
               borderTop: "1px solid rgba(245,197,66,.08)",
               background: "rgba(5,3,1,.6)",
             }}

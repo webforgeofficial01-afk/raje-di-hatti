@@ -73,7 +73,11 @@ export default function TodaysSpecial() {
     <section
       id="todays-special"
       className="section-premium"
-      style={{ background: "#050505", padding: "80px 0", position: "relative" }}
+      style={{
+        background: "#050505",
+        padding: "clamp(48px, 7vw, 80px) 0",
+        position: "relative",
+      }}
       data-ocid="todays-special.section"
     >
       {/* Ambient glow */}
@@ -88,7 +92,7 @@ export default function TodaysSpecial() {
         }}
       />
 
-      <div className="relative z-10 max-w-2xl mx-auto px-6">
+      <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
         {/* Heading */}
         <div
           className="section-heading-block animate-section mb-10"

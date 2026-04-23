@@ -90,7 +90,7 @@ export default function Footer() {
         }}
         data-ocid="footer.cta_bar"
       >
-        <div className="max-w-6xl mx-auto px-6 lg:px-12 py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 py-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-5">
             <div>
               <p
@@ -218,7 +218,7 @@ export default function Footer() {
       />
 
       {/* Main footer grid */}
-      <div className="max-w-6xl mx-auto px-6 lg:px-12 pt-16 pb-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 pt-12 pb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Brand column */}
           <div>

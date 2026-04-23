@@ -25,10 +25,13 @@ export default function Gallery() {
   return (
     <section
       id="gallery"
-      style={{ backgroundColor: "#0d0905", padding: "120px 0" }}
+      style={{
+        backgroundColor: "#0d0905",
+        padding: "clamp(56px, 8vw, 120px) 0",
+      }}
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
-        <div className="text-center mb-14 animate-section">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="text-center mb-10 animate-section">
           <span className="section-kicker">Gallery</span>
           <h2
             style={{
@@ -47,7 +50,7 @@ export default function Gallery() {
         </div>
 
         <div
-          className="grid grid-cols-2 md:grid-cols-4 gap-5"
+          className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 lg:gap-5"
           data-ocid="gallery.section"
         >
           {GALLERY_SLOTS.map((slot, i) => (

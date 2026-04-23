@@ -244,7 +244,7 @@ export default function Stats() {
       id="stats"
       style={{
         backgroundColor: "#09080a",
-        padding: "120px 0",
+        padding: "clamp(56px, 8vw, 120px) 0",
         position: "relative",
         overflow: "hidden",
       }}
@@ -289,9 +289,9 @@ export default function Stats() {
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         {/* Section header */}
-        <div className="text-center mb-14 animate-section">
+        <div className="text-center mb-10 animate-section">
           <span className="section-kicker">Trust & Authority</span>
           <h2
             style={{
@@ -334,12 +334,12 @@ export default function Stats() {
               "linear-gradient(135deg, rgba(245,197,66,0.06) 0%, rgba(255,122,24,0.04) 100%)",
             border: "1px solid rgba(245,197,66,0.22)",
             borderRadius: "20px",
-            padding: "40px 32px",
+            padding: "clamp(24px, 5vw, 40px) clamp(16px, 4vw, 32px)",
             textAlign: "center",
             position: "relative",
             overflow: "hidden",
             maxWidth: "480px",
-            margin: "0 auto 56px",
+            margin: "0 auto 40px",
             boxShadow:
               "inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 0 rgba(0,0,0,0.2)",
           }}
@@ -473,12 +473,12 @@ export default function Stats() {
 
         {/* Trust indicator pills */}
         <div
-          className="animate-section mb-14"
+          className="animate-section mb-10"
           data-delay="1"
           data-ocid="stats.trust_badges"
           style={{
             borderTop: "1px solid rgba(245,197,66,0.1)",
-            paddingTop: "40px",
+            paddingTop: "clamp(20px, 4vw, 40px)",
           }}
         >
           <div
@@ -486,7 +486,7 @@ export default function Stats() {
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "center",
-              gap: "10px",
+              gap: "8px",
             }}
           >
             {trustBadges.map(({ icon, label, highlight }, i) => (
