@@ -210,6 +210,7 @@ function StatCard({ stat, index }: { stat: Stat; index: number }) {
       />
 
       <div
+        className="stat-label"
         style={{
           color: "rgba(255,255,255,0.5)",
           fontFamily: "Poppins, sans-serif",
@@ -533,7 +534,7 @@ export default function Stats() {
         </div>
 
         {/* Stat cards grid */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-5 md:gap-6">
+        <div className="grid grid-cols-3 md:grid-cols-5 gap-3 md:gap-6">
           {stats.map((stat, i) => (
             <StatCard key={stat.label} stat={stat} index={i} />
           ))}
@@ -545,6 +546,14 @@ export default function Stats() {
           transition: border-color 0.45s cubic-bezier(0.16,1,0.3,1),
                       transform 0.45s cubic-bezier(0.16,1,0.3,1),
                       box-shadow 0.45s cubic-bezier(0.16,1,0.3,1);
+        }
+        @media (max-width: 767px) {
+          .stats-card {
+            padding: 16px 8px !important;
+          }
+          .stats-card .stat-label {
+            letter-spacing: 0.08em !important;
+          }
         }
         .stats-card:hover {
           border-color: rgba(245,197,66,0.42) !important;
