@@ -1,9 +1,8 @@
 // Contact.tsx — Two-column contact section with form + info + Google Maps
 
-import { Clock, Loader2, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Clock, MapPin, MessageCircle, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useSubmitContactForm } from "../hooks/useQueries";
 
 // ─── Live Open Status ─────────────────────────────────────────────────────────
 
@@ -111,31 +110,17 @@ const inputStyle: React.CSSProperties = {
 export default function Contact() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const mutation = useSubmitContactForm();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim() || !message.trim()) {
-      toast.error("Please fill in all required fields.");
+    if (!name.trim() || !message.trim()) {
+      toast.error("Please fill in your name and message.");
       return;
     }
-    try {
-      await mutation.mutateAsync({
-        name: name.trim(),
-        phone: phone.trim() || null,
-        email: email.trim(),
-        message: message.trim(),
-      });
-      toast.success("Message sent! We'll get back to you soon.");
-      setName("");
-      setPhone("");
-      setEmail("");
-      setMessage("");
-    } catch {
-      toast.error("Failed to send message. Please try again.");
-    }
+    const text = `Hi, my name is ${name.trim()}. ${message.trim()}`;
+    const whatsappUrl = `https://wa.me/919599233307?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, "_blank");
   };
 
   return (
@@ -306,44 +291,7 @@ export default function Contact() {
               </div>
 
               {/* Email */}
-              <div>
-                <label
-                  htmlFor="contact-email"
-                  style={{
-                    color: "rgba(245,240,232,0.7)",
-                    fontFamily: "Poppins, sans-serif",
-                    fontSize: "12px",
-                    fontWeight: 700,
-                    display: "block",
-                    marginBottom: "6px",
-                    letterSpacing: "0.05em",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  Email *
-                </label>
-                <input
-                  id="contact-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  style={inputStyle}
-                  className="px-4 py-3 text-sm placeholder:text-white/20"
-                  data-ocid="contact.email.input"
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(245,197,66,0.45)";
-                    e.currentTarget.style.boxShadow =
-                      "0 0 0 3px rgba(245,197,66,0.07)";
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(212,168,67,0.18)";
-                    e.currentTarget.style.boxShadow = "";
-                  }}
-                />
-              </div>
 
-              {/* Message */}
               <div>
                 <label
                   htmlFor="contact-message"
@@ -383,18 +331,11 @@ export default function Contact() {
 
               <button
                 type="submit"
-                disabled={mutation.isPending}
                 className="btn-primary w-full justify-center"
                 data-ocid="contact.submit.button"
                 style={{ minHeight: "50px" }}
               >
-                {mutation.isPending ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Sending...
-                  </>
-                ) : (
-                  "Send Message"
-                )}
+                Send on WhatsApp
               </button>
             </form>
           </div>

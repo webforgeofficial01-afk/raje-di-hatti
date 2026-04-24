@@ -10,6 +10,23 @@ const trustIndicators = [
   { icon: "⚡", label: "Fast Delivery" },
 ];
 
+/* Inline styles injected once to handle sm breakpoint stat dividers */
+const statsResponsiveCSS = `
+  @media (min-width: 640px) {
+    .rdh-stats-grid {
+      flex-direction: row !important;
+      gap: 0 !important;
+    }
+    .rdh-stat-item + .rdh-stat-item {
+      border-top: none !important;
+      padding-top: 0 !important;
+      border-left: 1px solid rgba(212,168,67,0.18) !important;
+      padding-left: clamp(16px, 4vw, 32px) !important;
+      margin-left: clamp(16px, 4vw, 32px) !important;
+    }
+  }
+`;
+
 export default function About() {
   return (
     <section
@@ -21,6 +38,7 @@ export default function About() {
         overflow: "hidden",
       }}
     >
+      <style>{statsResponsiveCSS}</style>
       {/* Warm gold ambient glow */}
       <div
         aria-hidden
@@ -81,27 +99,30 @@ export default function About() {
             <div
               style={{
                 position: "absolute",
-                bottom: "28px",
-                right: "-16px",
+                bottom: "20px",
+                right: "-8px",
                 background:
                   "linear-gradient(135deg, rgba(212,168,67,0.18) 0%, rgba(10,6,2,0.98) 40%)",
                 border: "1px solid rgba(212,168,67,0.45)",
                 borderRadius: "1.25rem",
-                padding: "1.25rem 1.75rem",
+                padding:
+                  "clamp(0.85rem, 3vw, 1.25rem) clamp(1rem, 3.5vw, 1.75rem)",
                 boxShadow:
                   "0 8px 40px rgba(0,0,0,0.7), 0 0 20px rgba(212,168,67,0.15)",
                 backdropFilter: "blur(12px)",
                 WebkitBackdropFilter: "blur(12px)",
               }}
-              className="hidden lg:flex flex-col items-center"
+              className="flex flex-col items-center"
             >
               <span
                 style={{
                   fontFamily: "Playfair Display, Georgia, serif",
                   color: "#f5c542",
                   filter: "drop-shadow(0 0 10px rgba(245,197,66,0.5))",
+                  fontSize: "clamp(1.8rem, 7vw, 2.5rem)",
+                  fontWeight: 900,
+                  lineHeight: 1,
                 }}
-                className="text-4xl font-bold leading-none"
               >
                 35+
               </span>
@@ -109,8 +130,11 @@ export default function About() {
                 style={{
                   color: "rgba(245,197,66,0.7)",
                   fontFamily: "Poppins, sans-serif",
+                  fontSize: "clamp(0.6rem, 2vw, 0.75rem)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  marginTop: "4px",
                 }}
-                className="text-xs uppercase tracking-widest mt-1"
               >
                 Years of Service
               </span>
@@ -194,7 +218,7 @@ export default function About() {
             <div
               style={{
                 marginTop: "32px",
-                padding: "clamp(16px, 3.5vw, 24px)",
+                padding: "clamp(20px, 5vw, 28px)",
                 background:
                   "linear-gradient(135deg, rgba(245,197,66,0.06) 0%, rgba(255,122,24,0.03) 100%)",
                 border: "1px solid rgba(245,197,66,0.18)",
@@ -203,26 +227,28 @@ export default function About() {
                 WebkitBackdropFilter: "blur(8px)",
               }}
             >
-              <div className="flex gap-4 sm:gap-8 min-w-0">
+              {/* Mobile: vertical stack. sm+: horizontal row */}
+              <div className="rdh-stats-grid flex flex-col gap-5">
                 {aboutStats.map((stat, i) => (
                   <div
                     key={stat.label}
-                    className="flex flex-col min-w-0"
+                    className={`rdh-stat-item flex flex-col${i > 0 ? " border-t border-gold-faint pt-4" : ""}`}
                     style={
                       i > 0
                         ? {
-                            borderLeft: "1px solid rgba(212,168,67,0.18)",
-                            paddingLeft: "clamp(12px, 3vw, 28px)",
+                            borderTop: "1px solid rgba(212,168,67,0.18)",
+                            paddingTop: "clamp(14px, 3.5vw, 20px)",
                           }
-                        : {}
+                        : undefined
                     }
                   >
+                    {/* On sm+: switch back to side-by-side dividers via an inner wrapper */}
                     <span
                       style={{
                         fontFamily: "Playfair Display, Georgia, serif",
                         color: "#f5c542",
                         filter: "drop-shadow(0 0 8px rgba(245,197,66,0.4))",
-                        fontSize: "clamp(1.3rem, 4vw, 1.8rem)",
+                        fontSize: "clamp(2rem, 7vw, 2.5rem)",
                         fontWeight: 900,
                         lineHeight: 1,
                       }}
@@ -231,12 +257,13 @@ export default function About() {
                     </span>
                     <span
                       style={{
-                        color: "rgba(212,168,67,0.6)",
+                        color: "rgba(212,168,67,0.7)",
                         fontFamily: "Poppins, sans-serif",
-                        fontSize: "0.65rem",
+                        fontSize: "clamp(0.78rem, 2.8vw, 0.92rem)",
                         textTransform: "uppercase",
-                        letterSpacing: "0.12em",
-                        marginTop: "4px",
+                        letterSpacing: "0.05em",
+                        marginTop: "6px",
+                        fontWeight: 600,
                       }}
                     >
                       {stat.label}

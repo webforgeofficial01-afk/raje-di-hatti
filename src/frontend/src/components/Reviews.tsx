@@ -456,16 +456,29 @@ function LiveReviews() {
       >
         Recent Customer Reviews
       </h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
+      <div
+        className="flex flex-row gap-3 sm:gap-5 overflow-x-auto pb-3"
+        style={{
+          scrollBehavior: "smooth",
+          WebkitOverflowScrolling: "touch",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}
+      >
         {(reviews as Review[]).map((review, i) => (
-          <ReviewCard
+          <div
             key={review.id}
-            name={review.name}
-            rating={review.rating}
-            comment={review.comment}
-            timestamp={review.timestampNs}
-            delay={i * 100}
-          />
+            className="flex-shrink-0"
+            style={{ minWidth: "280px", maxWidth: "340px", width: "75vw" }}
+          >
+            <ReviewCard
+              name={review.name}
+              rating={review.rating}
+              comment={review.comment}
+              timestamp={review.timestampNs}
+              delay={i * 100}
+            />
+          </div>
         ))}
       </div>
     </div>
@@ -639,20 +652,32 @@ export default function Reviews() {
           </p>
         </div>
 
-        {/* Featured review cards */}
+        {/* Featured review cards — horizontal scroll row */}
         <div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5"
+          className="flex flex-row gap-3 sm:gap-5 overflow-x-auto pb-3"
           data-ocid="reviews.list"
+          style={{
+            scrollBehavior: "smooth",
+            WebkitOverflowScrolling: "touch",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
         >
+          <style>{".reviews-scroll::-webkit-scrollbar{display:none}"}</style>
           {FEATURED_REVIEWS.map((rev, i) => (
-            <ReviewCard
+            <div
               key={rev.id}
-              name={rev.name}
-              rating={rev.rating}
-              comment={rev.comment}
-              badge={rev.source}
-              delay={i * 100}
-            />
+              className="flex-shrink-0"
+              style={{ minWidth: "280px", maxWidth: "340px", width: "75vw" }}
+            >
+              <ReviewCard
+                name={rev.name}
+                rating={rev.rating}
+                comment={rev.comment}
+                badge={rev.source}
+                delay={i * 100}
+              />
+            </div>
           ))}
         </div>
 

@@ -533,11 +533,20 @@ export default function Stats() {
           </div>
         </div>
 
-        {/* Stat cards grid */}
-        <div className="grid grid-cols-3 md:grid-cols-5 gap-3 md:gap-6">
-          {stats.map((stat, i) => (
+        {/* Stat cards grid — 2-col on mobile so cards 3&4 form a centered pair on row 2 */}
+        <div
+          className="grid md:grid-cols-5 gap-3 md:gap-6"
+          style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}
+        >
+          {stats.slice(0, 4).map((stat, i) => (
             <StatCard key={stat.label} stat={stat} index={i} />
           ))}
+          {/* 5th card — centered on its own row on mobile */}
+          <div className="col-span-2 md:col-span-1 flex justify-center">
+            <div className="w-full max-w-[220px] md:max-w-none">
+              <StatCard stat={stats[4]} index={4} />
+            </div>
+          </div>
         </div>
       </div>
 
