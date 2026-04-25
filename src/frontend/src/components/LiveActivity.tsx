@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 const MESSAGES = [
   "🔥 12 people ordered in the last hour",
@@ -9,7 +9,7 @@ const MESSAGES = [
   "🌟 Fresh naan coming out of the tandoor right now",
 ] as const;
 
-export default function LiveActivity() {
+const LiveActivity = memo(function LiveActivity() {
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(true);
   const prefersReduced = useRef(
@@ -23,10 +23,11 @@ export default function LiveActivity() {
 
     const interval = setInterval(() => {
       setVisible(false);
-      setTimeout(() => {
+      const swapTimeout = setTimeout(() => {
         setIndex((prev) => (prev + 1) % MESSAGES.length);
         setVisible(true);
       }, 700);
+      return () => clearTimeout(swapTimeout);
     }, 7000);
 
     return () => clearInterval(interval);
@@ -107,4 +108,6 @@ export default function LiveActivity() {
       `}</style>
     </div>
   );
-}
+});
+
+export default LiveActivity;

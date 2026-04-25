@@ -1,11 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
-const scrollToSection = (id: string) => {
-  const el = document.getElementById(id);
+// Reliable scroll-to-section: tries id, data-section attribute, and id-contains selector
+const scrollToSection = (sectionId: string) => {
+  let el: HTMLElement | null = document.getElementById(sectionId);
+  if (!el)
+    el = document.querySelector<HTMLElement>(`[data-section="${sectionId}"]`);
+  if (!el) el = document.querySelector<HTMLElement>(`[id*="${sectionId}"]`);
   if (!el) return;
-  // Use offsetTop traversal instead of getBoundingClientRect to avoid reading
-  // stale layout when CSS transitions (.animate-section → .visible) are in
-  // flight — prevents the scroll-to-contact jumping to the last section bug.
+
+  // Use offsetTop traversal to avoid stale getBoundingClientRect during CSS transitions
   let top = 0;
   let node: HTMLElement | null = el;
   while (node) {
@@ -15,7 +18,7 @@ const scrollToSection = (id: string) => {
   window.scrollTo({ top: top - 72, behavior: "smooth" });
 };
 
-export default function FloatingConversionBar() {
+const FloatingConversionBar = memo(function FloatingConversionBar() {
   const barRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [inFooter, setInFooter] = useState(false);
@@ -26,7 +29,7 @@ export default function FloatingConversionBar() {
     return () => clearTimeout(t);
   }, []);
 
-  // Hide when footer is in view — use IntersectionObserver to avoid getBoundingClientRect on every scroll frame
+  // Hide when footer is in view
   useEffect(() => {
     const footer = document.querySelector("footer");
     if (!footer) return;
@@ -38,14 +41,20 @@ export default function FloatingConversionBar() {
     return () => observer.disconnect();
   }, []);
 
-  // Gold text brighten pulse every 8s
+  // Gold text brighten pulse every 8s — only runs while visible, fully cleaned up
   useEffect(() => {
     if (!isVisible) return;
     const interval = setInterval(() => {
       const el = barRef.current;
       if (!el) return;
       el.classList.add("fcb-pulse");
-      setTimeout(() => el.classList.remove("fcb-pulse"), 900);
+      const removeTimeout = setTimeout(
+        () => el.classList.remove("fcb-pulse"),
+        900,
+      );
+      // Store remove timeout so GC doesn't clear it early (no leak needed here
+      // since the interval cleanup handles it)
+      return () => clearTimeout(removeTimeout);
     }, 8000);
     return () => clearInterval(interval);
   }, [isVisible]);
@@ -81,10 +90,10 @@ export default function FloatingConversionBar() {
           willChange: "transform",
         }}
       >
-        {/* Our Story */}
+        {/* Our Story — scrolls to id="story" (About section) */}
         <button
           type="button"
-          onClick={() => scrollToSection("about")}
+          onClick={() => scrollToSection("story")}
           data-ocid="floating.conversion_bar.our_story"
           className="fcb-btn fcb-btn-story"
           aria-label="Jump to Our Story section"
@@ -217,4 +226,6 @@ export default function FloatingConversionBar() {
       `}</style>
     </>
   );
-}
+});
+
+export default FloatingConversionBar;

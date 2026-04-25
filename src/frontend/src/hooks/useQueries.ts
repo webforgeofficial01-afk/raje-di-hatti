@@ -63,7 +63,8 @@ export function useGetAllReviews() {
       }));
     },
     enabled: !!actor && !isFetching,
-    staleTime: 30_000,
+    // staleTime: 0 — always treat as stale so refetch fires immediately
+    staleTime: 0,
   });
 }
 
@@ -84,8 +85,11 @@ export function useSubmitReview() {
       const id = await actor.submitReview(name, BigInt(rating), comment);
       return { id: String(id), name, rating, comment };
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reviews"] });
+    onSuccess: async () => {
+      // Invalidate to mark stale, then immediately refetch so the new review
+      // appears in the list without any delay or manual refresh.
+      await queryClient.invalidateQueries({ queryKey: ["reviews"] });
+      await queryClient.refetchQueries({ queryKey: ["reviews"] });
     },
   });
 }

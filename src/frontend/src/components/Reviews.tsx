@@ -1,6 +1,6 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { CheckCircle, Loader2, Star } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { memo, useEffect, useState } from "react";
 import type { Review } from "../hooks/useQueries";
 import {
   relativeTime,
@@ -8,32 +8,34 @@ import {
   useSubmitReview,
 } from "../hooks/useQueries";
 
-const FEATURED_REVIEWS = [
-  {
-    id: "f1",
-    name: "Rajesh Kumar",
-    rating: 5,
-    comment:
-      "Amazing quality and taste! The Chole Bhature here is truly the best in Burari. Been coming here for years and the flavour never disappoints.",
-    source: "Verified",
-  },
-  {
-    id: "f2",
-    name: "Priya Sharma",
-    rating: 5,
-    comment:
-      "Fast delivery, fresh food, and very good pricing. My family orders every week! The Amritsari Kulcha is always crispy and perfectly made.",
-    source: "Verified",
-  },
-  {
-    id: "f3",
-    name: "Amit Verma",
-    rating: 5,
-    comment:
-      "The Amritsari Kulcha is heavenly. Best breakfast spot near Sant Nagar! The desi ghee aroma and authenticity is unmatched anywhere in Delhi.",
-    source: "Verified",
-  },
-];
+// ─── Seed reviews shown when backend returns 0 reviews ───────────────────────
+
+const SEED_REVIEWS: (Omit<Review, "timestampNs"> & { timestampNs?: bigint })[] =
+  [
+    {
+      id: "seed1",
+      name: "Rajesh Kumar",
+      rating: 5,
+      comment:
+        "Best chole bhature in all of Burari! The kulcha is absolutely mind-blowing. Family has been coming here since 1995.",
+    },
+    {
+      id: "seed2",
+      name: "Priya Sharma",
+      rating: 5,
+      comment:
+        "Amazing food and very fast delivery. The dal makhani and butter naan combo is unbeatable. Highly recommend!",
+    },
+    {
+      id: "seed3",
+      name: "Amit Singh",
+      rating: 5,
+      comment:
+        "Authentic Punjabi taste that reminds me of home. The paneer butter masala is top-notch. Will definitely order again!",
+    },
+  ];
+
+// ─── Star row (display only) ─────────────────────────────────────────────────
 
 function StarRow({ rating, size = 14 }: { rating: number; size?: number }) {
   return (
@@ -55,7 +57,9 @@ function StarRow({ rating, size = 14 }: { rating: number; size?: number }) {
   );
 }
 
-function ReviewCard({
+// ─── Review Card (memoized to prevent unnecessary re-renders) ─────────────────
+
+const ReviewCard = memo(function ReviewCard({
   name,
   rating,
   comment,
@@ -232,7 +236,9 @@ function ReviewCard({
       </div>
     </div>
   );
-}
+});
+
+// ─── Input style ─────────────────────────────────────────────────────────────
 
 const inputStyle: React.CSSProperties = {
   fontFamily: "Poppins, sans-serif",
@@ -245,39 +251,60 @@ const inputStyle: React.CSSProperties = {
   transition: "border-color 0.25s ease, box-shadow 0.25s ease",
 };
 
-function SubmitReviewForm() {
+// ─── Submit Review Form ───────────────────────────────────────────────────────
+
+function SubmitReviewForm({
+  onReviewSubmitted,
+}: { onReviewSubmitted: () => void }) {
   const [name, setName] = useState("");
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [comment, setComment] = useState("");
+  const [errors, setErrors] = useState<{
+    name?: string;
+    rating?: string;
+    comment?: string;
+    submit?: string;
+  }>({});
+  const [successMsg, setSuccessMsg] = useState(false);
   const mutation = useSubmitReview();
+
+  const validate = () => {
+    const e: Omit<typeof errors, "submit"> = {};
+    if (!name.trim() || name.trim().length < 2)
+      e.name = "Name must be at least 2 characters.";
+    if (rating === 0) e.rating = "Please select a star rating.";
+    if (!comment.trim() || comment.trim().length < 10)
+      e.comment = "Review must be at least 10 characters.";
+    return e;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) {
-      toast.error("Please enter your name.");
+    const errs = validate();
+    if (Object.keys(errs).length > 0) {
+      setErrors(errs);
       return;
     }
-    if (rating === 0) {
-      toast.error("Please select a star rating.");
-      return;
-    }
-    if (!comment.trim()) {
-      toast.error("Please write a comment.");
-      return;
-    }
+    setErrors({});
     try {
       await mutation.mutateAsync({
         name: name.trim(),
         rating,
         comment: comment.trim(),
       });
-      toast.success("Thank you for your review! 🙏");
       setName("");
       setRating(0);
       setComment("");
-    } catch {
-      toast.error("Failed to submit review. Please try again.");
+      setSuccessMsg(true);
+      onReviewSubmitted();
+      setTimeout(() => setSuccessMsg(false), 3000);
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Failed to submit review. Please try again.";
+      setErrors({ submit: message });
     }
   };
 
@@ -307,7 +334,66 @@ function SubmitReviewForm() {
         Your feedback helps us serve Delhi better
       </p>
       <div className="section-divider mb-8" />
-      <form onSubmit={handleSubmit} className="space-y-5">
+
+      {/* Success message */}
+      {successMsg && (
+        <div
+          data-ocid="reviews.success_state"
+          style={{
+            background: "rgba(245,197,66,0.08)",
+            border: "1px solid rgba(245,197,66,0.35)",
+            borderRadius: "12px",
+            padding: "14px 18px",
+            marginBottom: "20px",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+          }}
+        >
+          <CheckCircle size={18} style={{ color: "#f5c542", flexShrink: 0 }} />
+          <span
+            style={{
+              fontFamily: "Poppins, sans-serif",
+              fontSize: "13px",
+              fontWeight: 600,
+              color: "#f5c542",
+            }}
+          >
+            Thank you! Your review has been posted.
+          </span>
+        </div>
+      )}
+
+      {/* Submission error message */}
+      {errors.submit && (
+        <div
+          data-ocid="reviews.error_state"
+          style={{
+            background: "rgba(239,68,68,0.08)",
+            border: "1px solid rgba(239,68,68,0.35)",
+            borderRadius: "12px",
+            padding: "14px 18px",
+            marginBottom: "20px",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "Poppins, sans-serif",
+              fontSize: "13px",
+              fontWeight: 600,
+              color: "#ef4444",
+            }}
+          >
+            {errors.submit}
+          </span>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+        {/* Name */}
         <div>
           <label
             htmlFor="review-name"
@@ -320,38 +406,61 @@ function SubmitReviewForm() {
             id="review-name"
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              setErrors((prev) => ({ ...prev, name: undefined }));
+            }}
             placeholder="Enter your name"
-            style={inputStyle}
+            style={{
+              ...inputStyle,
+              borderColor: errors.name
+                ? "rgba(239,68,68,0.6)"
+                : "rgba(212,168,67,0.18)",
+            }}
             className="px-4 py-3 text-sm placeholder:text-white/20"
             data-ocid="reviews.name.input"
           />
+          {errors.name && (
+            <p
+              data-ocid="reviews.name.field_error"
+              style={{
+                fontFamily: "Poppins, sans-serif",
+                fontSize: "11px",
+                color: "#ef4444",
+                marginTop: "5px",
+              }}
+            >
+              {errors.name}
+            </p>
+          )}
         </div>
+
+        {/* Star rating */}
         <div>
-          <label
-            htmlFor="review-rating"
+          <p
+            id="rating-label"
             style={{ color: "#f5f0e8", fontFamily: "Poppins, sans-serif" }}
             className="block text-sm font-semibold mb-2"
           >
             Your Rating *
-          </label>
-          <div
-            id="review-rating"
-            className="flex gap-2"
-            data-ocid="reviews.rating.select"
-          >
+          </p>
+          <div className="flex gap-2" data-ocid="reviews.rating.select">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 type="button"
                 key={`rate-${star}`}
                 onMouseEnter={() => setHover(star)}
                 onMouseLeave={() => setHover(0)}
-                onClick={() => setRating(star)}
+                onClick={() => {
+                  setRating(star);
+                  setErrors((prev) => ({ ...prev, rating: undefined }));
+                }}
+                aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
                 className="transition-transform hover:scale-110 focus:outline-none"
                 data-ocid={`reviews.star.${star}`}
               >
                 <Star
-                  size={30}
+                  size={32}
                   fill={(hover || rating) >= star ? "#f5c542" : "none"}
                   stroke={
                     (hover || rating) >= star
@@ -367,7 +476,22 @@ function SubmitReviewForm() {
               </button>
             ))}
           </div>
+          {errors.rating && (
+            <p
+              data-ocid="reviews.rating.field_error"
+              style={{
+                fontFamily: "Poppins, sans-serif",
+                fontSize: "11px",
+                color: "#ef4444",
+                marginTop: "5px",
+              }}
+            >
+              {errors.rating}
+            </p>
+          )}
         </div>
+
+        {/* Review text */}
         <div>
           <label
             htmlFor="review-comment"
@@ -379,14 +503,37 @@ function SubmitReviewForm() {
           <textarea
             id="review-comment"
             value={comment}
-            onChange={(e) => setComment(e.target.value)}
+            onChange={(e) => {
+              setComment(e.target.value);
+              setErrors((prev) => ({ ...prev, comment: undefined }));
+            }}
             placeholder="Tell us about your experience..."
             rows={4}
-            style={{ ...inputStyle, resize: "vertical" }}
+            style={{
+              ...inputStyle,
+              resize: "vertical",
+              borderColor: errors.comment
+                ? "rgba(239,68,68,0.6)"
+                : "rgba(212,168,67,0.18)",
+            }}
             className="px-4 py-3 text-sm placeholder:text-white/20"
             data-ocid="reviews.comment.textarea"
           />
+          {errors.comment && (
+            <p
+              data-ocid="reviews.comment.field_error"
+              style={{
+                fontFamily: "Poppins, sans-serif",
+                fontSize: "11px",
+                color: "#ef4444",
+                marginTop: "5px",
+              }}
+            >
+              {errors.comment}
+            </p>
+          )}
         </div>
+
         <button
           type="submit"
           disabled={mutation.isPending}
@@ -405,6 +552,8 @@ function SubmitReviewForm() {
     </div>
   );
 }
+
+// ─── Live Reviews ─────────────────────────────────────────────────────────────
 
 function LiveReviews() {
   const { data: reviews, isLoading, isError } = useGetAllReviews();
@@ -442,7 +591,12 @@ function LiveReviews() {
     );
   }
 
-  if (!reviews || reviews.length === 0) return null;
+  // Null-guard: treat undefined/null as empty array
+  const safeReviews = Array.isArray(reviews) ? reviews : [];
+  const hasRealReviews = safeReviews.length > 0;
+  const displayReviews = hasRealReviews
+    ? [...safeReviews].reverse()
+    : SEED_REVIEWS;
 
   return (
     <div className="mt-12" data-ocid="reviews.live_list">
@@ -454,7 +608,7 @@ function LiveReviews() {
         }}
         className="text-xl font-bold text-center mb-8"
       >
-        Recent Customer Reviews
+        {hasRealReviews ? "Recent Customer Reviews" : "What Our Customers Say"}
       </h3>
       <div
         className="flex flex-row gap-3 sm:gap-5 overflow-x-auto pb-3"
@@ -465,7 +619,7 @@ function LiveReviews() {
           msOverflowStyle: "none",
         }}
       >
-        {(reviews as Review[]).map((review, i) => (
+        {displayReviews.map((review, i) => (
           <div
             key={review.id}
             className="flex-shrink-0"
@@ -475,7 +629,10 @@ function LiveReviews() {
               name={review.name}
               rating={review.rating}
               comment={review.comment}
-              timestamp={review.timestampNs}
+              timestamp={
+                "timestampNs" in review ? review.timestampNs : undefined
+              }
+              badge={!hasRealReviews ? "Verified" : undefined}
               delay={i * 100}
             />
           </div>
@@ -485,7 +642,20 @@ function LiveReviews() {
   );
 }
 
+// ─── Main Reviews Section ─────────────────────────────────────────────────────
+
 export default function Reviews() {
+  const queryClient = useQueryClient();
+
+  // On successful submission: LiveReviews re-renders automatically because
+  // useSubmitReview already calls invalidateQueries + refetchQueries.
+  // We keep this handler only to trigger the success message in SubmitReviewForm.
+  const handleReviewSubmitted = () => {
+    // Ensure the cache is fresh — belt-and-suspenders in case mutation
+    // onSuccess fired before the component re-rendered.
+    void queryClient.refetchQueries({ queryKey: ["reviews"] });
+  };
+
   return (
     <section
       id="reviews"
@@ -652,36 +822,10 @@ export default function Reviews() {
           </p>
         </div>
 
-        {/* Featured review cards — horizontal scroll row */}
-        <div
-          className="flex flex-row gap-3 sm:gap-5 overflow-x-auto pb-3"
-          data-ocid="reviews.list"
-          style={{
-            scrollBehavior: "smooth",
-            WebkitOverflowScrolling: "touch",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-          }}
-        >
-          <style>{".reviews-scroll::-webkit-scrollbar{display:none}"}</style>
-          {FEATURED_REVIEWS.map((rev, i) => (
-            <div
-              key={rev.id}
-              className="flex-shrink-0"
-              style={{ minWidth: "280px", maxWidth: "340px", width: "75vw" }}
-            >
-              <ReviewCard
-                name={rev.name}
-                rating={rev.rating}
-                comment={rev.comment}
-                badge={rev.source}
-                delay={i * 100}
-              />
-            </div>
-          ))}
-        </div>
+        {/* Submit form — above reviews list */}
+        <SubmitReviewForm onReviewSubmitted={handleReviewSubmitted} />
 
-        <SubmitReviewForm />
+        {/* Live reviews list — re-renders whenever React Query cache updates */}
         <LiveReviews />
       </div>
 

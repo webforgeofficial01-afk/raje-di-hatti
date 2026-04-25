@@ -25,18 +25,29 @@ const EVENT_TYPES = [
   },
 ];
 
+// Catering items synced with main menu (full/2pc prices)
 const CATERING_ITEMS = [
-  { id: "cb_aloo", name: "Aloo Chole Bhature (1 Pc)", price: 70 },
-  { id: "cb_paneer", name: "Paneer Chole Bhature", price: 150 },
-  { id: "kulcha_aloo", name: "Aloo Onion Kulcha", price: 90 },
-  { id: "kulcha_paneer", name: "Paneer Kulcha", price: 120 },
-  { id: "kulcha_mix", name: "Mix Kulcha", price: 110 },
-  { id: "dal_makhni", name: "Dal Makhni (per portion)", price: 120 },
-  { id: "rajma_rice", name: "Rajma Rice", price: 100 },
-  { id: "lassi_sweet", name: "Sweet Lassi", price: 60 },
-  { id: "lassi_namkeen", name: "Namkeen Lassi", price: 60 },
-  { id: "naan_butter", name: "Butter Naan", price: 40 },
-  { id: "thali", name: "Full Thali", price: 150 },
+  { id: "cb_aloo", name: "Aloo Chole Bhature (2 pc)", price: 95 },
+  { id: "cb_paneer", name: "Paneer Chole Bhature (2 pc)", price: 100 },
+  { id: "chole_kulche", name: "Chole Kulche (2 pc)", price: 95 },
+  {
+    id: "kulcha_aloo_onion",
+    name: "Amritsari Aloo Onion Kulcha (2 pc)",
+    price: 180,
+  },
+  { id: "kulcha_paneer", name: "Amritsari Paneer Kulcha (2 pc)", price: 200 },
+  { id: "kulcha_gobhi", name: "Amritsari Gobhi Kulcha (2 pc)", price: 200 },
+  { id: "kulcha_mix", name: "Amritsari Mix Kulcha (2 pc)", price: 240 },
+  { id: "dal_makhni", name: "Dal Makhani (full)", price: 180 },
+  { id: "kadai_paneer", name: "Kadai Paneer (full)", price: 190 },
+  { id: "pbm", name: "Paneer Butter Masala (full)", price: 190 },
+  { id: "palak_paneer", name: "Palak Paneer (full)", price: 190 },
+  { id: "naan_butter", name: "Butter Naan", price: 35 },
+  { id: "naan_garlic", name: "Garlic Naan", price: 50 },
+  { id: "chur_chur_naan", name: "Chur Chur Naan", price: 70 },
+  { id: "lassi_sweet", name: "Sweet Lassi", price: 75 },
+  { id: "thali_butter_roti", name: "Butter Roti Thali", price: 180 },
+  { id: "thali_mix_chur", name: "Mix Chur Chur Naan Thali", price: 260 },
 ];
 
 import { useState } from "react";

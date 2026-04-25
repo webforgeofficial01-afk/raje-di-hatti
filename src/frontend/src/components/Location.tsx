@@ -62,13 +62,13 @@ function useOpenStatus(): HoursStatus {
   return s;
 }
 
-// ─── Zone data ────────────────────────────────────────────────────────────────
+// ─── Zone data (updated delivery time text) ───────────────────────────────────
 
 const ZONES = [
   {
     label: "Primary Zones",
     badge: "Fastest",
-    time: "20–25 mins",
+    time: "Typically delivered within 20–25 minutes",
     areas: ["Burari", "Sant Nagar", "Mukundpur", "Nathupura", "Jharoda Majra"],
     borderColor: "rgba(245,197,66,0.45)",
     bg: "rgba(245,197,66,0.06)",
@@ -78,7 +78,7 @@ const ZONES = [
   {
     label: "Secondary Zones",
     badge: "Standard",
-    time: "30–40 mins",
+    time: "Usually delivered within 30–40 minutes",
     areas: [
       "Mukherjee Nagar",
       "Timarpur",
@@ -94,7 +94,7 @@ const ZONES = [
   {
     label: "Extended Zones",
     badge: "Extended",
-    time: "40–50 mins",
+    time: "Delivery may take 40–50 minutes",
     areas: ["Ashok Vihar", "Shalimar Bagh", "Model Town", "Azadpur"],
     borderColor: "rgba(255,255,255,0.12)",
     bg: "rgba(255,255,255,0.03)",
@@ -105,6 +105,12 @@ const ZONES = [
 
 const ZOMATO_URL =
   "https://www.zomato.com/ncr/raje-di-hatti-burari-new-delhi/order";
+
+// Exact Google Maps URLs for Labour Chowk, Sant Nagar, Burari
+const MAPS_OPEN_URL =
+  "https://maps.google.com/?q=Labour+Chowk,+Sant+Nagar,+Burari,+Delhi+110084";
+const MAPS_DIRECTIONS_URL =
+  "https://www.google.com/maps/dir/?api=1&destination=Labour+Chowk,+Sant+Nagar,+Burari,+Delhi+110084";
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -223,7 +229,7 @@ export default function Location() {
                 letterSpacing: "0.03em",
               }}
             >
-              ⚡ 20–30 min delivery
+              ⚡ From 20 min delivery
             </span>
           </div>
 
@@ -240,7 +246,7 @@ export default function Location() {
             gridTemplateColumns:
               "repeat(auto-fit, minmax(min(100%, 240px), 1fr))",
             gap: "16px",
-            marginBottom: "32px",
+            marginBottom: "20px",
           }}
         >
           {ZONES.map((zone, i) => (
@@ -313,7 +319,8 @@ export default function Location() {
                   fontWeight: 600,
                   color: zone.badgeColor,
                   marginBottom: "14px",
-                  letterSpacing: "0.02em",
+                  letterSpacing: "0.01em",
+                  lineHeight: 1.5,
                 }}
               >
                 🕐 {zone.time}
@@ -348,6 +355,21 @@ export default function Location() {
             </div>
           ))}
         </div>
+
+        {/* Delivery note */}
+        <p
+          style={{
+            fontFamily: "Poppins, sans-serif",
+            fontSize: "11px",
+            color: "rgba(245,240,232,0.4)",
+            textAlign: "center",
+            marginBottom: "32px",
+            letterSpacing: "0.02em",
+            opacity: 0.6,
+          }}
+        >
+          Delivery times may vary based on traffic and order volume.
+        </p>
 
         {/* ── ORDER CTA ── */}
         <div className="animate-section" style={{ textAlign: "center" }}>
@@ -417,7 +439,7 @@ export default function Location() {
             </a>
 
             <a
-              href="https://maps.google.com/?q=28.7211,77.1835&z=17"
+              href={MAPS_OPEN_URL}
               target="_blank"
               rel="noopener noreferrer"
               data-ocid="location.open_maps.button"
@@ -452,6 +474,44 @@ export default function Location() {
               }}
             >
               📍 Open in Google Maps
+            </a>
+
+            <a
+              href={MAPS_DIRECTIONS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-ocid="location.get_directions.button"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                background: "rgba(212,168,67,0.04)",
+                color: "rgba(212,168,67,0.75)",
+                fontFamily: "Poppins, sans-serif",
+                fontWeight: 700,
+                fontSize: "0.85rem",
+                letterSpacing: "0.04em",
+                padding: "13px 24px",
+                borderRadius: "13px",
+                border: "1px solid rgba(212,168,67,0.18)",
+                textDecoration: "none",
+                cursor: "pointer",
+                minHeight: "48px",
+                transition:
+                  "background 0.35s cubic-bezier(0.16,1,0.3,1), border-color 0.35s cubic-bezier(0.16,1,0.3,1), transform 0.35s cubic-bezier(0.16,1,0.3,1)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(212,168,67,0.10)";
+                e.currentTarget.style.borderColor = "rgba(212,168,67,0.4)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(212,168,67,0.04)";
+                e.currentTarget.style.borderColor = "rgba(212,168,67,0.18)";
+                e.currentTarget.style.transform = "";
+              }}
+            >
+              🗺️ Get Directions
             </a>
           </div>
         </div>

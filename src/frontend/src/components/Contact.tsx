@@ -105,6 +105,12 @@ const inputStyle: React.CSSProperties = {
   transition: "border-color 0.25s ease, box-shadow 0.25s ease",
 };
 
+// Exact Google Maps URLs for Labour Chowk, Sant Nagar, Burari
+const MAPS_OPEN_URL =
+  "https://maps.google.com/?q=Labour+Chowk,+Sant+Nagar,+Burari,+Delhi+110084";
+const MAPS_DIRECTIONS_URL =
+  "https://www.google.com/maps/dir/?api=1&destination=Labour+Chowk,+Sant+Nagar,+Burari,+Delhi+110084";
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function Contact() {
@@ -289,8 +295,6 @@ export default function Contact() {
                   />
                 </div>
               </div>
-
-              {/* Email */}
 
               <div>
                 <label
@@ -613,7 +617,7 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Google Maps embed + deep link */}
+            {/* Google Maps embed + deep link buttons */}
             <div
               style={{
                 borderRadius: "16px",
@@ -624,7 +628,7 @@ export default function Contact() {
               data-ocid="contact.map"
             >
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3497.3!2d77.1835!3d28.7211!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd3b00000001%3A0x0!2sRaje+Di+Hatti%2C+Main+100+Futa+Road%2C+Sant+Nagar+Burari%2C+Delhi+110084!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3497.3!2d77.1833!3d28.7197!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sLabour+Chowk%2C+Sant+Nagar%2C+Burari%2C+Delhi+110084!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
                 width="100%"
                 height="260"
                 style={{ border: 0, display: "block" }}
@@ -633,36 +637,81 @@ export default function Contact() {
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Raje Di Hatti Location — Sant Nagar Burari, Delhi"
               />
-              <a
-                href="https://maps.google.com/?q=28.7211,77.1835&z=17"
-                target="_blank"
-                rel="noopener noreferrer"
-                data-ocid="contact.open_maps.button"
+              {/* Map action buttons */}
+              <div
                 style={{
                   display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "6px",
-                  padding: "11px 16px",
-                  background: "rgba(212,168,67,0.06)",
                   borderTop: "1px solid rgba(212,168,67,0.18)",
-                  fontFamily: "Poppins, sans-serif",
-                  fontSize: "12px",
-                  fontWeight: 700,
-                  color: "#d4a843",
-                  textDecoration: "none",
-                  letterSpacing: "0.03em",
-                  transition: "background 0.25s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(212,168,67,0.12)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "rgba(212,168,67,0.06)";
                 }}
               >
-                📍 Open Exact Location in Google Maps
-              </a>
+                <a
+                  href={MAPS_OPEN_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-ocid="contact.open_maps.button"
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "6px",
+                    padding: "11px 12px",
+                    background: "rgba(212,168,67,0.06)",
+                    fontFamily: "Poppins, sans-serif",
+                    fontSize: "12px",
+                    fontWeight: 700,
+                    color: "#d4a843",
+                    textDecoration: "none",
+                    letterSpacing: "0.03em",
+                    transition: "background 0.25s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(212,168,67,0.12)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(212,168,67,0.06)";
+                  }}
+                >
+                  📍 Open in Maps
+                </a>
+                <div
+                  style={{
+                    width: "1px",
+                    background: "rgba(212,168,67,0.18)",
+                    flexShrink: 0,
+                  }}
+                />
+                <a
+                  href={MAPS_DIRECTIONS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-ocid="contact.get_directions.button"
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "6px",
+                    padding: "11px 12px",
+                    background: "rgba(212,168,67,0.04)",
+                    fontFamily: "Poppins, sans-serif",
+                    fontSize: "12px",
+                    fontWeight: 700,
+                    color: "rgba(212,168,67,0.75)",
+                    textDecoration: "none",
+                    letterSpacing: "0.03em",
+                    transition: "background 0.25s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(212,168,67,0.10)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(212,168,67,0.04)";
+                  }}
+                >
+                  🗺️ Get Directions
+                </a>
+              </div>
             </div>
           </div>
         </div>

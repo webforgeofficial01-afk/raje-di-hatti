@@ -1,12 +1,13 @@
 /**
  * AmbientParticles — premium white dot starfield.
- * 35 small white dots scattered across the full viewport.
+ * Desktop: 35 small white dots. Mobile (< 768px): 18 dots for performance.
  * GPU-only (transform + opacity). z-index: 1, pointer-events: none.
  *
- * v6 — replaced gold/orange specks with white dots (2–4px, rgba(255,255,255,0.15–0.35))
- *      4 gentle float patterns (±8–20px translate), 20–40s durations.
- *      Every 5th dot has a slow opacity pulse (±0.08).
+ * v7 — reduced to 18 dots on mobile via matchMedia for performance.
+ *      Same visual style, same animations — just fewer on small screens.
  */
+
+import { useMemo, useSyncExternalStore } from "react";
 
 interface Dot {
   id: number;
@@ -20,7 +21,7 @@ interface Dot {
   pulse: boolean;
 }
 
-const DOTS: Dot[] = [
+const ALL_DOTS: Dot[] = [
   {
     id: 0,
     x: 5,
@@ -219,6 +220,7 @@ const DOTS: Dot[] = [
     pattern: 2,
     pulse: false,
   },
+  // Desktop-only dots (indices 18–34)
   {
     id: 18,
     x: 16,
@@ -408,7 +410,41 @@ const DOTS: Dot[] = [
   },
 ];
 
+// Mobile subset: first 18 dots (well-distributed across the viewport)
+const MOBILE_DOTS = ALL_DOTS.slice(0, 18);
+
+// matchMedia subscription for useSyncExternalStore — stable singleton
+let mobileQuery: MediaQueryList | null = null;
+function getMobileQuery() {
+  if (typeof window === "undefined") return null;
+  if (!mobileQuery) mobileQuery = window.matchMedia("(max-width: 767px)");
+  return mobileQuery;
+}
+
+function subscribeToMobileQuery(callback: () => void) {
+  const mq = getMobileQuery();
+  if (!mq) return () => {};
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
+}
+
+function getIsMobileSnapshot() {
+  return getMobileQuery()?.matches ?? false;
+}
+
+function getIsMobileServerSnapshot() {
+  return false;
+}
+
 export default function AmbientParticles() {
+  const isMobile = useSyncExternalStore(
+    subscribeToMobileQuery,
+    getIsMobileSnapshot,
+    getIsMobileServerSnapshot,
+  );
+
+  const dots = useMemo(() => (isMobile ? MOBILE_DOTS : ALL_DOTS), [isMobile]);
+
   return (
     <div
       aria-hidden="true"
@@ -423,7 +459,7 @@ export default function AmbientParticles() {
         overflow: "hidden",
       }}
     >
-      {DOTS.map((d) => (
+      {dots.map((d) => (
         <div
           key={d.id}
           className="ambient-dot"

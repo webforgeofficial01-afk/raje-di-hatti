@@ -29,109 +29,58 @@ const ZOMATO_URL =
 
 type CategoryKey =
   | "all"
-  | "chole_bhature"
+  | "breakfast"
   | "amritsari_kulcha"
-  | "lassi"
-  | "tandoori_parantha"
-  | "rice_curry"
+  | "tandoori_paratha"
   | "main_course"
+  | "rice"
+  | "lassi"
   | "breads"
-  | "special_thali";
+  | "special_thali"
+  | "raita_salad"
+  | "soft_drinks";
 
 const CATEGORY_KEYS: CategoryKey[] = [
   "all",
-  "chole_bhature",
+  "breakfast",
   "amritsari_kulcha",
-  "lassi",
-  "tandoori_parantha",
-  "rice_curry",
+  "tandoori_paratha",
   "main_course",
+  "rice",
+  "lassi",
   "breads",
   "special_thali",
+  "raita_salad",
+  "soft_drinks",
 ];
 
-// ─── Menu Data (locked pricing) ───────────────────────────────────────────────
+// ─── Menu Data ────────────────────────────────────────────────────────────────
 
 const MENU_DATA: Record<Exclude<CategoryKey, "all">, CategoryData> = {
-  chole_bhature: {
-    label: "Chole Bhature",
+  breakfast: {
+    label: "Breakfast",
     icon: "🍽️",
-    subtitle: "Breakfast Special — Served fresh every morning",
+    subtitle: "Till 11:00 AM",
     items: [
       {
-        name: "Chole Bhature (1 pc)",
-        description: "Fluffy bhatura with spiced chickpea curry",
-        price: "₹65",
+        name: "Aloo Chole Bhature",
+        description: "Served with chole, onion & butter",
+        price: "₹65 (1pc) / ₹95 (2pc)",
         badges: ["bestseller"],
         isVeg: true,
       },
       {
-        name: "Chole Bhature (2 pc)",
-        description: "Double serving for big appetites",
-        price: "₹95",
-        badges: ["most_ordered"],
-        isVeg: true,
-      },
-      {
-        name: "Aloo Chole Bhature (1 pc)",
-        description: "Potato-stuffed bhatura with chole",
-        price: "₹70",
+        name: "Paneer Chole Bhature",
+        description: "Served with chole, onion & butter",
+        price: "₹70 (1pc) / ₹100 (2pc)",
         badges: ["chefs_pick"],
         isVeg: true,
       },
       {
-        name: "Aloo Chole Bhature (2 pc)",
-        description: "Extra filling, double bhatura",
-        price: "₹100",
-        badges: ["recommended"],
-        isVeg: true,
-      },
-      {
-        name: "Paneer Chole Bhature (1 pc)",
-        description: "Paneer-stuffed bhatura with chole",
-        price: "₹70",
-        isVeg: true,
-      },
-      {
-        name: "Paneer Chole Bhature (2 pc)",
-        description: "Paneer-stuffed, double serving",
-        price: "₹100",
-        isVeg: true,
-      },
-      {
-        name: "Chole Kulche (1 pc)",
-        description: "Soft kulcha with spiced chole",
-        price: "₹65",
-        isVeg: true,
-      },
-      {
-        name: "Chole Kulche (2 pc)",
-        description: "Double kulcha serving",
-        price: "₹95",
-        isVeg: true,
-      },
-      {
-        name: "Aloo Chole Kulche (1 pc)",
-        description: "Aloo-stuffed kulcha with chole",
-        price: "₹70",
-        isVeg: true,
-      },
-      {
-        name: "Aloo Chole Kulche (2 pc)",
-        description: "Double aloo kulcha",
-        price: "₹100",
-        isVeg: true,
-      },
-      {
-        name: "Paneer Chole Kulche (1 pc)",
-        description: "Paneer-stuffed kulcha with chole",
-        price: "₹70",
-        isVeg: true,
-      },
-      {
-        name: "Paneer Chole Kulche (2 pc)",
-        description: "Double paneer kulcha",
-        price: "₹100",
+        name: "Chole Kulche",
+        description: "Served with chole, onion & butter",
+        price: "₹65 (1pc) / ₹95 (2pc)",
+        badges: ["most_ordered"],
         isVeg: true,
       },
     ],
@@ -140,198 +89,68 @@ const MENU_DATA: Record<Exclude<CategoryKey, "all">, CategoryData> = {
   amritsari_kulcha: {
     label: "Amritsari Kulcha",
     icon: "🫓",
-    subtitle: "Served with Amritsari Chole + Butter",
+    subtitle: "Served with Chole + Onion + Butter",
     items: [
       {
-        name: "Plain Kulcha",
-        description: "Soft buttery plain kulcha",
-        price: "₹25",
+        name: "Amritsari Aloo Onion Kulcha",
+        description: "Classic aloo & onion stuffed kulcha",
+        price: "₹90 (1pc) / ₹180 (2pc)",
         badges: ["bestseller"],
         isVeg: true,
       },
       {
-        name: "Aloo Kulcha",
-        description: "Potato-stuffed Amritsari kulcha",
-        price: "₹35",
+        name: "Amritsari Paneer Kulcha",
+        description: "Rich paneer stuffed kulcha",
+        price: "₹110 (1pc) / ₹200 (2pc)",
         badges: ["most_ordered"],
         isVeg: true,
       },
       {
-        name: "Paneer Kulcha",
-        description: "Cottage cheese stuffed kulcha",
-        price: "₹40",
-        badges: ["chefs_pick"],
+        name: "Amritsari Gobhi Kulcha",
+        description: "Fresh gobhi stuffed kulcha",
+        price: "₹110 (1pc) / ₹200 (2pc)",
         isVeg: true,
       },
       {
-        name: "Mixed Kulcha (Aloo + Paneer)",
-        description: "Best of both — aloo and paneer",
-        price: "₹45",
-        isVeg: true,
-      },
-      {
-        name: "Gobhi Kulcha",
-        description: "Spiced cauliflower kulcha",
-        price: "₹35",
-        badges: ["recommended"],
-        isVeg: true,
-      },
-      {
-        name: "Onion Kulcha",
-        description: "Crispy onion-stuffed kulcha",
-        price: "₹35",
-        isVeg: true,
-      },
-      {
-        name: "Dal Kulcha",
-        description: "Dal-stuffed soft kulcha",
-        price: "₹35",
-        isVeg: true,
-      },
-    ],
-  },
-
-  lassi: {
-    label: "Lassi",
-    icon: "🥛",
-    subtitle: "Served chilled in kulhad",
-    items: [
-      {
-        name: "Sweet Lassi",
-        description: "Rich creamy sweet yogurt drink",
-        price: "₹40",
-        badges: ["bestseller"],
-        isVeg: true,
-      },
-      {
-        name: "Salted Lassi",
-        description: "Refreshing salted yogurt drink",
-        price: "₹40",
-        isVeg: true,
-      },
-      {
-        name: "Mango Lassi",
-        description: "Thick mango yogurt drink",
-        price: "₹60",
-        badges: ["most_ordered"],
-        isVeg: true,
-      },
-      {
-        name: "Rose Lassi",
-        description: "Rose-flavored creamy lassi",
-        price: "₹50",
-        isVeg: true,
-      },
-      {
-        name: "Masala Chaas",
-        description: "Spiced buttermilk",
-        price: "₹30",
+        name: "Amritsari Mix Kulcha",
+        description: "Mixed stuffed kulcha",
+        price: "₹120 (1pc) / ₹240 (2pc)",
         badges: ["recommended"],
         isVeg: true,
       },
     ],
   },
 
-  tandoori_parantha: {
-    label: "Tandoori Parantha",
+  tandoori_paratha: {
+    label: "Tandoori Paratha",
     icon: "🫓",
-    subtitle: "Served with Curd + Pickle + Onion + Butter",
+    subtitle: "Served with Dahi + Chole + Onion + Butter",
     items: [
       {
-        name: "Plain Parantha",
-        description: "Whole wheat layered parantha",
-        price: "₹25",
-        isVeg: true,
-      },
-      {
-        name: "Aloo Parantha",
-        description: "Potato-stuffed parantha",
-        price: "₹40",
+        name: "Aloo Pyaz Paratha",
+        description: "Aloo & pyaz stuffed paratha",
+        price: "₹90",
         badges: ["bestseller"],
         isVeg: true,
       },
       {
-        name: "Gobhi Parantha",
-        description: "Cauliflower-stuffed parantha",
-        price: "₹40",
-        isVeg: true,
-      },
-      {
-        name: "Paneer Parantha",
-        description: "Cottage cheese stuffed parantha",
-        price: "₹50",
-        badges: ["chefs_pick"],
-        isVeg: true,
-      },
-      {
-        name: "Mixed Parantha",
-        description: "Aloo + Gobhi + Paneer mix",
-        price: "₹55",
-        isVeg: true,
-      },
-      {
-        name: "Methi Parantha",
-        description: "Fenugreek-flavored parantha",
-        price: "₹35",
-        badges: ["recommended"],
-        isVeg: true,
-      },
-      {
-        name: "Pyaaz Parantha",
-        description: "Onion-stuffed parantha",
-        price: "₹35",
-        isVeg: true,
-      },
-      {
-        name: "Dal Makhani Parantha",
-        description: "Stuffed with rich dal makhani",
-        price: "₹60",
-        isVeg: true,
-      },
-    ],
-  },
-
-  rice_curry: {
-    label: "Rice & Curry",
-    icon: "🍚",
-    items: [
-      {
-        name: "Dal Makhani",
-        description: "Slow-cooked black lentils in butter",
-        price: "₹120",
-        badges: ["bestseller"],
-        isVeg: true,
-      },
-      {
-        name: "Dal Tadka",
-        description: "Yellow dal with tempering",
-        price: "₹80",
-        isVeg: true,
-      },
-      {
-        name: "Paneer Butter Masala",
-        description: "Cottage cheese in rich tomato gravy",
-        price: "₹160",
+        name: "Paneer Paratha",
+        description: "Rich paneer stuffed paratha",
+        price: "₹110",
         badges: ["most_ordered"],
         isVeg: true,
       },
       {
-        name: "Rajma Chawal",
-        description: "Kidney beans curry with steamed rice",
+        name: "Gobhi Paratha",
+        description: "Fresh gobhi stuffed paratha",
+        price: "₹110",
+        isVeg: true,
+      },
+      {
+        name: "Paneer Pyaz Paratha",
+        description: "Paneer & onion stuffed paratha",
         price: "₹120",
         badges: ["recommended"],
-        isVeg: true,
-      },
-      {
-        name: "Chole Rice",
-        description: "Spiced chole with steamed rice",
-        price: "₹100",
-        isVeg: true,
-      },
-      {
-        name: "Jeera Rice",
-        description: "Cumin-flavored basmati rice",
-        price: "₹80",
         isVeg: true,
       },
     ],
@@ -340,51 +159,167 @@ const MENU_DATA: Record<Exclude<CategoryKey, "all">, CategoryData> = {
   main_course: {
     label: "Main Course",
     icon: "🍛",
+    subtitle: "Dal, Veg, Paneer, Chaap & Mushroom",
     items: [
+      // Dal
       {
-        name: "Dal Makhani (full)",
-        description: "Full pot slow-cooked lentils",
-        price: "₹180",
+        name: "Dal Makhani",
+        description: "Rich & creamy black dal",
+        price: "₹100 (half) / ₹180 (full)",
         badges: ["bestseller"],
         isVeg: true,
       },
       {
-        name: "Paneer Tikka Masala",
-        description: "Marinated paneer in tikka gravy",
-        price: "₹200",
-        badges: ["most_ordered"],
+        name: "Yellow Dal Tadka",
+        description: "Classic yellow dal with tadka",
+        price: "₹90 (half) / ₹170 (full)",
+        isVeg: true,
+      },
+      // Veg
+      {
+        name: "Aloo Gobhi",
+        description: "Classic aloo & gobhi sabzi",
+        price: "₹90 (half) / ₹170 (full)",
         isVeg: true,
       },
       {
-        name: "Shahi Paneer",
-        description: "Creamy royal paneer curry",
-        price: "₹200",
-        badges: ["chefs_pick"],
+        name: "Mix Veg",
+        description: "Fresh seasonal vegetables",
+        price: "₹100 (half) / ₹180 (full)",
         isVeg: true,
       },
+      // Paneer
       {
-        name: "Matar Paneer",
-        description: "Green peas with cottage cheese",
-        price: "₹160",
-        isVeg: true,
-      },
-      {
-        name: "Palak Paneer",
-        description: "Cottage cheese in spinach gravy",
-        price: "₹160",
-        badges: ["recommended"],
-        isVeg: true,
-      },
-      {
-        name: "Malai Kofta",
-        description: "Creamy cottage cheese dumplings",
-        price: "₹180",
+        name: "Paneer Do Pyaza",
+        description: "Rich paneer with double onion",
+        price: "₹110 (half) / ₹180 (full)",
         isVeg: true,
       },
       {
         name: "Kadai Paneer",
-        description: "Paneer in kadai masala",
-        price: "₹170",
+        description: "Spiced kadai paneer",
+        price: "₹120 (half) / ₹190 (full)",
+        badges: ["bestseller"],
+        isVeg: true,
+      },
+      {
+        name: "Palak Paneer",
+        description: "Creamy spinach & paneer",
+        price: "₹120 (half) / ₹190 (full)",
+        badges: ["most_ordered"],
+        isVeg: true,
+      },
+      {
+        name: "Paneer Butter Masala",
+        description: "Rich butter tomato gravy",
+        price: "₹120 (half) / ₹190 (full)",
+        badges: ["recommended"],
+        isVeg: true,
+      },
+      {
+        name: "Shahi Paneer",
+        description: "Royal creamy paneer dish",
+        price: "₹120 (half) / ₹190 (full)",
+        isVeg: true,
+      },
+      // Chaap
+      {
+        name: "Kadai Chaap",
+        description: "Spiced kadai soya chaap",
+        price: "₹110 (half) / ₹180 (full)",
+        isVeg: true,
+      },
+      {
+        name: "Masala Chaap",
+        description: "Tangy masala soya chaap",
+        price: "₹110 (half) / ₹180 (full)",
+        badges: ["bestseller"],
+        isVeg: true,
+      },
+      {
+        name: "Chaap Do Pyaza",
+        description: "Chaap with double onion",
+        price: "₹110 (half) / ₹180 (full)",
+        isVeg: true,
+      },
+      // Mushroom
+      {
+        name: "Kadai Mushroom",
+        description: "Spiced kadai mushroom",
+        price: "₹120 (half) / ₹190 (full)",
+        isVeg: true,
+      },
+      {
+        name: "Masala Mushroom",
+        description: "Tangy masala mushroom",
+        price: "₹120 (half) / ₹190 (full)",
+        isVeg: true,
+      },
+      {
+        name: "Mushroom Butter Masala",
+        description: "Rich butter tomato mushroom",
+        price: "₹120 (half) / ₹190 (full)",
+        isVeg: true,
+      },
+    ],
+  },
+
+  rice: {
+    label: "Rice",
+    icon: "🍚",
+    subtitle: "",
+    items: [
+      {
+        name: "Steam Rice",
+        description: "Plain steamed basmati rice",
+        price: "₹60 (half) / ₹100 (full)",
+        isVeg: true,
+      },
+      {
+        name: "Jeera Rice",
+        description: "Aromatic jeera basmati rice",
+        price: "₹70 (half) / ₹120 (full)",
+        badges: ["most_ordered"],
+        isVeg: true,
+      },
+      {
+        name: "Veg Biryani",
+        description: "Fragrant vegetable biryani",
+        price: "₹100 (half) / ₹150 (full)",
+        badges: ["bestseller"],
+        isVeg: true,
+      },
+    ],
+  },
+
+  lassi: {
+    label: "Sweet & Lassi",
+    icon: "🥛",
+    subtitle: "",
+    items: [
+      {
+        name: "Sweet Lassi",
+        description: "Chilled sweet yogurt drink",
+        price: "₹75",
+        badges: ["bestseller"],
+        isVeg: true,
+      },
+      {
+        name: "Salted Lassi",
+        description: "Refreshing salted lassi",
+        price: "₹75",
+        isVeg: true,
+      },
+      {
+        name: "Chaas",
+        description: "Light spiced buttermilk",
+        price: "₹35",
+        isVeg: true,
+      },
+      {
+        name: "Gulab Jamun",
+        description: "Soft milk dumplings in syrup",
+        price: "₹20 (1 pc)",
         isVeg: true,
       },
     ],
@@ -393,57 +328,94 @@ const MENU_DATA: Record<Exclude<CategoryKey, "all">, CategoryData> = {
   breads: {
     label: "Breads",
     icon: "🫓",
+    subtitle: "",
     items: [
       {
         name: "Tandoori Roti",
-        description: "Classic tandoor-baked whole wheat roti",
-        price: "₹20",
-        badges: ["bestseller"],
+        description: "Whole wheat tandoor roti",
+        price: "₹8",
         isVeg: true,
       },
       {
-        name: "Butter Roti",
-        description: "Butter-glazed roti",
-        price: "₹25",
+        name: "Butter Tandoori Roti",
+        description: "Butter glazed tandoor roti",
+        price: "₹10",
         isVeg: true,
       },
       {
-        name: "Naan",
-        description: "Soft leavened bread",
+        name: "Plain Roti",
+        description: "Soft plain roti",
+        price: "₹10",
+        isVeg: true,
+      },
+      {
+        name: "Missi Roti",
+        description: "Spiced gram flour roti",
+        price: "₹15",
+        isVeg: true,
+      },
+      {
+        name: "Plain Naan",
+        description: "Soft plain naan",
         price: "₹30",
-        badges: ["most_ordered"],
         isVeg: true,
       },
       {
         name: "Butter Naan",
-        description: "Butter-topped soft naan",
+        description: "Butter glazed naan",
         price: "₹35",
+        badges: ["bestseller"],
+        isVeg: true,
+      },
+      {
+        name: "Stuffed Naan",
+        description: "Stuffed naan",
+        price: "₹45",
         isVeg: true,
       },
       {
         name: "Garlic Naan",
-        description: "Garlic-topped naan",
-        price: "₹40",
-        badges: ["chefs_pick"],
+        description: "Garlic butter naan",
+        price: "₹50",
+        badges: ["most_ordered"],
         isVeg: true,
       },
       {
-        name: "Butter Garlic Naan",
-        description: "Extra buttery garlic naan",
-        price: "₹45",
+        name: "Lachha Paratha",
+        description: "Flaky layered paratha",
+        price: "₹60",
         badges: ["recommended"],
         isVeg: true,
       },
       {
-        name: "Laccha Parantha",
-        description: "Multi-layered flaky parantha",
+        name: "Chilli Paratha",
+        description: "Spiced chilli paratha",
         price: "₹40",
         isVeg: true,
       },
       {
-        name: "Puri",
-        description: "Deep-fried puffed bread (2 pcs)",
-        price: "₹20",
+        name: "Garlic Paratha",
+        description: "Garlic flavoured paratha",
+        price: "₹40",
+        isVeg: true,
+      },
+      {
+        name: "Paneer Paratha",
+        description: "Paneer stuffed paratha",
+        price: "₹45",
+        isVeg: true,
+      },
+      {
+        name: "Rumali Roti",
+        description: "Thin soft rumali roti",
+        price: "₹10",
+        isVeg: true,
+      },
+      {
+        name: "Chur Chur Naan",
+        description: "Crispy crushed naan",
+        price: "₹70",
+        badges: ["chefs_pick"],
         isVeg: true,
       },
     ],
@@ -452,34 +424,114 @@ const MENU_DATA: Record<Exclude<CategoryKey, "all">, CategoryData> = {
   special_thali: {
     label: "Special Thali",
     icon: "🍽️",
-    subtitle: "Complete Punjabi meals — best value",
+    subtitle: "Lunch & Dinner",
     items: [
       {
-        name: "Chole Bhature Thali",
-        description: "2 Bhature + Chole + Pickle + Sweet",
-        price: "₹150",
+        name: "Butter Roti Thali",
+        description: "Paneer Dish + Raita + Salad + Chutni",
+        price: "₹180",
+        isVeg: true,
+      },
+      {
+        name: "Butter Naan Thali",
+        description: "Paneer Dish + Dal Makhani + Chutni",
+        price: "₹190",
+        isVeg: true,
+      },
+      {
+        name: "Aloo Naan Thali",
+        description: "Paneer Dish + Dal Makhani + Chutni",
+        price: "₹200",
+        isVeg: true,
+      },
+      {
+        name: "Aloo Naan Thali (Special)",
+        description: "Paneer Dish + Dal Makhani + Chutni",
+        price: "₹210",
+        isVeg: true,
+      },
+      {
+        name: "Lachha Paratha Thali",
+        description: "Premium lachha paratha thali",
+        price: "₹180",
+        isVeg: true,
+      },
+      {
+        name: "Aloo Chur Chur Naan Thali",
+        description: "Aloo stuffed chur chur naan thali",
+        price: "₹190",
+        isVeg: true,
+      },
+      {
+        name: "Mix Naan Thali",
+        description: "Mix naan thali",
+        price: "₹220",
+        isVeg: true,
+      },
+      {
+        name: "Gobhi Chur Chur Naan Thali",
+        description: "Gobhi stuffed chur chur naan thali",
+        price: "₹260",
+        badges: ["recommended"],
+        isVeg: true,
+      },
+      {
+        name: "Mix Chur Chur Naan Thali",
+        description: "Mix stuffed chur chur naan thali",
+        price: "₹260",
         badges: ["bestseller"],
         isVeg: true,
       },
+    ],
+  },
+
+  raita_salad: {
+    label: "Raita & Salad",
+    icon: "🥗",
+    subtitle: "",
+    items: [
       {
-        name: "Amritsari Kulcha Thali",
-        description: "2 Kulcha + Chole + Dal + Salad",
-        price: "₹160",
-        badges: ["most_ordered"],
+        name: "Boondi Raita",
+        description: "Creamy boondi raita",
+        price: "₹50",
         isVeg: true,
       },
       {
-        name: "Full Punjabi Thali",
-        description: "Dal Makhani + Paneer + 2 Bread + Rice + Dessert",
-        price: "₹250",
-        badges: ["chefs_pick"],
+        name: "Mix Raita",
+        description: "Mixed vegetable raita",
+        price: "₹50",
         isVeg: true,
       },
       {
-        name: "Mini Thali",
-        description: "Chole + 1 Bread + Rice + Raita",
-        price: "₹120",
-        badges: ["recommended"],
+        name: "Green Salad",
+        description: "Fresh garden salad",
+        price: "₹90",
+        isVeg: true,
+      },
+      {
+        name: "Papad",
+        description: "Crispy papad",
+        price: "₹10 (1pc) / ₹110 (plate)",
+        isVeg: true,
+      },
+    ],
+  },
+
+  soft_drinks: {
+    label: "Soft Drinks",
+    icon: "🥤",
+    subtitle: "",
+    items: [
+      {
+        name: "Cold Drink",
+        description: "Assorted cold drinks",
+        price: "MRP",
+        isVeg: true,
+      },
+      {
+        name: "Water",
+        description: "Mineral water",
+        price: "MRP",
         isVeg: true,
       },
     ],
@@ -488,22 +540,25 @@ const MENU_DATA: Record<Exclude<CategoryKey, "all">, CategoryData> = {
 
 // Category gradient per key
 const CATEGORY_GRADIENT: Record<Exclude<CategoryKey, "all">, string> = {
-  chole_bhature:
+  breakfast:
     "linear-gradient(135deg, rgba(255,122,24,0.28), rgba(245,197,66,0.12))",
   amritsari_kulcha:
     "linear-gradient(135deg, rgba(245,197,66,0.28), rgba(232,160,32,0.12))",
-  lassi:
-    "linear-gradient(135deg, rgba(168,85,247,0.22), rgba(245,197,66,0.10))",
-  tandoori_parantha:
+  tandoori_paratha:
     "linear-gradient(135deg, rgba(255,122,24,0.22), rgba(245,197,66,0.10))",
-  rice_curry:
-    "linear-gradient(135deg, rgba(34,197,94,0.18), rgba(245,197,66,0.10))",
   main_course:
     "linear-gradient(135deg, rgba(245,197,66,0.22), rgba(255,122,24,0.12))",
+  rice: "linear-gradient(135deg, rgba(34,197,94,0.18), rgba(245,197,66,0.10))",
+  lassi:
+    "linear-gradient(135deg, rgba(168,85,247,0.22), rgba(245,197,66,0.10))",
   breads:
     "linear-gradient(135deg, rgba(251,191,36,0.22), rgba(245,197,66,0.10))",
   special_thali:
     "linear-gradient(135deg, rgba(245,197,66,0.30), rgba(255,122,24,0.18))",
+  raita_salad:
+    "linear-gradient(135deg, rgba(34,197,94,0.18), rgba(245,197,66,0.08))",
+  soft_drinks:
+    "linear-gradient(135deg, rgba(59,130,246,0.18), rgba(245,197,66,0.08))",
 };
 
 // ─── Flat item list for "All" and search ─────────────────────────────────────
@@ -603,28 +658,6 @@ function BadgeRecommended() {
   );
 }
 
-function ItemBadges({ badges }: { badges?: Badge[] }) {
-  if (!badges || badges.length === 0) return null;
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "4px",
-        marginBottom: "8px",
-      }}
-    >
-      {badges.map((b) => {
-        if (b === "bestseller") return <BadgeBestseller key={b} />;
-        if (b === "most_ordered") return <BadgeMostOrdered key={b} />;
-        if (b === "chefs_pick") return <BadgesChefsPick key={b} />;
-        if (b === "recommended") return <BadgeRecommended key={b} />;
-        return null;
-      })}
-    </div>
-  );
-}
-
 function BadgesChefsPick() {
   return (
     <span
@@ -647,6 +680,28 @@ function BadgesChefsPick() {
       <Trophy size={9} />
       Chef's Top Pick
     </span>
+  );
+}
+
+function ItemBadges({ badges }: { badges?: Badge[] }) {
+  if (!badges || badges.length === 0) return null;
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "4px",
+        marginBottom: "8px",
+      }}
+    >
+      {badges.map((b) => {
+        if (b === "bestseller") return <BadgeBestseller key={b} />;
+        if (b === "most_ordered") return <BadgeMostOrdered key={b} />;
+        if (b === "chefs_pick") return <BadgesChefsPick key={b} />;
+        if (b === "recommended") return <BadgeRecommended key={b} />;
+        return null;
+      })}
+    </div>
   );
 }
 
@@ -1165,7 +1220,7 @@ function SkeletonGrid() {
 // ─── Main Menu ────────────────────────────────────────────────────────────────
 
 export default function Menu() {
-  const [activeTab, setActiveTab] = useState<CategoryKey>("chole_bhature");
+  const [activeTab, setActiveTab] = useState<CategoryKey>("breakfast");
   const [loading, setLoading] = useState(true);
   const [visibleItems, setVisibleItems] = useState<boolean[]>([]);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -1251,7 +1306,6 @@ export default function Menu() {
         `[data-tab="${key}"]`,
       ) as HTMLElement | null;
       if (el && tabsRef.current) {
-        // Manually scroll the horizontal tab container — avoids scrollIntoView affecting the window scroll
         const container = tabsRef.current;
         const elLeft = el.offsetLeft;
         const elWidth = el.offsetWidth;
@@ -1559,7 +1613,7 @@ export default function Menu() {
           </div>
         )}
 
-        {/* Order via Zomato CTA strip */}
+        {/* Order via platform CTA strip */}
         {!loading && currentItems.length > 0 && (
           <div
             style={{
@@ -1708,8 +1762,6 @@ export default function Menu() {
           </div>
         )}
       </div>
-
-      {/* Great Choice Toast - removed (no cart actions) */}
     </section>
   );
 }
