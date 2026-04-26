@@ -91,9 +91,9 @@ export class ExternalBlob {
 }
 export interface Review {
     id: bigint;
+    review: string;
     name: string;
-    comment: string;
-    timestamp: Time;
+    createdAt: bigint;
     rating: bigint;
 }
 export interface Order {
@@ -139,8 +139,8 @@ export interface Submission {
     phone?: string;
 }
 export interface ReviewInput {
+    review: string;
     name: string;
-    comment: string;
     rating: bigint;
 }
 export interface UserProfile {
@@ -173,6 +173,7 @@ export interface backendInterface {
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getGalleryItem(id: bigint): Promise<GalleryItem | null>;
+    getLatestReviews(limit: bigint): Promise<Array<Review>>;
     getOrderById(orderId: string): Promise<Order | null>;
     getReviewInputs(): Promise<Array<ReviewInput>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
@@ -180,7 +181,7 @@ export interface backendInterface {
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     submitContactForm(name: string, phone: string | null, email: string, message: string): Promise<void>;
     submitOrder(input: OrderInput): Promise<string>;
-    submitReview(name: string, rating: bigint, comment: string): Promise<bigint>;
+    submitReview(name: string, rating: bigint, review: string): Promise<bigint>;
 }
 import type { ExternalBlob as _ExternalBlob, GalleryItem as _GalleryItem, Order as _Order, Submission as _Submission, Time as _Time, UserProfile as _UserProfile, UserRole as _UserRole, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
@@ -421,6 +422,20 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.getGalleryItem(arg0);
             return from_candid_opt_n22(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getLatestReviews(arg0: bigint): Promise<Array<Review>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getLatestReviews(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getLatestReviews(arg0);
+            return result;
         }
     }
     async getOrderById(arg0: string): Promise<Order | null> {

@@ -12,8 +12,9 @@ import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 import MixinStorage "blob-storage/Mixin";
 import Storage "blob-storage/Storage";
+import Migration "migration";
 
-
+(with migration = Migration.run)
 actor {
   // Authorization system state
   let accessControlState = AccessControl.initState();
@@ -88,53 +89,61 @@ actor {
     id : Nat;
     name : Text;
     rating : Nat;
-    comment : Text;
-    timestamp : Time.Time;
+    review : Text;
+    createdAt : Int;
   };
 
   type ReviewInput = {
     name : Text;
     rating : Nat;
-    comment : Text;
+    review : Text;
   };
 
   module Review {
     public func compare(r1 : Review, r2 : Review) : { #less; #equal; #greater } {
       Nat.compare(r1.id, r2.id);
     };
+    // Descending by createdAt (newest first)
+    public func compareDesc(r1 : Review, r2 : Review) : { #less; #equal; #greater } {
+      Int.compare(r2.createdAt, r1.createdAt);
+    };
   };
 
   var nextReviewId = 0;
   let reviews = Map.empty<Nat, Review>();
-  let reviewInputs = List.empty<ReviewInput>();
 
-  public shared ({ caller }) func submitReview(name : Text, rating : Nat, comment : Text) : async Nat {
+  public shared ({ caller }) func submitReview(name : Text, rating : Nat, review : Text) : async Nat {
     if (rating < 1 or rating > 5) {
       Runtime.trap("Rating must be between 1 and 5");
     };
-    let review = {
+    let newReview = {
       id = nextReviewId;
       name;
       rating;
-      comment;
-      timestamp = Time.now();
+      review;
+      createdAt = Time.now();
     };
-    reviews.add(nextReviewId, review);
+    reviews.add(nextReviewId, newReview);
     nextReviewId += 1;
-    review.id;
+    newReview.id;
   };
 
   public query ({ caller }) func getAllReviews() : async [Review] {
-    reviews.values().toArray().sort();
+    reviews.values().sort(Review.compareDesc).toArray();
+  };
+
+  public query ({ caller }) func getLatestReviews(limit : Nat) : async [Review] {
+    let effectiveLimit = if (limit > 20) { 20 } else { limit };
+    reviews.values().sort(Review.compareDesc).take(effectiveLimit).toArray();
   };
 
   public query ({ caller }) func getReviewInputs() : async [ReviewInput] {
     let reviewInputsList = List.empty<ReviewInput>();
-    for (review in reviews.values()) {
+    for (r in reviews.values()) {
       let input : ReviewInput = {
-        name = review.name;
-        rating = review.rating;
-        comment = review.comment;
+        name = r.name;
+        rating = r.rating;
+        review = r.review;
       };
       reviewInputsList.add(input);
     };

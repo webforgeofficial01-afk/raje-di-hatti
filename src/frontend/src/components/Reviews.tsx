@@ -3,6 +3,7 @@ import { CheckCircle, Loader2, Star } from "lucide-react";
 import { memo, useEffect, useState } from "react";
 import type { Review } from "../hooks/useQueries";
 import {
+  SEED_REVIEWS_FALLBACK,
   relativeTime,
   useGetAllReviews,
   useSubmitReview,
@@ -10,30 +11,35 @@ import {
 
 // ─── Seed reviews shown when backend returns 0 reviews ───────────────────────
 
-const SEED_REVIEWS: (Omit<Review, "timestampNs"> & { timestampNs?: bigint })[] =
-  [
-    {
-      id: "seed1",
-      name: "Rajesh Kumar",
-      rating: 5,
-      comment:
-        "Best chole bhature in all of Burari! The kulcha is absolutely mind-blowing. Family has been coming here since 1995.",
-    },
-    {
-      id: "seed2",
-      name: "Priya Sharma",
-      rating: 5,
-      comment:
-        "Amazing food and very fast delivery. The dal makhani and butter naan combo is unbeatable. Highly recommend!",
-    },
-    {
-      id: "seed3",
-      name: "Amit Singh",
-      rating: 5,
-      comment:
-        "Authentic Punjabi taste that reminds me of home. The paneer butter masala is top-notch. Will definitely order again!",
-    },
-  ];
+const SEED_REVIEWS: Review[] = [
+  {
+    id: "seed1",
+    name: "Rajesh Kumar",
+    rating: 5,
+    comment:
+      "Best chole bhature in all of Burari! The kulcha is absolutely mind-blowing. Family has been coming here since 1995.",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed2",
+    name: "Priya Sharma",
+    rating: 5,
+    comment:
+      "Amazing food and very fast delivery. The dal makhani and butter naan combo is unbeatable. Highly recommend!",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed3",
+    name: "Amit Singh",
+    rating: 5,
+    comment:
+      "Authentic Punjabi taste that reminds me of home. The paneer butter masala is top-notch. Will definitely order again!",
+    timestampNs: BigInt(0),
+  },
+];
+
+// Export for reference (alias to the shared fallback)
+export { SEED_REVIEWS };
 
 // ─── Star row (display only) ─────────────────────────────────────────────────
 
@@ -81,7 +87,9 @@ const ReviewCard = memo(function ReviewCard({
     .slice(0, 2)
     .toUpperCase();
 
-  const timeLabel = timestamp != null ? relativeTime(timestamp) : null;
+  // Only show time label if timestamp is a real non-zero value
+  const timeLabel =
+    timestamp != null && timestamp > BigInt(0) ? relativeTime(timestamp) : null;
 
   return (
     <div
@@ -194,7 +202,7 @@ const ReviewCard = memo(function ReviewCard({
         )}
       </div>
 
-      {/* Review text */}
+      {/* Review text — field is 'comment' (backend.d.ts confirmed) */}
       <p
         style={{
           color: "rgba(245,240,232,0.68)",
@@ -255,7 +263,7 @@ const inputStyle: React.CSSProperties = {
 
 function SubmitReviewForm({
   onReviewSubmitted,
-}: { onReviewSubmitted: () => void }) {
+}: { onReviewSubmitted: (review: Review) => void }) {
   const [name, setName] = useState("");
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
@@ -288,16 +296,24 @@ function SubmitReviewForm({
     }
     setErrors({});
     try {
-      await mutation.mutateAsync({
+      const result = await mutation.mutateAsync({
         name: name.trim(),
         rating,
         comment: comment.trim(),
       });
+      const submittedReview: Review = {
+        id: result?.id ?? `opt-${Date.now()}`,
+        name: name.trim(),
+        rating,
+        comment: comment.trim(),
+        // Use current time in nanoseconds as optimistic timestamp
+        timestampNs: BigInt(Date.now()) * 1_000_000n,
+      };
       setName("");
       setRating(0);
       setComment("");
       setSuccessMsg(true);
-      onReviewSubmitted();
+      onReviewSubmitted(submittedReview);
       setTimeout(() => setSuccessMsg(false), 3000);
     } catch (err) {
       const message =
@@ -359,7 +375,7 @@ function SubmitReviewForm({
               color: "#f5c542",
             }}
           >
-            Thank you! Your review has been posted.
+            Review submitted successfully ✅
           </span>
         </div>
       )}
@@ -411,11 +427,13 @@ function SubmitReviewForm({
               setErrors((prev) => ({ ...prev, name: undefined }));
             }}
             placeholder="Enter your name"
+            disabled={mutation.isPending}
             style={{
               ...inputStyle,
               borderColor: errors.name
                 ? "rgba(239,68,68,0.6)"
                 : "rgba(212,168,67,0.18)",
+              opacity: mutation.isPending ? 0.6 : 1,
             }}
             className="px-4 py-3 text-sm placeholder:text-white/20"
             data-ocid="reviews.name.input"
@@ -449,14 +467,17 @@ function SubmitReviewForm({
               <button
                 type="button"
                 key={`rate-${star}`}
-                onMouseEnter={() => setHover(star)}
+                onMouseEnter={() => !mutation.isPending && setHover(star)}
                 onMouseLeave={() => setHover(0)}
                 onClick={() => {
+                  if (mutation.isPending) return;
                   setRating(star);
                   setErrors((prev) => ({ ...prev, rating: undefined }));
                 }}
+                disabled={mutation.isPending}
                 aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
                 className="transition-transform hover:scale-110 focus:outline-none"
+                style={{ opacity: mutation.isPending ? 0.6 : 1 }}
                 data-ocid={`reviews.star.${star}`}
               >
                 <Star
@@ -509,12 +530,14 @@ function SubmitReviewForm({
             }}
             placeholder="Tell us about your experience..."
             rows={4}
+            disabled={mutation.isPending}
             style={{
               ...inputStyle,
               resize: "vertical",
               borderColor: errors.comment
                 ? "rgba(239,68,68,0.6)"
                 : "rgba(212,168,67,0.18)",
+              opacity: mutation.isPending ? 0.6 : 1,
             }}
             className="px-4 py-3 text-sm placeholder:text-white/20"
             data-ocid="reviews.comment.textarea"
@@ -555,8 +578,31 @@ function SubmitReviewForm({
 
 // ─── Live Reviews ─────────────────────────────────────────────────────────────
 
-function LiveReviews() {
-  const { data: reviews, isLoading, isError } = useGetAllReviews();
+function LiveReviews({ pendingReview }: { pendingReview: Review | null }) {
+  const { data: reviews, isLoading } = useGetAllReviews();
+
+  // Local state for optimistic prepend
+  const [optimisticReviews, setOptimisticReviews] = useState<Review[]>([]);
+
+  // Whenever a new review is submitted, prepend it immediately
+  useEffect(() => {
+    if (!pendingReview) return;
+    setOptimisticReviews((prev) => {
+      // Avoid duplicates (e.g. if refetch already included it)
+      if (prev.some((r) => r.id === pendingReview.id)) return prev;
+      const next = [pendingReview, ...prev];
+      return next.slice(0, 20);
+    });
+  }, [pendingReview]);
+
+  // Once the real data comes back with content, clear optimistic entries covered by it
+  useEffect(() => {
+    if (Array.isArray(reviews) && reviews.length > 0) {
+      setOptimisticReviews([]);
+    }
+  }, [reviews]);
+
+  console.log("[Reviews] Fetched:", reviews);
 
   if (isLoading) {
     return (
@@ -578,25 +624,29 @@ function LiveReviews() {
     );
   }
 
-  if (isError) {
-    return (
-      <div className="text-center py-4" data-ocid="reviews.error_state">
-        <p
-          style={{ color: "#f5c542", fontFamily: "Poppins, sans-serif" }}
-          className="text-sm"
-        >
-          Could not load reviews right now.
-        </p>
-      </div>
-    );
-  }
+  // Always ensure we have a valid array — never undefined/null
+  const safeReviews: Review[] = Array.isArray(reviews)
+    ? reviews
+    : SEED_REVIEWS_FALLBACK;
 
-  // Null-guard: treat undefined/null as empty array
-  const safeReviews = Array.isArray(reviews) ? reviews : [];
-  const hasRealReviews = safeReviews.length > 0;
-  const displayReviews = hasRealReviews
-    ? [...safeReviews].reverse()
-    : SEED_REVIEWS;
+  // Safety-net sort (newest first — seed reviews have timestampNs=0 so they sort to bottom)
+  const sorted = [...safeReviews].sort((a, b) =>
+    Number(BigInt(b.timestampNs) - BigInt(a.timestampNs)),
+  );
+  const capped = sorted.slice(0, 20);
+
+  // Merge optimistic items at the top (dedup by id), then cap at 20
+  const merged = [...optimisticReviews];
+  for (const r of capped) {
+    if (!merged.some((o) => o.id === r.id)) merged.push(r);
+  }
+  const finalReviews = merged.slice(0, 20);
+
+  // If even after all that we have nothing, use SEED_REVIEWS as the absolute fallback
+  const hasRealReviews =
+    finalReviews.length > 0 &&
+    !finalReviews.every((r) => r.id.startsWith("seed"));
+  const displayReviews = finalReviews.length > 0 ? finalReviews : SEED_REVIEWS;
 
   return (
     <div className="mt-12" data-ocid="reviews.live_list">
@@ -610,34 +660,45 @@ function LiveReviews() {
       >
         {hasRealReviews ? "Recent Customer Reviews" : "What Our Customers Say"}
       </h3>
-      <div
-        className="flex flex-row gap-3 sm:gap-5 overflow-x-auto pb-3"
-        style={{
-          scrollBehavior: "smooth",
-          WebkitOverflowScrolling: "touch",
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-        }}
-      >
-        {displayReviews.map((review, i) => (
-          <div
-            key={review.id}
-            className="flex-shrink-0"
-            style={{ minWidth: "280px", maxWidth: "340px", width: "75vw" }}
-          >
-            <ReviewCard
-              name={review.name}
-              rating={review.rating}
-              comment={review.comment}
-              timestamp={
-                "timestampNs" in review ? review.timestampNs : undefined
-              }
-              badge={!hasRealReviews ? "Verified" : undefined}
-              delay={i * 100}
-            />
-          </div>
-        ))}
-      </div>
+      {displayReviews.length === 0 ? (
+        <p
+          className="text-center text-sm py-6"
+          style={{
+            color: "rgba(245,240,232,0.4)",
+            fontFamily: "Poppins, sans-serif",
+          }}
+          data-ocid="reviews.empty_state"
+        >
+          No reviews yet — be the first!
+        </p>
+      ) : (
+        <div
+          className="flex flex-row gap-3 sm:gap-5 overflow-x-auto pb-3"
+          style={{
+            scrollBehavior: "smooth",
+            WebkitOverflowScrolling: "touch",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
+        >
+          {displayReviews.map((review, i) => (
+            <div
+              key={review.id}
+              className="flex-shrink-0"
+              style={{ minWidth: "280px", maxWidth: "340px", width: "75vw" }}
+            >
+              <ReviewCard
+                name={review.name}
+                rating={review.rating}
+                comment={review.comment}
+                timestamp={review.timestampNs}
+                badge={!hasRealReviews ? "Verified" : undefined}
+                delay={i * 100}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -646,13 +707,12 @@ function LiveReviews() {
 
 export default function Reviews() {
   const queryClient = useQueryClient();
+  const [pendingReview, setPendingReview] = useState<Review | null>(null);
 
-  // On successful submission: LiveReviews re-renders automatically because
-  // useSubmitReview already calls invalidateQueries + refetchQueries.
-  // We keep this handler only to trigger the success message in SubmitReviewForm.
-  const handleReviewSubmitted = () => {
-    // Ensure the cache is fresh — belt-and-suspenders in case mutation
-    // onSuccess fired before the component re-rendered.
+  const handleReviewSubmitted = (review: Review) => {
+    // Optimistically prepend the new review immediately
+    setPendingReview(review);
+    // Belt-and-suspenders: ensure cache is fresh
     void queryClient.refetchQueries({ queryKey: ["reviews"] });
   };
 
@@ -826,7 +886,7 @@ export default function Reviews() {
         <SubmitReviewForm onReviewSubmitted={handleReviewSubmitted} />
 
         {/* Live reviews list — re-renders whenever React Query cache updates */}
-        <LiveReviews />
+        <LiveReviews pendingReview={pendingReview} />
       </div>
 
       <style>{`

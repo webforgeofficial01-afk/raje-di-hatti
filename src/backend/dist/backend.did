@@ -28,17 +28,17 @@ type Submission =
  };
 type ReviewInput = 
  record {
-   comment: text;
    name: text;
    rating: nat;
+   review: text;
  };
 type Review = 
  record {
-   comment: text;
+   createdAt: int;
    id: nat;
    name: text;
    rating: nat;
-   timestamp: Time;
+   review: text;
  };
 type OrderInput = 
  record {
@@ -92,6 +92,7 @@ service : {
   getCallerUserProfile: () -> (opt UserProfile) query;
   getCallerUserRole: () -> (UserRole) query;
   getGalleryItem: (id: nat) -> (opt GalleryItem) query;
+  getLatestReviews: (limit: nat) -> (vec Review) query;
   getOrderById: (orderId: text) -> (opt Order) query;
   getReviewInputs: () -> (vec ReviewInput) query;
   getUserProfile: (user: principal) -> (opt UserProfile) query;
@@ -100,5 +101,5 @@ service : {
   submitContactForm: (name: text, phone: opt text, email: text, message:
    text) -> ();
   submitOrder: (input: OrderInput) -> (text);
-  submitReview: (name: text, rating: nat, comment: text) -> (nat);
+  submitReview: (name: text, rating: nat, review: text) -> (nat);
 }

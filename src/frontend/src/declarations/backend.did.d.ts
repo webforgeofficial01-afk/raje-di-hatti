@@ -40,14 +40,14 @@ export interface OrderInput {
 }
 export interface Review {
   'id' : bigint,
+  'review' : string,
   'name' : string,
-  'comment' : string,
-  'timestamp' : Time,
+  'createdAt' : bigint,
   'rating' : bigint,
 }
 export interface ReviewInput {
+  'review' : string,
   'name' : string,
-  'comment' : string,
   'rating' : bigint,
 }
 export interface Submission {
@@ -100,6 +100,7 @@ export interface _SERVICE {
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getGalleryItem' : ActorMethod<[bigint], [] | [GalleryItem]>,
+  'getLatestReviews' : ActorMethod<[bigint], Array<Review>>,
   'getOrderById' : ActorMethod<[string], [] | [Order]>,
   'getReviewInputs' : ActorMethod<[], Array<ReviewInput>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,

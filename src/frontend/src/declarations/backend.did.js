@@ -36,9 +36,9 @@ export const GalleryItem = IDL.Record({
 });
 export const Review = IDL.Record({
   'id' : IDL.Nat,
+  'review' : IDL.Text,
   'name' : IDL.Text,
-  'comment' : IDL.Text,
-  'timestamp' : Time,
+  'createdAt' : IDL.Int,
   'rating' : IDL.Nat,
 });
 export const Submission = IDL.Record({
@@ -61,8 +61,8 @@ export const Order = IDL.Record({
   'items' : IDL.Text,
 });
 export const ReviewInput = IDL.Record({
+  'review' : IDL.Text,
   'name' : IDL.Text,
-  'comment' : IDL.Text,
   'rating' : IDL.Nat,
 });
 export const OrderInput = IDL.Record({
@@ -116,6 +116,7 @@ export const idlService = IDL.Service({
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getGalleryItem' : IDL.Func([IDL.Nat], [IDL.Opt(GalleryItem)], ['query']),
+  'getLatestReviews' : IDL.Func([IDL.Nat], [IDL.Vec(Review)], ['query']),
   'getOrderById' : IDL.Func([IDL.Text], [IDL.Opt(Order)], ['query']),
   'getReviewInputs' : IDL.Func([], [IDL.Vec(ReviewInput)], ['query']),
   'getUserProfile' : IDL.Func(
@@ -165,9 +166,9 @@ export const idlFactory = ({ IDL }) => {
   });
   const Review = IDL.Record({
     'id' : IDL.Nat,
+    'review' : IDL.Text,
     'name' : IDL.Text,
-    'comment' : IDL.Text,
-    'timestamp' : Time,
+    'createdAt' : IDL.Int,
     'rating' : IDL.Nat,
   });
   const Submission = IDL.Record({
@@ -190,8 +191,8 @@ export const idlFactory = ({ IDL }) => {
     'items' : IDL.Text,
   });
   const ReviewInput = IDL.Record({
+    'review' : IDL.Text,
     'name' : IDL.Text,
-    'comment' : IDL.Text,
     'rating' : IDL.Nat,
   });
   const OrderInput = IDL.Record({
@@ -245,6 +246,7 @@ export const idlFactory = ({ IDL }) => {
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getGalleryItem' : IDL.Func([IDL.Nat], [IDL.Opt(GalleryItem)], ['query']),
+    'getLatestReviews' : IDL.Func([IDL.Nat], [IDL.Vec(Review)], ['query']),
     'getOrderById' : IDL.Func([IDL.Text], [IDL.Opt(Order)], ['query']),
     'getReviewInputs' : IDL.Func([], [IDL.Vec(ReviewInput)], ['query']),
     'getUserProfile' : IDL.Func(
