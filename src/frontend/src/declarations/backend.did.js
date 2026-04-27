@@ -119,6 +119,11 @@ export const idlService = IDL.Service({
   'getLatestReviews' : IDL.Func([IDL.Nat], [IDL.Vec(Review)], ['query']),
   'getOrderById' : IDL.Func([IDL.Text], [IDL.Opt(Order)], ['query']),
   'getReviewInputs' : IDL.Func([], [IDL.Vec(ReviewInput)], ['query']),
+  'getReviewsPaginated' : IDL.Func(
+      [IDL.Nat, IDL.Nat],
+      [IDL.Vec(Review)],
+      ['query'],
+    ),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
       [IDL.Opt(UserProfile)],
@@ -249,6 +254,11 @@ export const idlFactory = ({ IDL }) => {
     'getLatestReviews' : IDL.Func([IDL.Nat], [IDL.Vec(Review)], ['query']),
     'getOrderById' : IDL.Func([IDL.Text], [IDL.Opt(Order)], ['query']),
     'getReviewInputs' : IDL.Func([], [IDL.Vec(ReviewInput)], ['query']),
+    'getReviewsPaginated' : IDL.Func(
+        [IDL.Nat, IDL.Nat],
+        [IDL.Vec(Review)],
+        ['query'],
+      ),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
         [IDL.Opt(UserProfile)],

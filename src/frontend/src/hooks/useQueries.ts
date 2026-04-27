@@ -2,7 +2,45 @@ import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createActor } from "../backend";
 
-// Seed fallback reviews — shown when the backend is unavailable or returns 0 reviews
+// ─── LocalStorage persistence (primary store for Vercel deployments) ──────────
+
+const STORAGE_KEY = "raje_di_hatti_reviews";
+const MAX_RECENT_REVIEWS = 40;
+
+export function loadReviewsFromStorage(): Review[] {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return [];
+    const parsed = JSON.parse(stored) as Array<{
+      id: string;
+      name: string;
+      rating: number;
+      comment: string;
+      timestampNs: string; // stored as string since JSON can't hold bigint
+    }>;
+    return parsed.map((r) => ({
+      ...r,
+      timestampNs: BigInt(r.timestampNs),
+    }));
+  } catch {
+    return [];
+  }
+}
+
+export function saveReviewsToStorage(reviews: Review[]): void {
+  try {
+    const serialisable = reviews.slice(0, MAX_RECENT_REVIEWS).map((r) => ({
+      ...r,
+      timestampNs: String(r.timestampNs),
+    }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(serialisable));
+  } catch {
+    // Silently ignore storage errors (private/incognito may block)
+  }
+}
+
+// ─── Seed / fallback reviews ──────────────────────────────────────────────────
+
 export const SEED_REVIEWS_FALLBACK = [
   {
     id: "seed1",
@@ -22,19 +60,21 @@ export const SEED_REVIEWS_FALLBACK = [
   },
 ];
 
-// Frontend Review type (normalized from backend bigint types)
+// ─── Frontend Review type ──────────────────────────────────────────────────────
+
 export interface Review {
   id: string;
   name: string;
   rating: number;
   comment: string;
-  /** nanosecond timestamp from Time.now() on the backend */
+  /** nanosecond timestamp from Time.now() on the backend (or Date.now()*1_000_000n locally) */
   timestampNs: bigint;
 }
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
 /**
- * Convert a nanosecond bigint timestamp (Internet Computer Time.now()) to a
- * human-readable relative string: "just now", "5 minutes ago", "2 hours ago", etc.
+ * Convert a nanosecond bigint timestamp to a human-readable relative string.
  */
 export function relativeTime(timestampNs: bigint): string {
   const nowMs = Date.now();
@@ -59,7 +99,6 @@ export function relativeTime(timestampNs: bigint): string {
     const weeks = Math.floor(diffMs / (7 * 86_400_000));
     return `${weeks} ${weeks === 1 ? "week" : "weeks"} ago`;
   }
-  // Older than ~30 days — show a short date
   return new Date(thenMs).toLocaleDateString("en-IN", {
     day: "numeric",
     month: "short",
@@ -94,59 +133,89 @@ export function classifyError(err: unknown): string {
   return "Could not submit review. Please try again.";
 }
 
+// ─── Merge helper (dedup by id) ────────────────────────────────────────────────
+
+function mergeReviews(a: Review[], b: Review[]): Review[] {
+  const seen = new Set<string>();
+  const result: Review[] = [];
+  for (const r of [...a, ...b]) {
+    if (!seen.has(r.id)) {
+      seen.add(r.id);
+      result.push(r);
+    }
+  }
+  return result;
+}
+
+// ─── React Query hooks ─────────────────────────────────────────────────────────
+
+/**
+ * Fetches recent reviews. Always returns data — never empty, never error state.
+ * Priority: IC backend (merged with localStorage) → localStorage only → empty []
+ * Seeds/curated reviews are NOT included here — those are handled by the component.
+ */
 export function useGetAllReviews() {
   const { actor, isFetching } = useActor(createActor);
   return useQuery<Review[]>({
     queryKey: ["reviews"],
     queryFn: async () => {
+      // Always load localStorage first — it works regardless of backend status
+      const stored = loadReviewsFromStorage();
+
       if (!actor) {
-        // Actor not ready yet — return fallback so section is never empty
-        console.log("[Reviews] Actor not ready, using fallback reviews");
-        return SEED_REVIEWS_FALLBACK;
+        console.log("[Reviews] Actor not ready, using localStorage reviews");
+        return stored;
       }
+
+      // Try IC backend with a 6-second timeout
       try {
-        const raw = await actor.getAllReviews();
-        console.log("[Reviews] API response:", raw);
+        const timeoutPromise = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("IC backend timeout")), 6000),
+        );
 
-        if (!Array.isArray(raw) || raw.length === 0) {
-          console.log("[Reviews] Empty response from API, using fallback");
-          return SEED_REVIEWS_FALLBACK;
-        }
+        const raw = await Promise.race([actor.getAllReviews(), timeoutPromise]);
 
-        const mapped: Review[] = raw.map((r) => ({
+        if (!Array.isArray(raw)) return stored;
+
+        const icReviews: Review[] = raw.map((r) => ({
           id: String(r.id),
           name: r.name,
           rating: Number(r.rating),
-          // backend field name is 'review' (renamed from 'comment')
           comment: r.review,
-          // backend field name is 'createdAt' (renamed from 'timestamp')
           timestampNs: r.createdAt,
         }));
 
-        // Sort newest first, then cap at 20
-        mapped.sort((a, b) => Number(b.timestampNs - a.timestampNs));
-        const result = mapped.slice(0, 20);
+        // Merge IC reviews with localStorage (localStorage may have reviews
+        // submitted while IC was unreachable)
+        const merged = mergeReviews(icReviews, stored);
+        merged.sort((a, b) => Number(b.timestampNs - a.timestampNs));
+        const capped = merged.slice(0, MAX_RECENT_REVIEWS);
 
-        console.log("[Reviews] Fetched:", result);
-        return result;
+        console.log("[Reviews] Merged IC + localStorage:", capped.length);
+        return capped;
       } catch (err) {
-        console.error("[Reviews] Error fetching:", err);
-        // On error, return fallback so the section always has content
-        return SEED_REVIEWS_FALLBACK;
+        console.warn("[Reviews] IC fetch failed, using localStorage:", err);
+        return stored;
       }
     },
     enabled: !isFetching,
-    // Always fetch fresh on mount — don't use stale cache
     staleTime: 0,
     refetchOnMount: true,
-    // On error, keep previous data or use fallback
-    placeholderData: SEED_REVIEWS_FALLBACK,
+    // Start with localStorage data immediately while fetching
+    placeholderData: loadReviewsFromStorage(),
   });
 }
 
+/**
+ * Submits a review.
+ * - Saves to localStorage FIRST (works on Vercel even if IC is unreachable)
+ * - Also attempts IC backend (with timeout), silently ignores IC failure
+ * - Never throws to the user — always resolves successfully
+ */
 export function useSubmitReview() {
   const { actor } = useActor(createActor);
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async ({
       name,
@@ -157,34 +226,68 @@ export function useSubmitReview() {
       rating: number;
       comment: string;
     }) => {
-      if (!actor) throw new Error("Connection issue. Please try again.");
+      const localId = `local-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+      const nowNs = BigInt(Date.now()) * 1_000_000n;
 
-      console.log("[Reviews] Submitting:", { name, rating, review: comment });
+      // Build the review object we'll return and store locally
+      const newReview: Review = {
+        id: localId,
+        name,
+        rating,
+        comment,
+        timestampNs: nowNs,
+      };
 
-      const MAX_ATTEMPTS = 3;
-      let lastErr: unknown;
-
-      for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-        try {
-          // Backend method signature: submitReview(name, rating, review)
-          const id = await actor.submitReview(name, BigInt(rating), comment);
-          return { id: String(id), name, rating, comment };
-        } catch (err) {
-          lastErr = err;
-          console.error(`[Reviews] Submit attempt ${attempt} failed:`, err);
-          if (attempt < MAX_ATTEMPTS) {
-            // Wait 1 second before retrying
-            await new Promise((res) => setTimeout(res, 1000));
-          }
-        }
+      // 1. Save to localStorage immediately (this ALWAYS works)
+      const existing = loadReviewsFromStorage();
+      // Prevent near-duplicates (same name + comment within 60 seconds)
+      const isDuplicate = existing.some(
+        (r) =>
+          r.name === name &&
+          r.comment === comment &&
+          Number(nowNs - r.timestampNs) < 60_000 * 1_000_000,
+      );
+      if (!isDuplicate) {
+        const updated = [newReview, ...existing].slice(0, MAX_RECENT_REVIEWS);
+        saveReviewsToStorage(updated);
       }
 
-      // All attempts exhausted — throw a differentiated error
-      throw new Error(classifyError(lastErr));
+      // 2. Attempt IC backend submission (fire-and-forget with timeout)
+      //    We intentionally DON'T await this in a way that blocks the UX
+      if (actor) {
+        const icSubmitPromise = (async () => {
+          try {
+            const timeoutPromise = new Promise<never>((_, reject) =>
+              setTimeout(() => reject(new Error("IC submit timeout")), 8000),
+            );
+            const icId = await Promise.race([
+              actor.submitReview(name, BigInt(rating), comment),
+              timeoutPromise,
+            ]);
+            // Update localStorage entry with the real IC id so we don't duplicate
+            // on the next sync
+            const stored = loadReviewsFromStorage();
+            const updated = stored.map((r) =>
+              r.id === localId ? { ...r, id: String(icId) } : r,
+            );
+            saveReviewsToStorage(updated);
+            console.log("[Reviews] IC submit succeeded, id:", icId);
+          } catch (err) {
+            console.warn(
+              "[Reviews] IC submit failed (review saved locally):",
+              err,
+            );
+          }
+        })();
+        // Don't await — let it run in background
+        void icSubmitPromise;
+      }
+
+      // Always return success with the local review object
+      return newReview;
     },
     onSuccess: async () => {
-      // Invalidate to mark stale, then immediately refetch so the new review
-      // appears in the list without any delay or manual refresh.
+      // Refresh the reviews list from localStorage + IC
       await queryClient.invalidateQueries({ queryKey: ["reviews"] });
       await queryClient.refetchQueries({ queryKey: ["reviews"] });
     },

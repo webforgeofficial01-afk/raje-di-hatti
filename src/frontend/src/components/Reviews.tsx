@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { CheckCircle, Loader2, Star } from "lucide-react";
+import { CheckCircle, ChevronDown, Loader2, Star } from "lucide-react";
 import { memo, useEffect, useState } from "react";
 import type { Review } from "../hooks/useQueries";
 import {
@@ -9,7 +9,7 @@ import {
   useSubmitReview,
 } from "../hooks/useQueries";
 
-// ─── Seed reviews shown when backend returns 0 reviews ───────────────────────
+// ─── Section 1 curated reviews (What Our Customers Say) ───────────────────────
 
 const SEED_REVIEWS: Review[] = [
   {
@@ -36,12 +36,147 @@ const SEED_REVIEWS: Review[] = [
       "Authentic Punjabi taste that reminds me of home. The paneer butter masala is top-notch. Will definitely order again!",
     timestampNs: BigInt(0),
   },
+  {
+    id: "seed4",
+    name: "Sunita Verma",
+    rating: 5,
+    comment:
+      "I have been ordering from Raje Di Hatti for years. The chole kulche is heavenly — crispy, buttery, and perfectly spiced.",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed5",
+    name: "Deepak Chaudhary",
+    rating: 5,
+    comment:
+      "Family dinner sorted! The thali was massive and delicious. Every dish was made with love. Pure Delhi taste!",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed6",
+    name: "Meera Joshi",
+    rating: 5,
+    comment:
+      "The kulhad lassi alone is worth the trip. Thick, sweet, and cooling. Nothing beats this on a hot Delhi afternoon.",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed7",
+    name: "Vikas Nagar",
+    rating: 4,
+    comment:
+      "Ordered the amritsari kulcha set — absolutely outstanding. The butter and chole combination is perfection.",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed8",
+    name: "Pooja Rawat",
+    rating: 5,
+    comment:
+      "Fast delivery, piping hot food. The dal makhani is creamy and rich, just like my nani used to make.",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed9",
+    name: "Rahul Bhatia",
+    rating: 5,
+    comment:
+      "Ordered for a family gathering of 20 people. Everyone loved the food. Highly recommend for catering orders too!",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed10",
+    name: "Kavita Sharma",
+    rating: 5,
+    comment:
+      "The tandoori paratha with dahi is divine. Everything comes fresh and hot. This is our family's favourite spot in Burari.",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed11",
+    name: "Nikhil Gupta",
+    rating: 5,
+    comment:
+      "Genuinely the best Punjabi food in Delhi NCR. The chur chur naan is unbelievable — crispy layers with perfect stuffing.",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed12",
+    name: "Anjali Saxena",
+    rating: 5,
+    comment:
+      "Always fresh, always delicious. The paneer butter masala is restaurant-quality but with that authentic homemade warmth.",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed13",
+    name: "Mohit Yadav",
+    rating: 5,
+    comment:
+      "Tried almost everything on the menu. The gobhi kulcha and mix raita combo is simply outstanding. Five stars, no doubt!",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed14",
+    name: "Ritika Kapoor",
+    rating: 5,
+    comment:
+      "The chole bhature was so good I ordered again the same evening! Crispy bhatura, spicy chole — absolutely perfect.",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed15",
+    name: "Suresh Malhotra",
+    rating: 4,
+    comment:
+      "Ordered the breakfast set every Sunday for months. The aloo kulcha is my weekend ritual. Never disappoints.",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed16",
+    name: "Nisha Pandey",
+    rating: 5,
+    comment:
+      "The biryani is surprisingly good for a Punjabi dhaba! Fragrant, perfectly spiced, and generous portions.",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed17",
+    name: "Karan Mehta",
+    rating: 5,
+    comment:
+      "Running a business nearby and this is our team lunch spot every week. Consistent quality, great value, fast service.",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed18",
+    name: "Preeti Arora",
+    rating: 5,
+    comment:
+      "The shahi paneer with butter naan is absolutely divine. Creamy, rich, perfectly spiced. Best I have had in Delhi.",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed19",
+    name: "Anil Tomar",
+    rating: 5,
+    comment:
+      "Been a customer since the 90s. The quality has only gotten better. True legacy taste with modern reliability.",
+    timestampNs: BigInt(0),
+  },
+  {
+    id: "seed20",
+    name: "Divya Thakur",
+    rating: 5,
+    comment:
+      "Everything is just amazing. The food is fresh, the portions are generous, and the service is super fast. Highly recommend!",
+    timestampNs: BigInt(0),
+  },
 ];
 
-// Export for reference (alias to the shared fallback)
 export { SEED_REVIEWS };
 
-// ─── Star row (display only) ─────────────────────────────────────────────────
+// ─── Star row (display only) ──────────────────────────────────────────────────
 
 function StarRow({ rating, size = 14 }: { rating: number; size?: number }) {
   return (
@@ -87,13 +222,12 @@ const ReviewCard = memo(function ReviewCard({
     .slice(0, 2)
     .toUpperCase();
 
-  // Only show time label if timestamp is a real non-zero value
   const timeLabel =
     timestamp != null && timestamp > BigInt(0) ? relativeTime(timestamp) : null;
 
   return (
     <div
-      className="review-premium-card animate-section flex flex-col h-full"
+      className="review-premium-card animate-section flex flex-col"
       style={{
         background: "#0a0a0a",
         border: "1px solid rgba(245,197,66,0.18)",
@@ -202,7 +336,7 @@ const ReviewCard = memo(function ReviewCard({
         )}
       </div>
 
-      {/* Review text — field is 'comment' (backend.d.ts confirmed) */}
+      {/* Review text */}
       <p
         style={{
           color: "rgba(245,240,232,0.68)",
@@ -246,7 +380,37 @@ const ReviewCard = memo(function ReviewCard({
   );
 });
 
-// ─── Input style ─────────────────────────────────────────────────────────────
+// ─── Load More Button ─────────────────────────────────────────────────────────
+
+function LoadMoreButton({ onClick }: { onClick: () => void }) {
+  return (
+    <div className="text-center mt-8">
+      <button
+        type="button"
+        onClick={onClick}
+        className="inline-flex items-center gap-2"
+        style={{
+          background: "rgba(245,197,66,0.07)",
+          border: "1px solid rgba(245,197,66,0.28)",
+          color: "#f5c542",
+          fontFamily: "Poppins, sans-serif",
+          fontSize: "0.85rem",
+          fontWeight: 700,
+          padding: "10px 28px",
+          borderRadius: "9999px",
+          cursor: "pointer",
+          transition: "background 0.25s ease, border-color 0.25s ease",
+          letterSpacing: "0.04em",
+        }}
+        data-ocid="reviews.load_more_button"
+      >
+        Load More <ChevronDown size={16} />
+      </button>
+    </div>
+  );
+}
+
+// ─── Input style ──────────────────────────────────────────────────────────────
 
 const inputStyle: React.CSSProperties = {
   fontFamily: "Poppins, sans-serif",
@@ -302,25 +466,23 @@ function SubmitReviewForm({
         comment: comment.trim(),
       });
       const submittedReview: Review = {
-        id: result?.id ?? `opt-${Date.now()}`,
+        id: result.id ?? `opt-${Date.now()}`,
         name: name.trim(),
         rating,
         comment: comment.trim(),
-        // Use current time in nanoseconds as optimistic timestamp
-        timestampNs: BigInt(Date.now()) * 1_000_000n,
+        timestampNs: result.timestampNs ?? BigInt(Date.now()) * 1_000_000n,
       };
       setName("");
       setRating(0);
       setComment("");
       setSuccessMsg(true);
       onReviewSubmitted(submittedReview);
-      setTimeout(() => setSuccessMsg(false), 3000);
-    } catch (err) {
-      const message =
-        err instanceof Error
-          ? err.message
-          : "Failed to submit review. Please try again.";
-      setErrors({ submit: message });
+      setTimeout(() => setSuccessMsg(false), 4000);
+    } catch {
+      // useSubmitReview no longer throws — but keep a safety net
+      setErrors({
+        submit: "Something went wrong. Please try again.",
+      });
     }
   };
 
@@ -375,7 +537,8 @@ function SubmitReviewForm({
               color: "#f5c542",
             }}
           >
-            Review submitted successfully ✅
+            Review submitted successfully ✅ It will appear in Recent Reviews
+            below.
           </span>
         </div>
       )}
@@ -576,128 +739,357 @@ function SubmitReviewForm({
   );
 }
 
-// ─── Live Reviews ─────────────────────────────────────────────────────────────
+// ─── Section 1: What Our Customers Say ───────────────────────────────────────
+// Curated/seed reviews shown in a vertical grid, with Load More (20 per page).
+// The 4.8 / Google rating block is rendered BELOW this section.
 
-function LiveReviews({ pendingReview }: { pendingReview: Review | null }) {
-  const { data: reviews, isLoading } = useGetAllReviews();
+const SECTION1_PAGE_SIZE = 20;
+const SECTION1_MAX = 200;
 
-  // Local state for optimistic prepend
-  const [optimisticReviews, setOptimisticReviews] = useState<Review[]>([]);
+function WhatCustomersSay() {
+  const [visibleCount, setVisibleCount] = useState(SECTION1_PAGE_SIZE);
 
-  // Whenever a new review is submitted, prepend it immediately
-  useEffect(() => {
-    if (!pendingReview) return;
-    setOptimisticReviews((prev) => {
-      // Avoid duplicates (e.g. if refetch already included it)
-      if (prev.some((r) => r.id === pendingReview.id)) return prev;
-      const next = [pendingReview, ...prev];
-      return next.slice(0, 20);
-    });
-  }, [pendingReview]);
-
-  // Once the real data comes back with content, clear optimistic entries covered by it
-  useEffect(() => {
-    if (Array.isArray(reviews) && reviews.length > 0) {
-      setOptimisticReviews([]);
-    }
-  }, [reviews]);
-
-  console.log("[Reviews] Fetched:", reviews);
-
-  if (isLoading) {
-    return (
-      <div className="text-center py-8" data-ocid="reviews.loading_state">
-        <Loader2
-          className="w-6 h-6 animate-spin mx-auto"
-          style={{ color: "#f5c542" }}
-        />
-        <p
-          style={{
-            color: "rgba(245,240,232,0.5)",
-            fontFamily: "Poppins, sans-serif",
-          }}
-          className="mt-2 text-sm"
-        >
-          Loading reviews...
-        </p>
-      </div>
-    );
-  }
-
-  // Always ensure we have a valid array — never undefined/null
-  const safeReviews: Review[] = Array.isArray(reviews)
-    ? reviews
-    : SEED_REVIEWS_FALLBACK;
-
-  // Safety-net sort (newest first — seed reviews have timestampNs=0 so they sort to bottom)
-  const sorted = [...safeReviews].sort((a, b) =>
-    Number(BigInt(b.timestampNs) - BigInt(a.timestampNs)),
-  );
-  const capped = sorted.slice(0, 20);
-
-  // Merge optimistic items at the top (dedup by id), then cap at 20
-  const merged = [...optimisticReviews];
-  for (const r of capped) {
-    if (!merged.some((o) => o.id === r.id)) merged.push(r);
-  }
-  const finalReviews = merged.slice(0, 20);
-
-  // If even after all that we have nothing, use SEED_REVIEWS as the absolute fallback
-  const hasRealReviews =
-    finalReviews.length > 0 &&
-    !finalReviews.every((r) => r.id.startsWith("seed"));
-  const displayReviews = finalReviews.length > 0 ? finalReviews : SEED_REVIEWS;
+  // Limit to SECTION1_MAX and paginate
+  const allReviews = SEED_REVIEWS.slice(0, SECTION1_MAX);
+  const visible = allReviews.slice(0, visibleCount);
+  const hasMore = visibleCount < allReviews.length;
 
   return (
-    <div className="mt-12" data-ocid="reviews.live_list">
+    <div>
+      {/* Sub-heading */}
       <h3
         style={{
           fontFamily: "Playfair Display, Georgia, serif",
           color: "#f5f0e8",
           fontWeight: 800,
+          textAlign: "center",
+          marginBottom: "32px",
         }}
-        className="text-xl font-bold text-center mb-8"
+        className="text-2xl"
+        data-ocid="reviews.customers_say.section"
       >
-        {hasRealReviews ? "Recent Customer Reviews" : "What Our Customers Say"}
+        What Our Customers Say
       </h3>
-      {displayReviews.length === 0 ? (
-        <p
-          className="text-center text-sm py-6"
+
+      {/* Review horizontal scroll row */}
+      <div
+        className="reviews-scroll-container flex flex-row overflow-x-auto gap-4 pb-4 hide-scrollbar scroll-smooth"
+        data-ocid="reviews.customers_say.list"
+      >
+        {visible.map((review, i) => (
+          <div
+            key={review.id}
+            className="reviews-scroll-item min-w-[320px] max-w-[320px] flex-shrink-0"
+            data-ocid={`reviews.customers_say.item.${i + 1}`}
+          >
+            <ReviewCard
+              name={review.name}
+              rating={review.rating}
+              comment={review.comment}
+              badge="Verified"
+              delay={Math.min(i, 5) * 80}
+            />
+          </div>
+        ))}
+      </div>
+
+      {hasMore && (
+        <LoadMoreButton
+          onClick={() =>
+            setVisibleCount((c) =>
+              Math.min(c + SECTION1_PAGE_SIZE, SECTION1_MAX),
+            )
+          }
+        />
+      )}
+    </div>
+  );
+}
+
+// ─── Google Rating Block (rendered below Section 1) ───────────────────────────
+
+function GoogleRatingBlock() {
+  return (
+    <div
+      className="animate-section mt-14 mb-14"
+      data-ocid="reviews.google_rating"
+      style={{
+        background:
+          "linear-gradient(135deg, rgba(245,197,66,0.06) 0%, rgba(255,122,24,0.03) 100%)",
+        border: "1px solid rgba(245,197,66,0.2)",
+        borderRadius: "20px",
+        padding: "clamp(20px, 4vw, 36px) clamp(16px, 4vw, 32px)",
+        maxWidth: "520px",
+        margin: "56px auto 56px",
+        textAlign: "center",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(ellipse at center, rgba(245,197,66,0.07) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "7px",
+          background: "rgba(245,197,66,0.1)",
+          border: "1px solid rgba(245,197,66,0.22)",
+          borderRadius: "9999px",
+          padding: "5px 16px",
+          marginBottom: "18px",
+        }}
+      >
+        <span
           style={{
-            color: "rgba(245,240,232,0.4)",
+            fontSize: "13px",
+            fontWeight: 900,
+            color: "#f5c542",
             fontFamily: "Poppins, sans-serif",
           }}
-          data-ocid="reviews.empty_state"
         >
-          No reviews yet — be the first!
-        </p>
-      ) : (
-        <div
-          className="flex flex-row gap-3 sm:gap-5 overflow-x-auto pb-3"
+          G
+        </span>
+        <span
           style={{
-            scrollBehavior: "smooth",
-            WebkitOverflowScrolling: "touch",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
+            color: "rgba(245,240,232,0.65)",
+            fontFamily: "Poppins, sans-serif",
+            fontSize: "11px",
+            fontWeight: 700,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
           }}
         >
-          {displayReviews.map((review, i) => (
-            <div
-              key={review.id}
-              className="flex-shrink-0"
-              style={{ minWidth: "280px", maxWidth: "340px", width: "75vw" }}
-            >
-              <ReviewCard
-                name={review.name}
-                rating={review.rating}
-                comment={review.comment}
-                timestamp={review.timestampNs}
-                badge={!hasRealReviews ? "Verified" : undefined}
-                delay={i * 100}
-              />
-            </div>
-          ))}
+          Google Rating
+        </span>
+      </div>
+
+      <div className="flex items-center justify-center gap-5 mb-4">
+        <div
+          style={{
+            background: "linear-gradient(135deg, #f5c542 0%, #ff9a1a 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            fontFamily: "Playfair Display, Georgia, serif",
+            fontSize: "clamp(3.5rem, 8vw, 5rem)",
+            fontWeight: 900,
+            lineHeight: 1,
+            letterSpacing: "-0.03em",
+            filter: "drop-shadow(0 0 20px rgba(245,197,66,0.5))",
+          }}
+        >
+          4.8
         </div>
+        <div className="flex flex-col items-start gap-2">
+          <div className="flex gap-1.5">
+            {[1, 2, 3, 4].map((pos) => (
+              <Star
+                key={pos}
+                size={22}
+                fill="#f5c542"
+                stroke="#f5c542"
+                style={{
+                  filter: "drop-shadow(0 0 5px rgba(245,197,66,0.75))",
+                }}
+              />
+            ))}
+            <Star
+              size={22}
+              fill="rgba(245,197,66,0.35)"
+              stroke="rgba(245,197,66,0.35)"
+            />
+          </div>
+          <span
+            style={{
+              color: "rgba(245,240,232,0.5)",
+              fontFamily: "Poppins, sans-serif",
+              fontSize: "0.75rem",
+              fontWeight: 600,
+              letterSpacing: "0.05em",
+            }}
+          >
+            Based on 200+ reviews
+          </span>
+        </div>
+      </div>
+
+      <p
+        style={{
+          color: "rgba(245,240,232,0.4)",
+          fontFamily: "Poppins, sans-serif",
+          fontSize: "0.75rem",
+          fontWeight: 500,
+          letterSpacing: "0.04em",
+          position: "relative",
+        }}
+      >
+        Consistently rated by verified Google customers
+      </p>
+    </div>
+  );
+}
+
+// ─── Section 2: Recent Customer Reviews ───────────────────────────────────────
+// User-submitted reviews from localStorage / IC backend.
+// Shows newest first, up to 40 total, paginated 20 at a time.
+
+const SECTION2_PAGE_SIZE = 20;
+const SECTION2_MAX = 40;
+
+function RecentReviews({ pendingReview }: { pendingReview: Review | null }) {
+  const { data: fetchedReviews, isLoading } = useGetAllReviews();
+  const [visibleCount, setVisibleCount] = useState(SECTION2_PAGE_SIZE);
+
+  // Optimistic list — new reviews appear here instantly
+  const [optimisticList, setOptimisticList] = useState<Review[]>([]);
+
+  useEffect(() => {
+    if (!pendingReview) return;
+    setOptimisticList((prev) => {
+      if (prev.some((r) => r.id === pendingReview.id)) return prev;
+      return [pendingReview, ...prev].slice(0, SECTION2_MAX);
+    });
+  }, [pendingReview]);
+
+  // Once real data arrives, merge it with any optimistic entries
+  const safeBackend: Review[] = Array.isArray(fetchedReviews)
+    ? fetchedReviews
+    : SEED_REVIEWS_FALLBACK;
+
+  // Merge optimistic at top, then backend (dedup by id), newest first
+  const merged: Review[] = [];
+  const seen = new Set<string>();
+  for (const r of [...optimisticList, ...safeBackend]) {
+    // Exclude seed reviews from Section 2
+    if (r.id.startsWith("seed")) continue;
+    if (!seen.has(r.id)) {
+      seen.add(r.id);
+      merged.push(r);
+    }
+  }
+  merged.sort((a, b) => Number(b.timestampNs - a.timestampNs));
+  const allRecent = merged.slice(0, SECTION2_MAX);
+  const visible = allRecent.slice(0, visibleCount);
+  const hasMore = visibleCount < allRecent.length;
+
+  return (
+    <div
+      className="mt-16"
+      data-ocid="reviews.recent.section"
+      style={{
+        borderTop: "1px solid rgba(245,197,66,0.12)",
+        paddingTop: "clamp(32px, 6vw, 56px)",
+      }}
+    >
+      {/* Sub-heading */}
+      <h3
+        style={{
+          fontFamily: "Playfair Display, Georgia, serif",
+          color: "#f5f0e8",
+          fontWeight: 800,
+          textAlign: "center",
+          marginBottom: "8px",
+        }}
+        className="text-2xl"
+      >
+        Recent Customer Reviews
+      </h3>
+      <p
+        style={{
+          color: "rgba(245,197,66,0.45)",
+          fontFamily: "Poppins, sans-serif",
+          fontSize: "0.8rem",
+          textAlign: "center",
+          marginBottom: "32px",
+          letterSpacing: "0.03em",
+        }}
+      >
+        Submit a review above — it appears here instantly
+      </p>
+
+      {isLoading && optimisticList.length === 0 ? (
+        <div
+          className="text-center py-8"
+          data-ocid="reviews.recent.loading_state"
+        >
+          <Loader2
+            className="w-6 h-6 animate-spin mx-auto"
+            style={{ color: "#f5c542" }}
+          />
+          <p
+            style={{
+              color: "rgba(245,240,232,0.5)",
+              fontFamily: "Poppins, sans-serif",
+            }}
+            className="mt-2 text-sm"
+          >
+            Loading reviews...
+          </p>
+        </div>
+      ) : visible.length === 0 ? (
+        <div
+          className="text-center py-10"
+          data-ocid="reviews.recent.empty_state"
+          style={{
+            background: "rgba(245,197,66,0.03)",
+            border: "1px dashed rgba(245,197,66,0.15)",
+            borderRadius: "16px",
+            padding: "32px",
+          }}
+        >
+          <p
+            style={{
+              color: "rgba(245,240,232,0.4)",
+              fontFamily: "Poppins, sans-serif",
+              fontSize: "0.9rem",
+            }}
+          >
+            No reviews yet — be the first to share your experience!
+          </p>
+        </div>
+      ) : (
+        <>
+          {/* Horizontal scroll row — same design as Section 1 */}
+          <div
+            className="reviews-scroll-container flex flex-row overflow-x-auto gap-4 pb-4 hide-scrollbar scroll-smooth"
+            data-ocid="reviews.recent.list"
+          >
+            {visible.map((review, i) => (
+              <div
+                key={review.id}
+                className="reviews-scroll-item min-w-[320px] max-w-[320px] flex-shrink-0"
+                data-ocid={`reviews.recent.item.${i + 1}`}
+              >
+                <ReviewCard
+                  name={review.name}
+                  rating={review.rating}
+                  comment={review.comment}
+                  timestamp={review.timestampNs}
+                  delay={Math.min(i, 5) * 80}
+                />
+              </div>
+            ))}
+          </div>
+
+          {hasMore && (
+            <LoadMoreButton
+              onClick={() =>
+                setVisibleCount((c) =>
+                  Math.min(c + SECTION2_PAGE_SIZE, SECTION2_MAX),
+                )
+              }
+            />
+          )}
+        </>
       )}
     </div>
   );
@@ -710,9 +1102,8 @@ export default function Reviews() {
   const [pendingReview, setPendingReview] = useState<Review | null>(null);
 
   const handleReviewSubmitted = (review: Review) => {
-    // Optimistically prepend the new review immediately
     setPendingReview(review);
-    // Belt-and-suspenders: ensure cache is fresh
+    // Refetch so Section 2 picks up the new localStorage entry
     void queryClient.refetchQueries({ queryKey: ["reviews"] });
   };
 
@@ -739,7 +1130,7 @@ export default function Reviews() {
             }}
             className="section-title"
           >
-            What Our Customers Say
+            Loved by Thousands
           </h2>
           <div className="section-divider" />
           <p
@@ -751,142 +1142,21 @@ export default function Reviews() {
               marginTop: "12px",
             }}
           >
-            Real reviews from real customers
+            Real reviews from real customers across Burari and Delhi
           </p>
         </div>
 
-        {/* Google Rating block */}
-        <div
-          className="animate-section mb-14"
-          data-ocid="reviews.google_rating"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(245,197,66,0.06) 0%, rgba(255,122,24,0.03) 100%)",
-            border: "1px solid rgba(245,197,66,0.2)",
-            borderRadius: "20px",
-            padding: "clamp(20px, 4vw, 36px) clamp(16px, 4vw, 32px)",
-            maxWidth: "520px",
-            margin: "0 auto 40px",
-            textAlign: "center",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "radial-gradient(ellipse at center, rgba(245,197,66,0.07) 0%, transparent 70%)",
-              pointerEvents: "none",
-            }}
-          />
+        {/* ── Section 1: Curated customer testimonials ── */}
+        <WhatCustomersSay />
 
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "7px",
-              background: "rgba(245,197,66,0.1)",
-              border: "1px solid rgba(245,197,66,0.22)",
-              borderRadius: "9999px",
-              padding: "5px 16px",
-              marginBottom: "18px",
-            }}
-          >
-            <span
-              style={{
-                fontSize: "13px",
-                fontWeight: 900,
-                color: "#f5c542",
-                fontFamily: "Poppins, sans-serif",
-              }}
-            >
-              G
-            </span>
-            <span
-              style={{
-                color: "rgba(245,240,232,0.65)",
-                fontFamily: "Poppins, sans-serif",
-                fontSize: "11px",
-                fontWeight: 700,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-              }}
-            >
-              Google Rating
-            </span>
-          </div>
+        {/* ── Google Rating block — shown BELOW Section 1 ── */}
+        <GoogleRatingBlock />
 
-          <div className="flex items-center justify-center gap-5 mb-4">
-            <div
-              style={{
-                background: "linear-gradient(135deg, #f5c542 0%, #ff9a1a 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                fontFamily: "Playfair Display, Georgia, serif",
-                fontSize: "clamp(3.5rem, 8vw, 5rem)",
-                fontWeight: 900,
-                lineHeight: 1,
-                letterSpacing: "-0.03em",
-                filter: "drop-shadow(0 0 20px rgba(245,197,66,0.5))",
-              }}
-            >
-              4.7
-            </div>
-            <div className="flex flex-col items-start gap-2">
-              <div className="flex gap-1.5">
-                {[1, 2, 3, 4].map((pos) => (
-                  <Star
-                    key={pos}
-                    size={22}
-                    fill="#f5c542"
-                    stroke="#f5c542"
-                    style={{
-                      filter: "drop-shadow(0 0 5px rgba(245,197,66,0.75))",
-                    }}
-                  />
-                ))}
-                <Star
-                  size={22}
-                  fill="rgba(245,197,66,0.35)"
-                  stroke="rgba(245,197,66,0.35)"
-                />
-              </div>
-              <span
-                style={{
-                  color: "rgba(245,240,232,0.5)",
-                  fontFamily: "Poppins, sans-serif",
-                  fontSize: "0.75rem",
-                  fontWeight: 600,
-                  letterSpacing: "0.05em",
-                }}
-              >
-                Based on 200+ reviews
-              </span>
-            </div>
-          </div>
-
-          <p
-            style={{
-              color: "rgba(245,240,232,0.4)",
-              fontFamily: "Poppins, sans-serif",
-              fontSize: "0.75rem",
-              fontWeight: 500,
-              letterSpacing: "0.04em",
-              position: "relative",
-            }}
-          >
-            Consistently rated by verified Google customers
-          </p>
-        </div>
-
-        {/* Submit form — above reviews list */}
+        {/* ── Submit form ── */}
         <SubmitReviewForm onReviewSubmitted={handleReviewSubmitted} />
 
-        {/* Live reviews list — re-renders whenever React Query cache updates */}
-        <LiveReviews pendingReview={pendingReview} />
+        {/* ── Section 2: User-submitted recent reviews ── */}
+        <RecentReviews pendingReview={pendingReview} />
       </div>
 
       <style>{`

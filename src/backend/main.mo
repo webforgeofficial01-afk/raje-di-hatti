@@ -12,9 +12,9 @@ import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 import MixinStorage "blob-storage/Mixin";
 import Storage "blob-storage/Storage";
-import Migration "migration";
 
-(with migration = Migration.run)
+
+
 actor {
   // Authorization system state
   let accessControlState = AccessControl.initState();
@@ -112,7 +112,7 @@ actor {
   var nextReviewId = 0;
   let reviews = Map.empty<Nat, Review>();
 
-  public shared ({ caller }) func submitReview(name : Text, rating : Nat, review : Text) : async Nat {
+  public shared func submitReview(name : Text, rating : Nat, review : Text) : async Nat {
     if (rating < 1 or rating > 5) {
       Runtime.trap("Rating must be between 1 and 5");
     };
@@ -128,13 +128,16 @@ actor {
     newReview.id;
   };
 
-  public query ({ caller }) func getAllReviews() : async [Review] {
+  public query func getAllReviews() : async [Review] {
     reviews.values().sort(Review.compareDesc).toArray();
   };
 
-  public query ({ caller }) func getLatestReviews(limit : Nat) : async [Review] {
-    let effectiveLimit = if (limit > 20) { 20 } else { limit };
-    reviews.values().sort(Review.compareDesc).take(effectiveLimit).toArray();
+  public query func getLatestReviews(limit : Nat) : async [Review] {
+    reviews.values().sort(Review.compareDesc).take(limit).toArray();
+  };
+
+  public query func getReviewsPaginated(limit : Nat, offset : Nat) : async [Review] {
+    reviews.values().sort(Review.compareDesc).drop(offset).take(limit).toArray();
   };
 
   public query ({ caller }) func getReviewInputs() : async [ReviewInput] {

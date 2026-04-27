@@ -176,6 +176,7 @@ export interface backendInterface {
     getLatestReviews(limit: bigint): Promise<Array<Review>>;
     getOrderById(orderId: string): Promise<Order | null>;
     getReviewInputs(): Promise<Array<ReviewInput>>;
+    getReviewsPaginated(limit: bigint, offset: bigint): Promise<Array<Review>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
@@ -463,6 +464,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.getReviewInputs();
+            return result;
+        }
+    }
+    async getReviewsPaginated(arg0: bigint, arg1: bigint): Promise<Array<Review>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getReviewsPaginated(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getReviewsPaginated(arg0, arg1);
             return result;
         }
     }

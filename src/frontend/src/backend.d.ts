@@ -83,6 +83,7 @@ export interface backendInterface {
     getLatestReviews(limit: bigint): Promise<Array<Review>>;
     getOrderById(orderId: string): Promise<Order | null>;
     getReviewInputs(): Promise<Array<ReviewInput>>;
+    getReviewsPaginated(limit: bigint, offset: bigint): Promise<Array<Review>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;

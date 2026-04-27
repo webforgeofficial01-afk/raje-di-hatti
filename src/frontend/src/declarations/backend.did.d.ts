@@ -103,6 +103,7 @@ export interface _SERVICE {
   'getLatestReviews' : ActorMethod<[bigint], Array<Review>>,
   'getOrderById' : ActorMethod<[string], [] | [Order]>,
   'getReviewInputs' : ActorMethod<[], Array<ReviewInput>>,
+  'getReviewsPaginated' : ActorMethod<[bigint, bigint], Array<Review>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,

@@ -1,4 +1,4 @@
-// Version: 3.0.0
+// Version: 1.0.0
 type Data__791452850<K, V> =
   {var count : Nat__490723111; kvs : [var ?(K, V)]};
 type ExternalBlob__140892883 = Blob;
@@ -24,9 +24,6 @@ type Nat__490723111 = Nat__920180692;
 type Nat__920180692 = Nat;
 type Node__46230540<K, V> =
   {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
-type OldReviewInput__289149596 = {comment : Text; name : Text; rating : Nat};
-type OldReview__1036017002 =
-  {comment : Text; id : Nat; name : Text; rating : Nat; timestamp : Int};
 type Order__762448211 =
   {
     address : Text;
@@ -53,43 +50,7 @@ type Time__796480547 = Int__270357528;
 type Time__900049286 = Time__796480547;
 type UserProfile__491224006 = {name : Text};
 type UserRole__521596351 = {#admin; #guest; #user};
-actor ({
-  stable accessControlState :
-    {
-      var adminAssigned : Bool;
-      userRoles : Map__605269027<Principal, UserRole__521596351>
-    };
-  stable gallery :
-    {
-      var root : Node__46230540<Nat, GalleryItem__507378530>;
-      var size : Nat__490723111
-    };
-  stable var nextGalleryId : Nat;
-  stable var nextReviewId : Nat;
-  stable orders :
-    {
-      var root : Node__46230540<Text, Order__762448211>;
-      var size : Nat__490723111
-    };
-  in reviewInputs :
-    {
-      var blockIndex : Nat;
-      var blocks : [var [var ?OldReviewInput__289149596]];
-      var elementIndex : Nat
-    };
-  in reviews : Map__605269027<Nat, OldReview__1036017002>;
-  stable submissions :
-    {
-      var blockIndex : Nat__490723111;
-      var blocks : [var [var ?Submission__688246233]];
-      var elementIndex : Nat__490723111
-    };
-  stable userProfiles :
-    {
-      var root : Node__46230540<Principal, UserProfile__491224006>;
-      var size : Nat__490723111
-    }
-}, {
+actor {
   stable accessControlState :
     {
       var adminAssigned : Bool;
@@ -123,4 +84,4 @@ actor ({
       var root : Node__46230540<Principal, UserProfile__491224006>;
       var size : Nat__490723111
     }
-}) ;
+};

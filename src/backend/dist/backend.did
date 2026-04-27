@@ -95,6 +95,7 @@ service : {
   getLatestReviews: (limit: nat) -> (vec Review) query;
   getOrderById: (orderId: text) -> (opt Order) query;
   getReviewInputs: () -> (vec ReviewInput) query;
+  getReviewsPaginated: (limit: nat, offset: nat) -> (vec Review) query;
   getUserProfile: (user: principal) -> (opt UserProfile) query;
   isCallerAdmin: () -> (bool) query;
   saveCallerUserProfile: (profile: UserProfile) -> ();
