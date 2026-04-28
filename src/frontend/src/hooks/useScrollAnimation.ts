@@ -83,3 +83,56 @@ export function useElementReveal(threshold = 0.1) {
 
   return ref;
 }
+
+/**
+ * useLuxuryReveal — attaches a single IntersectionObserver to ALL
+ * .luxury-reveal elements on the page.
+ *
+ * Initial state: opacity 0, translateY(40px) scale(0.97) — set via CSS.
+ * Visible state: adds class "is-visible" — CSS handles the transition.
+ * Stagger: elements with data-delay="X" (ms) get that delay before reveal.
+ *
+ * PERFORMANCE: single shared observer, unobserves after animate, no scroll listeners.
+ */
+export function useLuxuryReveal() {
+  useEffect(() => {
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (prefersReduced) {
+      const elements = document.querySelectorAll<HTMLElement>(".luxury-reveal");
+      for (const el of elements) {
+        el.classList.add("is-visible");
+        el.style.transitionDelay = "0ms";
+      }
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            const delay = el.dataset.delay ? Number(el.dataset.delay) : 0;
+            if (delay > 0) {
+              setTimeout(() => {
+                el.classList.add("is-visible");
+              }, delay);
+            } else {
+              el.classList.add("is-visible");
+            }
+            observer.unobserve(el);
+          }
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -5% 0px" },
+    );
+
+    // Observe all .luxury-reveal elements currently in the DOM
+    const elements = document.querySelectorAll<HTMLElement>(".luxury-reveal");
+    for (const el of elements) observer.observe(el);
+
+    return () => observer.disconnect();
+  }, []);
+}

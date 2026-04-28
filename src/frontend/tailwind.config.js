@@ -172,6 +172,35 @@ export default {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
+        "tab-underline": {
+          "0%": { transform: "scaleX(0)", transformOrigin: "left" },
+          "100%": { transform: "scaleX(1)", transformOrigin: "left" },
+        },
+        "tab-fade-in": {
+          "0%": { opacity: "0", transform: "translateY(-8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "card-3d-rotate": {
+          "0%": { transform: "perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0)" },
+          "100%": { transform: "perspective(1200px) rotateX(4deg) rotateY(-6deg) translateZ(12px)" },
+        },
+        "digit-flip": {
+          "0%": { transform: "rotateX(90deg)", opacity: "0" },
+          "50%": { opacity: "1" },
+          "100%": { transform: "rotateX(0deg)", opacity: "1" },
+        },
+        "gallery-stagger": {
+          "0%": { opacity: "0", transform: "translateY(24px) scale(0.95)" },
+          "100%": { opacity: "1", transform: "translateY(0) scale(1)" },
+        },
+        "section-scroll-up": {
+          "0%": { opacity: "0", transform: "translateY(48px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "title-scale": {
+          "0%": { opacity: "0", transform: "scale(0.78)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -182,6 +211,13 @@ export default {
         "slide-in-right": "slide-in-right 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "gold-pulse": "gold-pulse 2.5s ease-in-out infinite",
         "scale-in": "scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "tab-underline": "tab-underline 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "tab-fade": "tab-fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "card-3d": "card-3d-rotate 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "digit-flip": "digit-flip 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "gallery-reveal": "gallery-stagger 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "section-scroll": "section-scroll-up 1.1s cubic-bezier(0.16, 1, 0.3, 1)",
+        "title-scale": "title-scale 1.0s cubic-bezier(0.16, 1, 0.3, 1)",
       },
       transitionTimingFunction: {
         luxury: "cubic-bezier(0.4, 0, 0.2, 1)",

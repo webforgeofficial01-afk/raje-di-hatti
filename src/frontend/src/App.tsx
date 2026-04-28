@@ -24,7 +24,10 @@ import SEOMeta from "./components/SEOMeta";
 import Stats from "./components/Stats";
 import TodaysSpecial from "./components/TodaysSpecial";
 import WhyChooseUs from "./components/WhyChooseUs";
-import { useScrollAnimation } from "./hooks/useScrollAnimation";
+import {
+  useLuxuryReveal,
+  useScrollAnimation,
+} from "./hooks/useScrollAnimation";
 
 // ─── Error Boundary ───────────────────────────────────────────────────────────
 
@@ -58,6 +61,7 @@ class ErrorBoundary extends Component<EBProps, EBState> {
 
 function AppInner() {
   useScrollAnimation();
+  useLuxuryReveal();
   const [loading, setLoading] = useState(true);
 
   const slowCursorRef = useRef({
@@ -170,67 +174,89 @@ function AppInner() {
         {/* 1. Navbar — always visible, sticky */}
         <Navbar />
 
-        <main>
-          {/* 2. Hero — full-screen cinematic section with CTAs */}
-          <LandingPage />
+        {/* 2. Tab navigation — sticky below navbar, z-40 — REMOVED */}
 
-          {/* 3. Trust Strip / Stats */}
-          <div className="animate-section">
+        <main>
+          {/* 3. Hero — full-screen cinematic section with CTAs */}
+          <section id="home">
+            <LandingPage />
+          </section>
+
+          {/* 4. Trust Strip / Stats */}
+          <div className="animate-section luxury-reveal" data-delay="0">
             <Stats />
           </div>
 
-          {/* 4. Today's Special — rotating daily highlight */}
-          <div className="animate-section">
+          {/* 5. Today's Special — rotating daily highlight */}
+          <div className="animate-section luxury-reveal" data-delay="100">
             <TodaysSpecial />
           </div>
 
-          {/* 5. Signature Dishes / Why Choose Us */}
-          <div className="animate-section">
+          {/* 6. Signature Dishes / Why Choose Us */}
+          <div className="animate-section luxury-reveal" data-delay="0">
             <WhyChooseUs />
           </div>
 
-          {/* 6. Cinematic WOW Banner — 3D animated food scene */}
-          <div className="animate-section">
+          {/* 7. Cinematic WOW Banner — 3D animated food scene */}
+          <div id="wow-section" className="animate-section">
             <CinematicBanner />
           </div>
 
-          {/* 7. Menu — app-like ordering system */}
-          <Menu />
+          {/* 8. Menu — app-like ordering system */}
+          <section id="menu">
+            <Menu />
+          </section>
 
-          {/* 8. About / Story — heritage and brand */}
-          <div className="animate-section section-offscreen">
+          {/* 9. About / Story — heritage and brand */}
+          <section
+            id="about"
+            className="animate-section luxury-reveal"
+            data-delay="0"
+          >
             <About />
-          </div>
+          </section>
 
-          {/* 9. Gallery — 4 real photos */}
-          <div className="animate-section section-offscreen">
+          {/* 10. Gallery — 4 real photos */}
+          <section className="animate-section luxury-reveal" data-delay="100">
             <Gallery />
-          </div>
+          </section>
 
-          {/* 10. Reviews — live customer testimonials */}
-          <div className="animate-section section-offscreen">
+          {/* 11. Reviews — live customer testimonials */}
+          <section className="animate-section luxury-reveal" data-delay="0">
             <Reviews />
-          </div>
+          </section>
 
-          {/* 11. Loyalty Card — badge-based repeat visitor rewards */}
-          <div className="animate-section section-offscreen">
+          {/* 12. Loyalty Card — badge-based repeat visitor rewards */}
+          <div className="animate-section luxury-reveal" data-delay="200">
             <LoyaltyCard />
           </div>
 
-          {/* 12. Catering Section — WhatsApp order builder for big orders */}
-          <div className="animate-section section-offscreen">
+          {/* 13. Catering Section — WhatsApp order builder for big orders */}
+          <section
+            id="catering"
+            className="animate-section luxury-reveal"
+            data-delay="0"
+          >
             <CateringBuilder />
-          </div>
+          </section>
 
-          {/* 13. Delivery Zones — where we deliver */}
-          <div className="animate-section section-offscreen">
+          {/* 14. Delivery Zones — where we deliver */}
+          <div
+            id="location"
+            className="animate-section luxury-reveal"
+            data-delay="100"
+          >
             <Location />
           </div>
 
-          {/* 14. Contact — map, phone, inquiry form */}
-          <div className="animate-section section-offscreen">
+          {/* 15. Contact — map, phone, inquiry form */}
+          <section
+            id="contact"
+            className="animate-section luxury-reveal"
+            data-delay="0"
+          >
             <Contact />
-          </div>
+          </section>
         </main>
 
         {/* 15. Footer */}

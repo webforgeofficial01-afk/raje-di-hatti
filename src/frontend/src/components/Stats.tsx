@@ -113,8 +113,15 @@ function StatCard({ stat, index }: { stat: Stat; index: number }) {
       ([entry]) => {
         if (entry.isIntersecting && !observedRef.current) {
           observedRef.current = true;
-          // Stagger: 120ms between cards — noticeable cascade, not too slow
-          setTimeout(() => start(), index * 120);
+          const delay = index * 120;
+          // Start count-up
+          setTimeout(() => start(), delay);
+          // Shimmer sweep on card top border
+          setTimeout(() => {
+            el.classList.add("shimmer-in");
+            // Glow border
+            el.classList.add("glow-in");
+          }, delay + 60);
           observer.disconnect();
         }
       },

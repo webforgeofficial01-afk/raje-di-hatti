@@ -80,6 +80,7 @@ export default function Hero() {
   const rafRef = useRef<number>(0);
   const primaryBtnRef = useRef<HTMLButtonElement>(null);
   const magneticRef = useMagnetic(5);
+  const [ringActive, setRingActive] = useState(false);
 
   const [urgencyIdx, setUrgencyIdx] = useState(0);
   const [urgencyVisible, setUrgencyVisible] = useState(true);
@@ -122,6 +123,7 @@ export default function Hero() {
     };
   }, []);
 
+  // CTA glow sweep + pulse ring every 6s
   useEffect(() => {
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -140,6 +142,9 @@ export default function Hero() {
         btn.classList.add("cta-glow-pulse");
         setTimeout(() => btn.classList.remove("cta-glow-pulse"), 3100);
       }
+      // Trigger expanding ring
+      setRingActive(true);
+      setTimeout(() => setRingActive(false), 950);
     };
 
     const initialTimer = setTimeout(triggerGlow, 5500);
@@ -187,6 +192,47 @@ export default function Hero() {
           className="absolute inset-0 pointer-events-none hero-grain"
           aria-hidden="true"
         />
+        {/* Subtle diagonal shimmer overlay */}
+        <div className="hero-shimmer" aria-hidden="true" />
+
+        {/* ── Ambient light rays — thin diagonal gold beams ── */}
+        <div aria-hidden="true" className="hero-ray hero-ray-1" />
+        <div aria-hidden="true" className="hero-ray hero-ray-2" />
+        <div aria-hidden="true" className="hero-ray hero-ray-3" />
+
+        {/* ── Floating hero particles — warm dots drifting upward ── */}
+        <div aria-hidden="true" className="hero-particles">
+          {(
+            [
+              "p1",
+              "p2",
+              "p3",
+              "p4",
+              "p5",
+              "p6",
+              "p7",
+              "p8",
+              "p9",
+              "p10",
+              "p11",
+              "p12",
+              "p13",
+              "p14",
+              "p15",
+              "p16",
+              "p17",
+              "p18",
+              "p19",
+              "p20",
+            ] as const
+          ).map((key, i) => (
+            <span
+              key={key}
+              className={`hero-particle hero-particle-${i + 1}`}
+            />
+          ))}
+        </div>
+
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -306,7 +352,7 @@ export default function Hero() {
                 animationDelay: "0.1s",
               }}
             >
-              Burari's Most Loved Taste
+              Delhi's Most Loved Taste
             </p>
 
             {/* Trust badges row */}
@@ -457,27 +503,32 @@ export default function Hero() {
 
             {/* ── CTAs ── */}
             <div className="flex flex-wrap gap-3 mb-4">
-              {/* Primary — Order Now */}
-              <button
-                ref={(el) => {
-                  (
-                    primaryBtnRef as React.MutableRefObject<HTMLButtonElement | null>
-                  ).current = el;
-                  (
-                    magneticRef as React.MutableRefObject<HTMLElement | null>
-                  ).current = el;
-                }}
-                type="button"
-                onClick={(e) => {
-                  handleRipple(e);
-                  scrollToSection("menu");
-                }}
-                className="hero-btn-gold btn-magnetic hero-cta-stagger"
-                style={{ "--cta-delay": "0ms" } as React.CSSProperties}
-                data-ocid="hero.menu.primary_button"
+              {/* Primary — Order Now (with pulse ring wrapper) */}
+              <div
+                className={`cta-pulse-ring${ringActive ? " ring-active" : ""}`}
+                style={{ borderRadius: "12px" }}
               >
-                📋 Explore Menu
-              </button>
+                <button
+                  ref={(el) => {
+                    (
+                      primaryBtnRef as React.MutableRefObject<HTMLButtonElement | null>
+                    ).current = el;
+                    (
+                      magneticRef as React.MutableRefObject<HTMLElement | null>
+                    ).current = el;
+                  }}
+                  type="button"
+                  onClick={(e) => {
+                    handleRipple(e);
+                    scrollToSection("menu");
+                  }}
+                  className="hero-btn-gold btn-magnetic hero-cta-stagger"
+                  style={{ "--cta-delay": "0ms" } as React.CSSProperties}
+                  data-ocid="hero.menu.primary_button"
+                >
+                  📋 Explore Menu
+                </button>
+              </div>
 
               {/* Secondary — Zomato */}
               <a
@@ -618,7 +669,7 @@ export default function Hero() {
                   <img
                     src="/assets/generated/hero-food-chole-bhature.dim_900x700.jpg"
                     alt="Signature Chole Bhature — Raje Di Hatti"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover hero-ken-burns"
                     style={{
                       filter: "brightness(0.9) saturate(1.15) contrast(1.05)",
                     }}
@@ -889,10 +940,118 @@ export default function Hero() {
           }
           .scroll-glow-text,
           .scroll-indicator-dot,
-          .hero-cinematic-bg {
-            animation: none !important;
-          }
+          .hero-cinematic-bg,
+          .hero-ray,
+          .hero-particle,
+          .hero-btn-gold-glow { animation: none !important; }
           .scroll-glow-text { opacity: 0.42 !important; }
+          .hero-shimmer { display: none !important; }
+        }
+
+        /* ── Ambient light rays ── */
+        .hero-ray {
+          position: absolute;
+          pointer-events: none;
+          width: 1.5px;
+          height: 180%;
+          top: -40%;
+          transform-origin: top center;
+          will-change: transform, opacity;
+        }
+        @keyframes heroRayDrift {
+          0%   { transform: rotate(35deg) translateX(-60px); opacity: 0; }
+          10%  { opacity: 1; }
+          90%  { opacity: 1; }
+          100% { transform: rotate(35deg) translateX(60px); opacity: 0; }
+        }
+        .hero-ray-1 {
+          left: 15%;
+          background: linear-gradient(to bottom, transparent, rgba(245,197,66,0.07) 40%, rgba(245,197,66,0.04) 70%, transparent);
+          animation: heroRayDrift 38s ease-in-out infinite;
+          animation-delay: 0s;
+        }
+        .hero-ray-2 {
+          left: 40%;
+          background: linear-gradient(to bottom, transparent, rgba(255,200,100,0.05) 40%, rgba(245,197,66,0.03) 70%, transparent);
+          animation: heroRayDrift 42s ease-in-out infinite;
+          animation-delay: -14s;
+        }
+        .hero-ray-3 {
+          left: 70%;
+          background: linear-gradient(to bottom, transparent, rgba(245,197,66,0.06) 40%, rgba(255,170,50,0.04) 70%, transparent);
+          animation: heroRayDrift 36s ease-in-out infinite;
+          animation-delay: -22s;
+        }
+
+        /* ── Hero floating particles ── */
+        .hero-particles {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          overflow: hidden;
+        }
+        .hero-particle {
+          position: absolute;
+          border-radius: 50%;
+          will-change: transform, opacity;
+        }
+        @keyframes heroParticleFloat {
+          0%   { transform: translateY(0)      opacity: 0; }
+          10%  { opacity: 1; }
+          90%  { opacity: 0.5; }
+          100% { transform: translateY(-120px); opacity: 0; }
+        }
+        @keyframes hpf { 0%{transform:translateY(0);opacity:0} 10%{opacity:1} 90%{opacity:.45} 100%{transform:translateY(-130px);opacity:0} }
+
+        .hero-particle-1  { width:2px;  height:2px;  background:rgba(245,197,66,0.55); top:75%; left:8%;   animation:hpf 18s ease-in-out infinite; animation-delay:0s; }
+        .hero-particle-2  { width:1px;  height:1px;  background:rgba(255,255,255,0.4); top:80%; left:15%;  animation:hpf 22s ease-in-out infinite; animation-delay:-3s; }
+        .hero-particle-3  { width:3px;  height:3px;  background:rgba(245,197,66,0.35); top:70%; left:22%;  animation:hpf 26s ease-in-out infinite; animation-delay:-7s; }
+        .hero-particle-4  { width:2px;  height:2px;  background:rgba(255,200,100,0.45);top:85%; left:30%;  animation:hpf 20s ease-in-out infinite; animation-delay:-2s; }
+        .hero-particle-5  { width:1px;  height:1px;  background:rgba(255,255,255,0.35);top:78%; left:38%;  animation:hpf 24s ease-in-out infinite; animation-delay:-10s; }
+        .hero-particle-6  { width:2px;  height:2px;  background:rgba(245,197,66,0.4); top:82%; left:45%;  animation:hpf 28s ease-in-out infinite; animation-delay:-5s; }
+        .hero-particle-7  { width:3px;  height:3px;  background:rgba(255,255,255,0.25);top:72%; left:52%;  animation:hpf 17s ease-in-out infinite; animation-delay:-8s; }
+        .hero-particle-8  { width:1px;  height:1px;  background:rgba(245,197,66,0.5); top:88%; left:60%;  animation:hpf 21s ease-in-out infinite; animation-delay:-13s; }
+        .hero-particle-9  { width:2px;  height:2px;  background:rgba(255,200,80,0.4); top:76%; left:68%;  animation:hpf 25s ease-in-out infinite; animation-delay:-1s; }
+        .hero-particle-10 { width:1px;  height:1px;  background:rgba(255,255,255,0.3); top:83%; left:75%;  animation:hpf 19s ease-in-out infinite; animation-delay:-16s; }
+        .hero-particle-11 { width:2px;  height:2px;  background:rgba(245,197,66,0.45);top:68%; left:82%;  animation:hpf 30s ease-in-out infinite; animation-delay:-4s; }
+        .hero-particle-12 { width:3px;  height:3px;  background:rgba(255,180,60,0.3); top:90%; left:88%;  animation:hpf 23s ease-in-out infinite; animation-delay:-11s; }
+        .hero-particle-13 { width:1px;  height:1px;  background:rgba(255,255,255,0.4); top:60%; left:5%;   animation:hpf 27s ease-in-out infinite; animation-delay:-6s; }
+        .hero-particle-14 { width:2px;  height:2px;  background:rgba(245,197,66,0.3); top:65%; left:92%;  animation:hpf 15s ease-in-out infinite; animation-delay:-9s; }
+        .hero-particle-15 { width:1px;  height:1px;  background:rgba(255,200,100,0.5);top:55%; left:48%;  animation:hpf 29s ease-in-out infinite; animation-delay:-12s; }
+        .hero-particle-16 { width:2px;  height:2px;  background:rgba(255,255,255,0.25);top:92%; left:35%;  animation:hpf 16s ease-in-out infinite; animation-delay:-18s; }
+        .hero-particle-17 { width:3px;  height:3px;  background:rgba(245,197,66,0.35);top:58%; left:78%;  animation:hpf 22s ease-in-out infinite; animation-delay:-15s; }
+        .hero-particle-18 { width:1px;  height:1px;  background:rgba(255,255,255,0.45);top:87%; left:12%;  animation:hpf 20s ease-in-out infinite; animation-delay:-20s; }
+        .hero-particle-19 { width:2px;  height:2px;  background:rgba(245,197,66,0.4); top:63%; left:55%;  animation:hpf 26s ease-in-out infinite; animation-delay:-17s; }
+        .hero-particle-20 { width:1px;  height:1px;  background:rgba(255,200,80,0.55);top:95%; left:70%;  animation:hpf 18s ease-in-out infinite; animation-delay:-14s; }
+
+        /* ── CTA gold glow breath — GPU-safe: animate filter brightness on pseudo ── */
+        @keyframes heroGlowBreathe {
+          0%, 100% { opacity: 0.7; }
+          50%       { opacity: 1; }
+        }
+        .hero-btn-gold::after {
+          content: '';
+          position: absolute;
+          inset: -4px;
+          border-radius: 16px;
+          background: radial-gradient(ellipse, rgba(245,197,66,0.45) 0%, transparent 70%);
+          pointer-events: none;
+          animation: heroGlowBreathe 3s ease-in-out infinite;
+          will-change: opacity;
+          z-index: -1;
+        }
+        .hero-btn-gold:hover::after { animation-play-state: paused; opacity: 1; }
+
+        /* ── Ken Burns subtle zoom on hero photo ── */
+        @keyframes heroKenBurns {
+          0%   { transform: scale(1.0); }
+          50%  { transform: scale(1.05); }
+          100% { transform: scale(1.0); }
+        }
+        .hero-ken-burns {
+          animation: heroKenBurns 20s ease-in-out infinite;
+          will-change: transform;
+          transform-origin: center center;
         }
       `}</style>
     </section>

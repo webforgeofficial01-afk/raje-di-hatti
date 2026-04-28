@@ -1,5 +1,6 @@
 import { Clock, Heart, Shield, Zap } from "lucide-react";
 import type { LucideProps } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 const features = [
   {
@@ -43,6 +44,217 @@ const features = [
   hint?: string;
 }>;
 
+/** 3D tilt on mouse enter — desktop only, GPU-safe */
+function use3DTilt(cardRef: React.RefObject<HTMLDivElement | null>) {
+  useEffect(() => {
+    const card = cardRef.current;
+    if (!card) return;
+    if (window.innerWidth <= 768) return;
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (prefersReduced) return;
+
+    const onEnter = (e: MouseEvent) => {
+      const rect = card.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = e.clientX - cx;
+      const dy = e.clientY - cy;
+      const rx = -(dy / (rect.height / 2)) * 4;
+      const ry = (dx / (rect.width / 2)) * 6;
+      card.style.transform = `perspective(1200px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(8px)`;
+      card.style.transition = "transform 0.1s linear";
+    };
+    const onLeave = () => {
+      card.style.transform = "";
+      card.style.transition =
+        "transform 0.4s cubic-bezier(0.16,1,0.3,1), border-color 0.35s, box-shadow 0.35s";
+    };
+
+    card.addEventListener("mousemove", onEnter);
+    card.addEventListener("mouseleave", onLeave);
+    return () => {
+      card.removeEventListener("mousemove", onEnter);
+      card.removeEventListener("mouseleave", onLeave);
+    };
+  }, [cardRef]);
+}
+
+function WhyCard({
+  feat,
+  index,
+}: {
+  feat: (typeof features)[number];
+  index: number;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const iconRef = useRef<HTMLDivElement>(null);
+  const observedRef = useRef(false);
+
+  use3DTilt(cardRef);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    const icon = iconRef.current;
+    if (!el || !icon) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !observedRef.current) {
+          observedRef.current = true;
+          setTimeout(
+            () => {
+              icon.classList.add("icon-in");
+            },
+            index * 80 + 200,
+          );
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [index]);
+
+  const { Icon } = feat;
+
+  return (
+    <div
+      ref={cardRef}
+      className="why-card animate-section"
+      style={{
+        background:
+          "linear-gradient(135deg, rgba(245,197,66,0.04) 0%, rgba(255,122,24,0.02) 100%)",
+        border: "1px solid rgba(245,197,66,0.12)",
+        borderRadius: "20px",
+        padding: "clamp(20px, 4vw, 32px) clamp(18px, 3.5vw, 28px)",
+        position: "relative",
+        overflow: "hidden",
+        transitionDelay: `${index * 80}ms`,
+        transition:
+          "border-color 0.35s cubic-bezier(0.4,0,0.2,1), transform 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.35s cubic-bezier(0.4,0,0.2,1)",
+        willChange: "transform",
+      }}
+      data-ocid={`why.item.${index + 1}`}
+    >
+      {/* Hover gradient overlay */}
+      <div
+        className="card-hover-overlay"
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "linear-gradient(135deg, rgba(245,197,66,0.07) 0%, rgba(255,122,24,0.04) 100%)",
+          opacity: 0,
+          transition: "opacity 0.35s ease",
+          pointerEvents: "none",
+          borderRadius: "20px",
+        }}
+      />
+
+      {/* Icon box — with entrance animation */}
+      <div
+        ref={iconRef}
+        className="icon-box icon-box-animated"
+        style={{
+          width: "62px",
+          height: "62px",
+          borderRadius: "16px",
+          background:
+            "linear-gradient(135deg, rgba(245,197,66,0.18) 0%, rgba(255,122,24,0.1) 100%)",
+          border: "1px solid rgba(245,197,66,0.28)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: "18px",
+          boxShadow: "0 0 16px rgba(245,197,66,0.1)",
+          transition:
+            "box-shadow 0.35s cubic-bezier(0.4,0,0.2,1), transform 0.35s cubic-bezier(0.4,0,0.2,1)",
+          position: "relative",
+        }}
+      >
+        <Icon
+          size={26}
+          style={{
+            color: feat.accent,
+            filter: `drop-shadow(0 0 6px ${feat.accent}80)`,
+          }}
+          strokeWidth={1.8}
+        />
+      </div>
+
+      <h3
+        style={{
+          fontFamily: "Poppins, sans-serif",
+          color: "#f5f0e8",
+          fontWeight: 800,
+          fontSize: "1rem",
+          marginBottom: "8px",
+          letterSpacing: "0.01em",
+          position: "relative",
+        }}
+      >
+        {feat.title}
+      </h3>
+
+      <p
+        style={{
+          color: feat.accent,
+          fontFamily: "Poppins, sans-serif",
+          fontSize: "0.78rem",
+          fontWeight: 600,
+          marginBottom: "12px",
+          position: "relative",
+        }}
+      >
+        {feat.description}
+      </p>
+
+      <p
+        style={{
+          color: "rgba(245,240,232,0.52)",
+          fontFamily: "Poppins, sans-serif",
+          lineHeight: 1.85,
+          fontSize: "0.82rem",
+          position: "relative",
+        }}
+      >
+        {feat.detail}
+      </p>
+
+      {/* Scarcity hint */}
+      {feat.hint && (
+        <div
+          style={{
+            marginTop: "14px",
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "6px",
+          }}
+        >
+          <span style={{ fontSize: "10px", color: "#ff7a18", flexShrink: 0 }}>
+            ⚠
+          </span>
+          <p
+            style={{
+              color: "rgba(255,122,24,0.7)",
+              fontFamily: "Poppins, sans-serif",
+              fontSize: "0.7rem",
+              fontWeight: 600,
+              fontStyle: "italic",
+              lineHeight: 1.4,
+            }}
+          >
+            {feat.hint}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function WhyChooseUs() {
   return (
     <>
@@ -82,9 +294,13 @@ export default function WhyChooseUs() {
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
                 fontWeight: 900,
+                fontSize: "clamp(2rem, 4.5vw, 3rem)",
+                lineHeight: 1.1,
+                letterSpacing: "-0.03em",
                 filter: "drop-shadow(0 0 18px rgba(245,197,66,0.2))",
+                display: "block",
+                marginBottom: "0.5rem",
               }}
-              className="section-title"
             >
               Why Burari Loves Us
             </h2>
@@ -92,149 +308,9 @@ export default function WhyChooseUs() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-7">
-            {features.map((feat, i) => {
-              const { Icon } = feat;
-              return (
-                <div
-                  key={feat.title}
-                  className="why-card animate-section"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(245,197,66,0.04) 0%, rgba(255,122,24,0.02) 100%)",
-                    border: "1px solid rgba(245,197,66,0.12)",
-                    borderRadius: "20px",
-                    padding: "clamp(20px, 4vw, 32px) clamp(18px, 3.5vw, 28px)",
-                    position: "relative",
-                    overflow: "hidden",
-                    transitionDelay: `${i * 80}ms`,
-                    transition:
-                      "border-color 0.35s cubic-bezier(0.4,0,0.2,1), transform 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.35s cubic-bezier(0.4,0,0.2,1)",
-                    backdropFilter: "blur(8px)",
-                    WebkitBackdropFilter: "blur(8px)",
-                    willChange: "transform",
-                  }}
-                  data-ocid={`why.item.${i + 1}`}
-                >
-                  {/* Hover gradient overlay */}
-                  <div
-                    className="card-hover-overlay"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      background:
-                        "linear-gradient(135deg, rgba(245,197,66,0.07) 0%, rgba(255,122,24,0.04) 100%)",
-                      opacity: 0,
-                      transition: "opacity 0.35s ease",
-                      pointerEvents: "none",
-                      borderRadius: "20px",
-                    }}
-                  />
-
-                  {/* Icon box */}
-                  <div
-                    className="icon-box"
-                    style={{
-                      width: "62px",
-                      height: "62px",
-                      borderRadius: "16px",
-                      background:
-                        "linear-gradient(135deg, rgba(245,197,66,0.18) 0%, rgba(255,122,24,0.1) 100%)",
-                      border: "1px solid rgba(245,197,66,0.28)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginBottom: "18px",
-                      boxShadow: "0 0 16px rgba(245,197,66,0.1)",
-                      transition:
-                        "box-shadow 0.35s cubic-bezier(0.4,0,0.2,1), transform 0.35s cubic-bezier(0.4,0,0.2,1)",
-                      position: "relative",
-                    }}
-                  >
-                    <Icon
-                      size={26}
-                      style={{
-                        color: feat.accent,
-                        filter: `drop-shadow(0 0 6px ${feat.accent}80)`,
-                      }}
-                      strokeWidth={1.8}
-                    />
-                  </div>
-
-                  <h3
-                    style={{
-                      fontFamily: "Poppins, sans-serif",
-                      color: "#f5f0e8",
-                      fontWeight: 800,
-                      fontSize: "1rem",
-                      marginBottom: "8px",
-                      letterSpacing: "0.01em",
-                      position: "relative",
-                    }}
-                  >
-                    {feat.title}
-                  </h3>
-
-                  <p
-                    style={{
-                      color: feat.accent,
-                      fontFamily: "Poppins, sans-serif",
-                      fontSize: "0.78rem",
-                      fontWeight: 600,
-                      marginBottom: "12px",
-                      position: "relative",
-                    }}
-                  >
-                    {feat.description}
-                  </p>
-
-                  <p
-                    style={{
-                      color: "rgba(245,240,232,0.52)",
-                      fontFamily: "Poppins, sans-serif",
-                      lineHeight: 1.85,
-                      fontSize: "0.82rem",
-                      position: "relative",
-                    }}
-                  >
-                    {feat.detail}
-                  </p>
-
-                  {/* Scarcity hint */}
-                  {feat.hint && (
-                    <div
-                      style={{
-                        marginTop: "14px",
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: "6px",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: "10px",
-                          color: "#ff7a18",
-                          flexShrink: 0,
-                        }}
-                      >
-                        ⚠
-                      </span>
-                      <p
-                        style={{
-                          color: "rgba(255,122,24,0.7)",
-                          fontFamily: "Poppins, sans-serif",
-                          fontSize: "0.7rem",
-                          fontWeight: 600,
-                          fontStyle: "italic",
-                          lineHeight: 1.4,
-                        }}
-                      >
-                        {feat.hint}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+            {features.map((feat, i) => (
+              <WhyCard key={feat.title} feat={feat} index={i} />
+            ))}
           </div>
 
           {/* Bottom trust line */}
@@ -267,7 +343,7 @@ export default function WhyChooseUs() {
                   textTransform: "uppercase",
                 }}
               >
-                Serving Burari with pride since 1990
+                Serving with pride since 1990
               </p>
               <div
                 style={{
@@ -284,15 +360,15 @@ export default function WhyChooseUs() {
         <style>{`
           .why-card:hover {
             border-color: rgba(245,197,66,0.45) !important;
-            transform: translateY(-4px);
             box-shadow: 0 16px 40px rgba(245,197,66,0.1), 0 0 0 1px rgba(245,197,66,0.18);
           }
-          .why-card:hover .card-hover-overlay {
-            opacity: 1;
-          }
+          .why-card:hover .card-hover-overlay { opacity: 1; }
           .why-card:hover .icon-box {
             box-shadow: 0 0 28px rgba(245,197,66,0.35), 0 0 0 1px rgba(245,197,66,0.2) !important;
             transform: scale(1.08) !important;
+          }
+          @media (max-width: 768px) {
+            .why-card { transform: none !important; }
           }
         `}</style>
       </section>
@@ -308,7 +384,6 @@ export default function WhyChooseUs() {
         }}
         data-ocid="final-cta.section"
       >
-        {/* Ambient glow */}
         <div
           aria-hidden
           style={{
@@ -319,7 +394,6 @@ export default function WhyChooseUs() {
               "radial-gradient(ellipse 65% 50% at 50% 50%, rgba(245,197,66,0.07) 0%, transparent 65%)",
           }}
         />
-        {/* Gold border top */}
         <div
           aria-hidden
           style={{
@@ -464,7 +538,7 @@ export default function WhyChooseUs() {
                 letterSpacing: "0.04em",
               }}
             >
-              No extra charges · Fast delivery · Serving Burari since 1990
+              No extra charges · Fast delivery · Serving since 1990
             </p>
           </div>
         </div>

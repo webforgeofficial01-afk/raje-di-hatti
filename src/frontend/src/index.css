@@ -221,10 +221,310 @@
       opacity: 0.55;
     }
   }
-  @media (prefers-reduced-motion: reduce) {
-    .ambient-dot {
-      animation: none !important;
+
+  /* ─── TAB NAVIGATION ANIMATIONS ─── */
+  @keyframes tabSlideUnderline {
+    from {
+      transform: scaleX(0);
+      transform-origin: left;
     }
+    to {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+  }
+  @keyframes tabFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ─── 3D PERSPECTIVE CARD ANIMATIONS ─── */
+  @keyframes cardRotate3D {
+    0% {
+      transform: perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0);
+    }
+    100% {
+      transform: perspective(1200px) rotateX(4deg) rotateY(-6deg)
+        translateZ(12px);
+    }
+  }
+  @keyframes cardRotate3DReverse {
+    0% {
+      transform: perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0);
+    }
+    100% {
+      transform: perspective(1200px) rotateX(-4deg) rotateY(6deg)
+        translateZ(12px);
+    }
+  }
+
+  /* ─── ENHANCED KULHAD FLOATING ANIMATION ─── */
+  @keyframes kulhadFloat {
+    0% {
+      transform: translateY(0px) scale(1);
+      opacity: 1;
+    }
+    25% {
+      transform: translateY(-18px) scale(1.02);
+    }
+    50% {
+      transform: translateY(8px) scale(1);
+    }
+    75% {
+      transform: translateY(-12px) scale(1.01);
+    }
+    100% {
+      transform: translateY(0px) scale(1);
+    }
+  }
+  @keyframes kulhadGlowPulse {
+    0%,
+    100% {
+      filter: drop-shadow(0 0 16px rgba(245, 197, 66, 0.5));
+    }
+    50% {
+      filter: drop-shadow(0 0 40px rgba(245, 197, 66, 0.8));
+    }
+  }
+
+  /* ─── DIGIT FLIP COUNTER ANIMATION ─── */
+  @keyframes digitFlip {
+    0% {
+      transform: rotateX(90deg);
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      transform: rotateX(0deg);
+      opacity: 1;
+    }
+  }
+
+  /* ─── GALLERY STAGGER REVEAL ─── */
+  @keyframes galleryStaggerReveal {
+    from {
+      opacity: 0;
+      transform: translateY(24px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* ─── SECTION SCROLL CHOREOGRAPHY — enhanced luxury ─── */
+  @keyframes sectionFadeSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(48px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ─── TITLE SCALE REVEAL ON SCROLL ─── */
+  @keyframes titleScaleReveal {
+    from {
+      opacity: 0;
+      transform: scale(0.78);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  /* ─── HERO DIAGONAL SHIMMER ─── */
+  /* Slow diagonal shimmer that drifts across the hero — 30s seamless loop, GPU only */
+  @keyframes shimmerDiag {
+    0% {
+      transform: translate(-100%, -100%) rotate(25deg);
+      opacity: 0;
+    }
+    8% {
+      opacity: 1;
+    }
+    92% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate(200%, 200%) rotate(25deg);
+      opacity: 0;
+    }
+  }
+  .hero-shimmer {
+    pointer-events: none;
+    position: absolute;
+    inset: -60%;
+    background: linear-gradient(
+      105deg,
+      transparent 35%,
+      rgba(245, 197, 66, 0.018) 50%,
+      transparent 65%
+    );
+    animation: shimmerDiag 30s linear infinite;
+    will-change: transform, opacity;
+    z-index: 2;
+  }
+  @media (max-width: 768px) {
+    .hero-shimmer {
+      opacity: 0.5;
+    }
+  }
+
+  /* ─── CTA PULSE RING — expands from button, GPU-only ─── */
+  @keyframes ctaPulseRing {
+    0% {
+      transform: scale(1);
+      opacity: 0.55;
+    }
+    100% {
+      transform: scale(1.28);
+      opacity: 0;
+    }
+  }
+  .cta-pulse-ring {
+    position: relative;
+  }
+  .cta-pulse-ring::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: inherit;
+    border: 2px solid rgba(245, 197, 66, 0.55);
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .cta-pulse-ring.ring-active::before {
+    animation: ctaPulseRing 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* ─── REVIEW CARD SLIDE-IN-FROM-LEFT ─── */
+  @keyframes staggerSlideLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  .review-card-enter {
+    animation: staggerSlideLeft 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* ─── STATS CARD SHIMMER LINE — sweeps across on viewport entry ─── */
+  @keyframes statCardShimmer {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+  .stats-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(245, 197, 66, 0.75),
+      rgba(255, 200, 80, 0.9),
+      rgba(245, 197, 66, 0.75),
+      transparent
+    );
+    border-radius: 4px 4px 0 0;
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .stats-card.shimmer-in::after {
+    animation: statCardShimmer 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* ─── STATS CARD BORDER GLOW ON ENTRY ─── */
+  @keyframes statBorderGlow {
+    from {
+      box-shadow: 0 0 0 0 rgba(245, 197, 66, 0);
+    }
+    to {
+      box-shadow: 0 0 18px rgba(245, 197, 66, 0.15), 0 0 0 1px
+        rgba(245, 197, 66, 0.14);
+    }
+  }
+  .stats-card.glow-in {
+    animation: statBorderGlow 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* ─── GALLERY STAGGER ENTRANCE ─── */
+  .gallery-slot-card {
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s
+      cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s
+      ease;
+  }
+  .gallery-slot-card.gallery-revealed {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* ─── ZONE CARD VIEWPORT SCALE ─── */
+  .zone-scale-card {
+    transform: scale(0.96);
+    opacity: 0;
+    transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1), opacity 600ms
+      cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .zone-scale-card.zone-in {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  /* ─── ICON BOX ENTRANCE ─── */
+  @keyframes iconBounceIn {
+    0% {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    65% {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  .icon-box-animated {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  .icon-box-animated.icon-in {
+    animation: iconBounceIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   /* backgroundPulse — opacity only (GPU-safe), 15s loop */
@@ -1008,6 +1308,44 @@
     opacity: 1;
     transform: translateY(0);
     will-change: auto;
+  }
+
+  /* ── LUXURY REVEAL — premium entrance: scale + vertical lift ── */
+  .luxury-reveal {
+    opacity: 0;
+    transform: translateY(40px) scale(0.97);
+    will-change: opacity, transform;
+    transition: opacity 600ms ease-out, transform 700ms
+      cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .luxury-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+  /* Stagger delay variants */
+  .luxury-reveal[data-delay="100"] {
+    transition-delay: 100ms;
+  }
+  .luxury-reveal[data-delay="200"] {
+    transition-delay: 200ms;
+  }
+  .luxury-reveal[data-delay="300"] {
+    transition-delay: 300ms;
+  }
+  .luxury-reveal[data-delay="400"] {
+    transition-delay: 400ms;
+  }
+  .luxury-reveal[data-delay="500"] {
+    transition-delay: 500ms;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .luxury-reveal {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      will-change: auto !important;
+    }
   }
 
   /* Stagger classes — data-delay attribute */
@@ -1794,6 +2132,89 @@
     transform: scaleX(1);
   }
 
+  /* ─── TAB NAVIGATION — active indicator ─── */
+  .tab-nav-active::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #f5c542, #ff7a18);
+    border-radius: 2px;
+    animation: tabSlideUnderline 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* ─── 3D CARD HOVER — signature dishes section ─── */
+  .card-3d-perspective {
+    perspective: 1200px;
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-style: preserve-3d;
+  }
+  .card-3d-perspective:hover {
+    animation: cardRotate3D 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .card-3d-perspective:nth-child(even):hover {
+    animation: cardRotate3DReverse 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* ─── ENHANCED KULHAD — WOW SECTION ─── */
+  .kulhad-wow-enhanced {
+    animation: kulhadFloat 5.2s cubic-bezier(0.16, 1, 0.3, 1) infinite,
+      kulhadGlowPulse 4.8s ease-in-out infinite;
+    filter: drop-shadow(0 0 16px rgba(245, 197, 66, 0.5));
+  }
+
+  /* ─── ANIMATED COUNTER — digit flip effect ─── */
+  .counter-digit-flip {
+    display: inline-block;
+    transform-style: preserve-3d;
+    animation: digitFlip 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* ─── GALLERY REVEAL — staggered grid ─── */
+  .gallery-item-reveal {
+    opacity: 0;
+    transform: translateY(24px) scale(0.95);
+    animation: galleryStaggerReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .gallery-item-reveal[data-index="0"] {
+    animation-delay: 0.0s;
+  }
+  .gallery-item-reveal[data-index="1"] {
+    animation-delay: 0.15s;
+  }
+  .gallery-item-reveal[data-index="2"] {
+    animation-delay: 0.30s;
+  }
+  .gallery-item-reveal[data-index="3"] {
+    animation-delay: 0.45s;
+  }
+
+  /* ─── SECTION SCROLL CHOREOGRAPHY ─── */
+  .section-scroll-reveal {
+    opacity: 0;
+    transform: translateY(48px);
+    transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.1s
+      cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .section-scroll-reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── TITLE SCALE REVEAL ─── */
+  .title-scale-reveal {
+    opacity: 0;
+    transform: scale(0.78);
+    transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), transform 1.0s
+      cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .title-scale-reveal.in-view {
+    opacity: 1;
+    transform: scale(1);
+  }
+
   /* ─── HERO CTA GLOW BUTTON ─── */
   .hero-cta-primary {
     display: inline-flex;
@@ -2146,6 +2567,9 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .ambient-dot {
+      animation: none !important;
+    }
     .animate-section,
     .animate-fade-up-editorial,
     .animate-scale-reveal {
@@ -2189,7 +2613,24 @@
     }
     .bg-shimmer-sweep,
     .ambient-particle,
-    .shimmer-line {
+    .shimmer-line,
+    .hero-shimmer,
+    .stats-card.shimmer-in::after,
+    .stats-card.glow-in,
+    .icon-box-animated.icon-in,
+    .review-card-enter {
+      animation: none !important;
+    }
+    .gallery-slot-card {
+      opacity: 1 !important;
+      transform: scale(1) !important;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+    }
+    .zone-scale-card {
+      opacity: 1 !important;
+      transform: scale(1) !important;
+    }
+    .cta-pulse-ring.ring-active::before {
       animation: none !important;
     }
     * {

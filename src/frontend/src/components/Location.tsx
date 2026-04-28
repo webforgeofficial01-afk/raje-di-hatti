@@ -1,7 +1,7 @@
 // Location.tsx — Delivery zones with live open status indicator
 
 import { ExternalLink } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // ─── Live Open Status ─────────────────────────────────────────────────────────
 
@@ -116,6 +116,39 @@ const MAPS_DIRECTIONS_URL =
 
 export default function Location() {
   const openStatus = useOpenStatus();
+  const zonesRef = useRef<HTMLDivElement>(null);
+  const zonesObservedRef = useRef(false);
+
+  useEffect(() => {
+    const container = zonesRef.current;
+    if (!container) return;
+
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !zonesObservedRef.current) {
+          zonesObservedRef.current = true;
+          const cards =
+            container.querySelectorAll<HTMLDivElement>(".zone-scale-card");
+          cards.forEach((card, i) => {
+            setTimeout(
+              () => {
+                card.classList.add("zone-in");
+              },
+              prefersReduced ? 0 : i * 80,
+            );
+          });
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section
@@ -241,6 +274,7 @@ export default function Location() {
 
         {/* ── ZONE CARDS ── */}
         <div
+          ref={zonesRef}
           style={{
             display: "grid",
             gridTemplateColumns:
@@ -252,19 +286,17 @@ export default function Location() {
           {ZONES.map((zone, i) => (
             <div
               key={zone.label}
-              className="animate-section"
+              className="animate-section zone-scale-card"
               style={{
                 background: zone.bg,
                 border: `1px solid ${zone.borderColor}`,
                 borderRadius: "20px",
                 padding: "clamp(18px, 4vw, 26px) clamp(16px, 3vw, 24px)",
                 transitionDelay: `${i * 80}ms`,
-                transition:
-                  "transform 0.45s cubic-bezier(0.16,1,0.3,1), box-shadow 0.45s cubic-bezier(0.16,1,0.3,1), border-color 0.45s cubic-bezier(0.16,1,0.3,1)",
                 cursor: "default",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-5px)";
+                e.currentTarget.style.transform = "translateY(-5px) scale(1)";
                 e.currentTarget.style.boxShadow = `0 12px 40px rgba(0,0,0,0.5), 0 0 24px ${zone.borderColor}`;
               }}
               onMouseLeave={(e) => {

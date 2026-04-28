@@ -13,14 +13,6 @@ import {
 
 const SEED_REVIEWS: Review[] = [
   {
-    id: "seed1",
-    name: "Rajesh Kumar",
-    rating: 5,
-    comment:
-      "Best chole bhature in all of Burari! The kulcha is absolutely mind-blowing. Family has been coming here since 1995.",
-    timestampNs: BigInt(0),
-  },
-  {
     id: "seed2",
     name: "Priya Sharma",
     rating: 5,
@@ -157,14 +149,6 @@ const SEED_REVIEWS: Review[] = [
     timestampNs: BigInt(0),
   },
   {
-    id: "seed19",
-    name: "Anil Tomar",
-    rating: 5,
-    comment:
-      "Been a customer since the 90s. The quality has only gotten better. True legacy taste with modern reliability.",
-    timestampNs: BigInt(0),
-  },
-  {
     id: "seed20",
     name: "Divya Thakur",
     rating: 5,
@@ -227,7 +211,7 @@ const ReviewCard = memo(function ReviewCard({
 
   return (
     <div
-      className="review-premium-card animate-section flex flex-col"
+      className="review-premium-card review-card-enter animate-section flex flex-col"
       style={{
         background: "#0a0a0a",
         border: "1px solid rgba(245,197,66,0.18)",
@@ -236,6 +220,7 @@ const ReviewCard = memo(function ReviewCard({
         padding: "clamp(14px, 3vw, 20px)",
         position: "relative",
         overflow: "hidden",
+        animationDelay: `${delay}ms`,
         transitionDelay: `${delay}ms`,
         transition:
           "border-color 0.35s cubic-bezier(0.4,0,0.2,1), transform 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.35s cubic-bezier(0.4,0,0.2,1)",

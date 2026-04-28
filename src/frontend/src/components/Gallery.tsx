@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 const GALLERY_SLOTS = [
   {
     label: "Our Food",
@@ -21,7 +23,43 @@ const GALLERY_SLOTS = [
   },
 ];
 
+const STAGGER_DELAYS = [0, 150, 300, 450];
+
 export default function Gallery() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const observedRef = useRef(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !observedRef.current) {
+          observedRef.current = true;
+          const cards =
+            container.querySelectorAll<HTMLDivElement>(".gallery-slot-card");
+          cards.forEach((card, i) => {
+            setTimeout(
+              () => {
+                card.classList.add("gallery-revealed");
+              },
+              prefersReduced ? 0 : (STAGGER_DELAYS[i] ?? 0),
+            );
+          });
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
       id="gallery"
@@ -50,6 +88,7 @@ export default function Gallery() {
         </div>
 
         <div
+          ref={containerRef}
           className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 lg:gap-5"
           data-ocid="gallery.section"
         >
@@ -65,6 +104,7 @@ export default function Gallery() {
                 aspectRatio: "1 / 1",
                 position: "relative",
                 background: "#1a1208",
+                transitionDelay: `${STAGGER_DELAYS[i] ?? 0}ms`,
               }}
               data-ocid={`gallery.item.${i + 1}`}
             >
@@ -135,11 +175,8 @@ export default function Gallery() {
       </div>
 
       <style>{`
-        .gallery-slot-card {
-          transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease;
-        }
         .gallery-slot-card:hover {
-          transform: scale(1.03) translateY(-4px);
+          transform: scale(1.03) translateY(-4px) !important;
           border-color: rgba(245,197,66,0.65) !important;
           box-shadow: 0 16px 48px rgba(0,0,0,0.7), 0 0 32px rgba(245,197,66,0.18) !important;
           will-change: transform;
@@ -150,7 +187,7 @@ export default function Gallery() {
         .gallery-warm-tint {
           position: absolute;
           inset: 0;
-          background: rgba(255,122,24,0.09);
+          background: rgba(245,197,66,0.06);
           opacity: 0;
           transition: opacity 0.3s cubic-bezier(0.16,1,0.3,1);
           pointer-events: none;

@@ -209,7 +209,7 @@ function HeroSection() {
                 className="text-sm font-semibold"
                 style={{ color: "rgba(245,197,66,0.75)" }}
               >
-                Serving Burari Since 1990
+                Serving Since 1990
               </span>
             </div>
 
