@@ -623,11 +623,9 @@ export default function Footer() {
                   fontSize: "12px",
                 }}
               >
-                Website designed &amp; developed by{" "}
+                Made by{" "}
                 <a
-                  href="https://webforge.in"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#footer"
                   style={{
                     color: "#d4a843",
                     textDecoration: "none",
@@ -642,9 +640,9 @@ export default function Footer() {
                     e.currentTarget.style.color = "#d4a843";
                     e.currentTarget.style.textShadow = "";
                   }}
-                  data-ocid="footer.webforge.link"
+                  data-ocid="footer.velora.link"
                 >
-                  WebForge
+                  Velora Studio
                 </a>
               </p>
             </div>
